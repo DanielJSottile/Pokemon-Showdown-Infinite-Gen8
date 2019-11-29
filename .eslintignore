@@ -1,5 +1,6 @@
 server/tournaments/lib/
 logs/
+.*-dist/
 dev-tools/globals.js
 node_modules/
 tools/set-import/importer.js
