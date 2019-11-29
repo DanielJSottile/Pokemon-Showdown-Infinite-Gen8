@@ -594,10 +594,27 @@ let BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
-		secondary: {
-			chance: 100,
-			onHit(target, source, move) {
-				if (source.isActive) target.addVolatile('trapped', source, move, 'trapper');
+		volatileStatus: 'anchorshot',
+		effect: {
+			duration: 4,
+			onStart(pokemon, source) {
+				this.add('-activate', pokemon, 'move: Anchor Shot', '[of] ' + source);
+			},
+			onEnd(pokemon, source) {
+				this.add('-end', pokemon, 'Anchor Shot', '[partiallytrapped]', '[silent]');
+					return;
+			},
+			onResidualOrder: 11,
+			onResidual(pokemon) {
+				const source = this.effectData.source;
+				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
+					delete pokemon.volatiles['anchorshot'];
+					this.add('-end', pokemon, 'Anchor Shot', '[partiallytrapped]', '[silent]');
+					return;
+				}
+			},
+			onTrapPokemon(pokemon) {
+				if (this.effectData.source && this.effectData.source.isActive) pokemon.tryTrap();
 			},
 		},
 		target: "normal",
@@ -5057,6 +5074,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Eternatus",
+		volatileStatus: 'emaxeternalenergy',
 		self: {
 			volatileStatus: 'mustrecharge',
 		},
@@ -5071,6 +5089,12 @@ let BattleMovedex = {
 					spe: 1,
 				},
 			},
+		},
+		onTryMove(pokemon, target, move) {
+			if (!pokemon.volatiles['emaxeternalenergy']) return;
+			this.add('-fail', pokemon, 'move: E-Max Eternal Energy');
+			this.attrLastMove('[still]');
+			return null;
 		},
 		target: "normal",
 		type: "Dragon",
@@ -13261,11 +13285,13 @@ let BattleMovedex = {
 		effect: {
 			onStart(side) {
 				this.add('-sidestart', side, 'move: Metal Shard');
+				this.add('-message', 'Sharp metallic shards float in the air around the opposing team!');
 			},
 			onSwitchIn(pokemon) {
 				if (pokemon.hasItem('heavydutyboots')) return;
 				let typeMod = this.dex.clampIntRange(pokemon.runEffectiveness(this.dex.getActiveMove('Metal Shard')), -6, 6);
 				this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+				this.add('-message', 'The metallic shards dug into the opposing Pokemon!');
 			},
 		},
 		secondary: null,
@@ -19677,10 +19703,27 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		secondary: {
-			chance: 100,
-			onHit(target, source, move) {
-				if (source.isActive) target.addVolatile('trapped', source, move, 'trapper');
+		volatileStatus: 'spiritshackle',
+		effect: {
+			duration: 4,
+			onStart(pokemon, source) {
+				this.add('-activate', pokemon, 'move: Spirit Shackle', '[of] ' + source);
+			},
+			onEnd(pokemon, source) {
+				this.add('-end', pokemon, 'Spirit Shackle', '[partiallytrapped]', '[silent]');
+					return;
+			},
+			onResidualOrder: 11,
+			onResidual(pokemon) {
+				const source = this.effectData.source;
+				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
+					delete pokemon.volatiles['spiritshackle'];
+					this.add('-end', pokemon, 'Spirit Shackle', '[partiallytrapped]', '[silent]');
+					return;
+				}
+			},
+			onTrapPokemon(pokemon) {
+				if (this.effectData.source && this.effectData.source.isActive) pokemon.tryTrap();
 			},
 		},
 		target: "normal",
@@ -21399,8 +21442,28 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
-		onHit(target, source, move) {
-			if (source.isActive) target.addVolatile('trapped', source, move, 'trapper');
+		volatileStatus: 'thousandwaves',
+		effect: {
+			duration: 4,
+			onStart(pokemon, source) {
+				this.add('-activate', pokemon, 'move: Thousand Waves', '[of] ' + source);
+			},
+			onEnd(pokemon, source) {
+				this.add('-end', pokemon, 'Thousand Waves', '[partiallytrapped]', '[silent]');
+					return;
+			},
+			onResidualOrder: 11,
+			onResidual(pokemon) {
+				const source = this.effectData.source;
+				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
+					delete pokemon.volatiles['thousandwaves'];
+					this.add('-end', pokemon, 'Thousand Waves', '[partiallytrapped]', '[silent]');
+					return;
+				}
+			},
+			onTrapPokemon(pokemon) {
+				if (this.effectData.source && this.effectData.source.isActive) pokemon.tryTrap();
+			},
 		},
 		secondary: null,
 		target: "allAdjacentFoes",
