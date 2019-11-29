@@ -47,7 +47,7 @@ let Formats = [
 		],
 
 		mod: 'gen8',
-		ruleset: ['Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Infinite Timer'],
+		ruleset: ['Obtainable', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Infinite Timer'],
 	},
 	{
 		name: "[Gen 8] Balanced Hackmons",
