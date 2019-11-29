@@ -5070,39 +5070,31 @@ let BattleMovedex = {
 		id: "emaxeternalenergy",
 		isViable: true,
 		name: "E-Max Eternal Energy",
-		pp: 1,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: "Eternatus",
+		volatileStatus: 'emaxeternalenergy',
 		self: {
 			volatileStatus: 'mustrecharge',
-			effect: {
-				onStart(pokemon) {
-					volatileStatus: 'emaxeternalenergy',
-					this.add('-start', pokemon, 'move: E-Max Eternal Energy');
-				},
-				onTrapPokemon(pokemon) {
-					pokemon.tryTrap();
-				},
-				// TODO: Check if No Retreat traps the user like Ingrain
-				onDragOut(pokemon) {
-					this.add('-activate', pokemon, 'move: E-Max Eternal Energy');
-					return null;
+		},
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: 1,
+					def: 1,
+					spa: 1,
+					spd: 1,
+					spe: 1,
 				},
 			},
-			boosts: {
-				atk: 1,
-				def: 1,
-				spa: 1,
-				spd: 1,
-				spe: 1,
-			},
-			onTryMove(pokemon, target, move) {
-				if (!pokemon.volatiles['emaxeternalenergy']) return;
-				this.add('-fail', pokemon, 'move: E-Max Eternal Energy');
-				this.attrLastMove('[still]');
-				return null;
-			},
+		},
+		onTryMove(pokemon, target, move) {
+			if (!pokemon.volatiles['emaxeternalenergy']) return;
+			this.add('-fail', pokemon, 'move: E-Max Eternal Energy');
+			this.attrLastMove('[still]');
+			return null;
 		},
 		target: "normal",
 		type: "Dragon",
