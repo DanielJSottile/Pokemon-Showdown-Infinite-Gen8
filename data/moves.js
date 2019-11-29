@@ -7471,7 +7471,7 @@ let BattleMovedex = {
 		self: {
 			onAfterHit(target, source) {
 				for (let pokemon of source.side.active) {
-					this.heal(pokemon.maxhp / 2, pokemon, pokemon);
+					this.heal(pokemon.maxhp / 6, pokemon, pokemon);
 				}
 			},
 		},
@@ -7928,7 +7928,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		desc: "Damages opponent(s) by 1/8 of their maximum HP for four turns. Base Power scales with the base move's Base Power.",
+		desc: "Damages non-Fire-type opponent(s) by 1/6 of their maximum HP for four turns. Base Power scales with the base move's Base Power.",
 		shortDesc: "Damages foes for 4 turns. BP scales w/ base move.",
 		id: "gmaxwildfire",
 		isNonstandard: "Custom",
@@ -7947,7 +7947,7 @@ let BattleMovedex = {
 			},
 			onResidual(targetSide) {
 				for (const pokemon of targetSide.active) {
-					this.damage(pokemon.maxhp / 8, pokemon);
+					if (!pokemon.hasType('Fire')) this.damage(pokemon.maxhp / 6, pokemon);
 				}
 			},
 			onEnd(targetSide) {
@@ -8039,7 +8039,7 @@ let BattleMovedex = {
 		flags: {contact: 1, protect: 1, mirror: 1, nonsky: 1},
 		onTryHit(pokemon, target, move) {
 			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', pokemon);
+			this.add('-fail', source, 'move: Grass Knot', '[from] Dynamax');
 			this.attrLastMove('[still]');
 			return null;
 		},
@@ -9008,7 +9008,7 @@ let BattleMovedex = {
 		flags: {contact: 1, protect: 1, mirror: 1, nonsky: 1},
 		onTryHit(pokemon, target, move) {
 			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', pokemon);
+			this.add('-fail', source, 'move: Heat Crash', '[from] Dynamax');
 			this.attrLastMove('[still]');
 			return null;
 		},
@@ -9073,7 +9073,7 @@ let BattleMovedex = {
 		flags: {contact: 1, protect: 1, mirror: 1, nonsky: 1},
 		onTryHit(pokemon, target, move) {
 			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', pokemon);
+			this.add('-fail', source, 'move: Heavy Slam', '[from] Dynamax');
 			this.attrLastMove('[still]');
 			return null;
 		},
@@ -11826,7 +11826,7 @@ let BattleMovedex = {
 		flags: {contact: 1, protect: 1, mirror: 1},
 		onTryHit(pokemon, target, move) {
 			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', pokemon);
+			this.add('-fail', source, 'move: Low Kick', '[from] Dynamax');
 			this.attrLastMove('[still]');
 			return null;
 		},

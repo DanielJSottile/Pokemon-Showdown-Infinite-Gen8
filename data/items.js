@@ -5425,6 +5425,7 @@ let BattleItems = {
 			return true;
 		},
 		forcedForme: "Zamazenta-Crowned",
+		itemUser: ["Zamazenta-Crowned"],
 		num: 1104,
 		gen: 8,
 		desc: "If held by a Zamazenta, this item changes it to Crowned Forme.",
@@ -5440,6 +5441,7 @@ let BattleItems = {
 			return true;
 		},
 		forcedForme: "Zacian-Crowned",
+		itemUser: ["Zacian-Crowned"],
 		num: 1103,
 		gen: 8,
 		desc: "If held by a Zacian, this item changes it to Crowned Forme.",

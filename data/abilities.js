@@ -649,9 +649,8 @@ let BattleAbilities = {
 		num: 186,
 	},
 	"dauntlessshield": {
-		shortDesc: "",
-		onSwitchIn(pokemon) {
-			// TODO: exact defense boost. This is a placeholder value
+		shortDesc: "On switch-in, this Pokemon's Defense is raised by 1 stage.",
+		onStart(pokemon) {
 			this.boost({def: 1}, pokemon);
 		},
 		id: "dauntlessshield",
@@ -788,7 +787,7 @@ let BattleAbilities = {
 			if (['mimikyu', 'mimikyutotem'].includes(pokemon.template.speciesid) && this.effectData.busted) {
 				let templateid = pokemon.template.speciesid + 'busted';
 				pokemon.formeChange(templateid, this.effect, true);
-				this.damage(pokemon.maxhp / 10, pokemon, pokemon);
+				this.damage(pokemon.maxhp / 8, pokemon, pokemon);
 			}
 		},
 		id: "disguise",
@@ -1847,9 +1846,8 @@ let BattleAbilities = {
 		num: 22,
 	},
 	"intrepidsword": {
-		shortDesc: "",
-		onSwitchIn(pokemon) {
-			// TODO: exact attack boost. This is a placeholder value
+		shortDesc: "On switch-in, this Pokemon's Attack is raised by 1 stage.",
+		onStart(pokemon) {
 			this.boost({atk: 1}, pokemon);
 		},
 		id: "intrepidsword",

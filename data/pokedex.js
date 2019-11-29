@@ -15317,11 +15317,11 @@ let BattlePokedex = {
 		eggGroups: ["Undiscovered"],
 		otherFormes: ["zaciancrownedsword"],
 	},
-	zaciancrownedsword: {
+	zaciancrowned: {
 		num: 888,
-		species: "Zacian-Crowned-Sword",
+		species: "Zacian-Crowned",
 		baseSpecies: "Zacian",
-		forme: "Crowned-Sword",
+		forme: "Crowned",
 		types: ["Fairy", "Steel"],
 		baseStats: {hp: 92, atk: 170, def: 115, spa: 80, spd: 115, spe: 148},
 		abilities: {0: "Intrepid Sword"},
@@ -15342,11 +15342,11 @@ let BattlePokedex = {
 		eggGroups: ["Undiscovered"],
 		otherFormes: ["zamazentacrownedshield"],
 	},
-	zamazentacrownedshield: {
+	zamazentacrowned: {
 		num: 889,
-		species: "Zamazenta-Crowned-Shield",
+		species: "Zamazenta-Crowned",
 		baseSpecies: "Zamazenta",
-		forme: "Crowned-Shield",
+		forme: "Crowned",
 		types: ["Fighting", "Steel"],
 		baseStats: {hp: 92, atk: 130, def: 145, spa: 80, spd: 145, spe: 128},
 		abilities: {0: "Dauntless Shield"},
