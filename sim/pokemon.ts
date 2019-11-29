@@ -197,7 +197,7 @@ export class Pokemon {
 	abilityOrder: number;
 
 	canMegaEvo: string | null | undefined;
-	canUltraBurst: string | null | undefined;
+	canUltraBurst: string | null;
 	canDynamax: string | boolean | null | undefined;
 	canGigantamax: string | null;
 
