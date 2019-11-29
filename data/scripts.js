@@ -1142,6 +1142,14 @@ let BattleScripts = {
 			pokemon.getItem().id === 'ultranecroziumz') {
 			return "Necrozma-Ultra";
 		}
+		if ('Mebiusan-Past'.includes(pokemon.baseTemplate.species) &&
+			pokemon.getAbility().id === 'timetravel') {
+			return "Mebiusan-Future";
+		}
+		if ('Mebiusan-Future'.includes(pokemon.baseTemplate.species) &&
+			pokemon.getAbility().id === 'timetravel') {
+			return "Mebiusan-Past";
+		}
 		return null;
 	},
 
@@ -1244,6 +1252,9 @@ let BattleScripts = {
 		for (const ally of side.pokemon) {
 			if (wasMega) {
 				ally.canMegaEvo = null;
+			}
+			if (['Mebiusan-Past', 'Mebiusan-Future'].includes(pokemon.baseTemplate.species)) {
+				ally.canUltraBurst = true;
 			} else {
 				ally.canUltraBurst = null;
 			}
