@@ -6694,6 +6694,44 @@ let BattleMovedex = {
 		zMoveEffect: 'crit2',
 		contestType: "Clever",
 	},
+	"forestfire": {
+		num: -23,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		desc: "Damages non-Fire-type opponent(s) by 1/6 of their maximum HP for four turns.",
+		shortDesc: "Damages foes for 4 turns.",
+		id: "forestfire",
+		name: "Forest Fire",
+		pp: 15,
+		priority: 0,
+		flags: {},
+		onHit(target, source, move) {
+			target.side.addSideCondition('forestfire');
+		},
+		effect: {
+			duration: 4,
+			onStart(targetSide) {
+				this.add('-sidestart', targetSide, 'Forest Fire');
+				this.add('-message', 'The opposing Pokemon were surrounded by fire!');
+			},
+			onResidual(targetSide) {
+				for (const pokemon of targetSide.active) {
+					if (!pokemon.hasType('Fire')) this.damage(pokemon.maxhp / 6, pokemon);
+					this.add('-message', "The opposing Pokemon is burning up within the Forest Fire's flames!");
+				}
+			},
+			onEnd(targetSide) {
+				this.add('-sideend', targetSide, 'Forest Fire');
+				this.add('-message', "The Forest Fire's flames died down.");
+			},
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Fire",
+		zMoveBoost: {spe: 1},
+		contestType: "Cool",
+	},
 	"forestscurse": {
 		num: 571,
 		accuracy: 100,
@@ -7350,7 +7388,7 @@ let BattleMovedex = {
 		basePower: 10,
 		category: "Physical",
 		desc: "Sleeps, poisons, or paralyzes opponent(s). Base Power scales with the base move's Base Power.",
-		shortDesc: "Foe: slp/psn/par. BP scales w/ base move BP.",
+		shortDesc: "Foes: SLP/PSN/PAR. BP scales with base move.",
 		id: "gmaxbefuddle",
 		isNonstandard: "Custom",
 		name: "G-Max Befuddle",
@@ -7358,17 +7396,19 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Butterfree",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				let result = this.random(3);
-				if (result === 0) {
-					pokemon.trySetStatus('slp', source);
-				} else if (result === 1) {
-					pokemon.trySetStatus('par', source);
-				} else {
-					pokemon.trySetStatus('psn', source);
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					let result = this.random(3);
+					if (result === 0) {
+						pokemon.trySetStatus('slp', source);
+					} else if (result === 1) {
+						pokemon.trySetStatus('par', source);
+					} else {
+						pokemon.trySetStatus('psn', source);
+					}
 				}
-			}
+			},
 		},
 		target: "adjacentFoe",
 		type: "Bug",
@@ -7380,7 +7420,7 @@ let BattleMovedex = {
 		basePower: 10,
 		category: "Physical",
 		desc: "Traps and damages the opponent(s) for 4-5 turns. Base Power scales with the base move's Base Power.",
-		shortDesc: "Traps and damages foe(s). BP scales w/ base move.",
+		shortDesc: "Traps/damages foes. BP scales w/ base move.",
 		id: "gmaxcentiferno",
 		isNonstandard: "Custom",
 		name: "G-Max Centiferno",
@@ -7388,10 +7428,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Centiskorch",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				pokemon.addVolatile('partiallytrapped');
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.addVolatile('partiallytrapped');
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7404,7 +7446,7 @@ let BattleMovedex = {
 		basePower: 10,
 		category: "Physical",
 		desc: "Applies Focus Energy to the user and its allies. Base Power scales with the base move's Base Power.",
-		shortDesc: "User side: Focus Energy. BP scale's w/ base move.",
+		shortDesc: "User side: Focus Energy. BP scales w/ base move.",
 		id: "gmaxchistrike",
 		isNonstandard: "Custom",
 		name: "G-Max Chi Strike",
@@ -7413,7 +7455,7 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Machamp",
 		self: {
-			onHit(target, source) {
+			onHit(source) {
 				for (let pokemon of source.side.active) {
 					pokemon.addVolatile('focusenergy');
 				}
@@ -7429,7 +7471,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Infatuates opponents. BP scales with base move's BP.",
+		shortDesc: "Infatuates opponents. BP scales with base move.",
 		id: "gmaxcuddle",
 		isNonstandard: "Custom",
 		name: "G-Max Cuddle",
@@ -7437,10 +7479,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Eevee",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				pokemon.addVolatile('attract');
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.addVolatile('attract');
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7453,7 +7497,7 @@ let BattleMovedex = {
 		basePower: 10,
 		category: "Physical",
 		desc: "Lowers the PP of the opponent(s) last used move. Base Power scales with the base move's Base Power.",
-		shortDesc: "Foe: Lowers PP of last move. BP scales.",
+		shortDesc: "Foe: Lowers PP of last move. BP scales w/ base move.",
 		id: "gmaxdepletion",
 		isNonstandard: "Custom",
 		name: "G-Max Depletion",
@@ -7461,18 +7505,20 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Duraludon",
-		onAfterHit(target, source) {
-			for (let pokemon of target.side.active) {
-				const move = pokemon.lastMove;
-				if (move && !move.isZ && !move.isMax) {
-					let ppDeducted = pokemon.deductPP(move.id, 4);
-					if (ppDeducted) {
-						this.add("-activate", pokemon, 'move: Max Depletion', move.name, ppDeducted);
-						return;
+		self: {
+			onAfterHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					const move = pokemon.lastMove;
+					if (move && !move.isZ && !move.isMax) {
+						let ppDeducted = pokemon.deductPP(move.id, 4);
+						if (ppDeducted) {
+							this.add("-activate", pokemon, 'move: Max Depletion', move.name, ppDeducted);
+							return;
+						}
 					}
+					return false;
 				}
-				return false;
-			}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7484,7 +7530,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Heals user and allies. BP scales with base move's BP.",
+		shortDesc: "Heals user and allies. BP scales with base move.",
 		id: "gmaxfinale",
 		isNonstandard: "Custom",
 		name: "G-Max Finale",
@@ -7493,9 +7539,9 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Alcremie",
 		self: {
-			onAfterHit(target, source) {
+			onAfterHit(source) {
 				for (let pokemon of source.side.active) {
-					this.heal(pokemon.maxhp / 6, pokemon, pokemon);
+					this.heal(pokemon.maxhp / 6, pokemon, source);
 				}
 			},
 		},
@@ -7517,10 +7563,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Kingler",
-		onHit(target, source, move) {
-			for (let pokemon of target.side.active) {
-				this.boost({spe: -2}, pokemon, source, move);
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					this.boost({spe: -2}, pokemon);
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7532,7 +7580,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Confuses opponents. BP scales with base move's BP.",
+		shortDesc: "Confuses foes. BP scales with base move's BP.",
 		id: "gmaxgoldrush",
 		isNonstandard: "Custom",
 		name: "G-Max Gold Rush",
@@ -7540,10 +7588,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Meowth",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				pokemon.addVolatile('confusion');
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.addVolatile('confusion');
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7555,7 +7605,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Summons Gravity. BP scales with base move's BP.",
+		shortDesc: "Summons Gravity. BP scales with base move.",
 		id: "gmaxgravitas",
 		isNonstandard: "Custom",
 		name: "G-Max Gravitas",
@@ -7564,9 +7614,7 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Orbeetle",
 		self: {
-			onHit(target, source, move) {
-				this.field.addPseudoWeather('gravity');
-			},
+			pseudoWeather: 'gravity',
 		},
 		target: "adjacentFoe",
 		type: "Psychic",
@@ -7577,7 +7625,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Poisons opponents. BP scales with base move's BP.",
+		shortDesc: "Poisons opponents. BP scales with base move.",
 		id: "gmaxmalodor",
 		isNonstandard: "Custom",
 		name: "G-Max Malodor",
@@ -7585,10 +7633,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Garbodor",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				pokemon.trySetStatus('psn', source);
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.trySetStatus('psn', source);
+				}
+			},
 		},
 		target: "adjacentFoe",
 		type: "Poison",
@@ -7599,7 +7649,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Applies Torment to opponents. BP scales with base move's BP.",
+		shortDesc: "Applies Torment to foes. BP scales with base move.",
 		id: "gmaxmeltdown",
 		isNonstandard: "Custom",
 		name: "G-Max Meltdown",
@@ -7607,10 +7657,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Melmetal",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				pokemon.addVolatile('torment');
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.addVolatile('torment');
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7622,7 +7674,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Restores user's side's berries. BP scales with base move's BP.",
+		shortDesc: "Restores user-side berries. BP scales w/ base move.",
 		id: "gmaxreplenish",
 		isNonstandard: "Custom",
 		name: "G-Max Replenish",
@@ -7631,8 +7683,8 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Snorlax",
 		self: {
-			onHit(target, source) {
-				for (let pokemon of target.side.active) {
+			onHit(source) {
+				for (let pokemon of source.side.active) {
 					if (!pokemon.item && pokemon.lastItem && this.dex.getItem(pokemon.lastItem).isBerry) {
 						let item = pokemon.lastItem;
 						pokemon.lastItem = '';
@@ -7652,7 +7704,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Summons Aurora Veil. BP scales with base move's BP.",
+		shortDesc: "Summons Aurora Veil. BP scales w/ base move.",
 		id: "gmaxresonance",
 		isNonstandard: "Custom",
 		name: "G-Max Resonance",
@@ -7661,9 +7713,7 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Lapras",
 		self: {
-			onHit(target, source, move) {
-				source.side.addSideCondition('auroraveil');
-			},
+			sideCondition: 'auroraveil',
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7675,7 +7725,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Traps and damages opponents. BP scales with base move's BP.",
+		shortDesc: "Traps/damages foes. BP scales w/ base move.",
 		id: "gmaxsandblast",
 		isNonstandard: "Custom",
 		name: "G-Max Sandblast",
@@ -7683,10 +7733,14 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Sandaconda",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				pokemon.addVolatile('partiallytrapped');
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					if (!pokemon.volatiles['substitute']) {
+						pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('Sand Tomb'), 'trapper');
+					}
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7696,9 +7750,9 @@ let BattleMovedex = {
 	"gmaxsmite": {
 		num: 1000,
 		accuracy: true,
-		basePower: 1,
+		basePower: 10,
 		category: "Physical",
-		shortDesc: "Confuses opponents. BP scales with base move's BP.",
+		shortDesc: "Confuses opponents. BP scales with base move.",
 		id: "gmaxsmite",
 		isNonstandard: "Custom",
 		name: "G-Max Smite",
@@ -7706,10 +7760,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Hatterene",
-		onHit(target, source, move) {
-			for (let pokemon of target.side.active) {
-				pokemon.addVolatile('confusion', source, move);
-			}
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.addVolatile('confusion', source);
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7721,7 +7777,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Afflicts foes with Yawn. BP scales with base move's BP.",
+		shortDesc: "Afflicts foes with Yawn. BP scales w/ base move.",
 		id: "gmaxsnooze",
 		isNonstandard: "Custom",
 		name: "G-Max Snooze",
@@ -7729,12 +7785,14 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Grimmsnarl",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				if (!target.status && target.runStatusImmunity('slp')) {
-					pokemon.addVolatile('yawn');
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					if (!pokemon.status && pokemon.runStatusImmunity('slp')) {
+						pokemon.addVolatile('yawn');
+					}
 				}
-			}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7754,8 +7812,10 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Copperajah",
-		onHit(target, source, move) {
-			target.side.addSideCondition('metalshard');
+		self: {
+			onHit(source) {
+				source.side.foe.addSideCondition('metalshard');
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7775,8 +7835,10 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Drednaw",
-		onHit(target, source, move) {
-			target.side.addSideCondition('stealthrock');
+		self: {
+			onHit(source) {
+				source.side.foe.addSideCondition('stealthrock');
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7796,15 +7858,17 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Toxtricity",
-		onHit(target, source) {
-			for (let pokemon of target.side.active) {
-				let result = this.random(2);
-				if (result === 0) {
-					pokemon.trySetStatus('par', source);
-				} else {
-					pokemon.trySetStatus('psn', source);
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					let result = this.random(2);
+					if (result === 0) {
+						pokemon.trySetStatus('par', source);
+					} else {
+						pokemon.trySetStatus('psn', source);
+					}
 				}
-			}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7824,18 +7888,18 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Appletun",
-		onHit(target, source, move) {
-			this.add('-activate', source, 'move: G-Max Sweetness');
-			let success = false;
-			for (const ally of source.side.pokemon) {
-				// TODO: test move's interaction with sap sipper and Substitute
-				if (ally !== source && ((ally.hasAbility('sapsipper')) ||
-						(ally.volatiles['substitute'] && !move.infiltrates))) {
-					continue;
+		self: {
+			onHit(source, pokemon, move) {
+				this.add('-activate', source, 'move: G-Max Sweetness');
+				for (const ally of source.side.pokemon) {
+					// TODO: test move's interaction with sap sipper and Substitute
+					if (ally !== source && ((ally.hasAbility('sapsipper')) ||
+							(ally.volatiles['substitute'] && !move.infiltrates))) {
+						continue;
+					}
+					ally.cureStatus();
 				}
-				if (ally.cureStatus()) success = true;
-			}
-			return success;
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7855,10 +7919,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Gengar",
-		onHit(target, source, move) {
-			for (const pokemon of target.side.active) {
-				pokemon.addVolatile('trapped', source, move, 'trapper');
-			}
+		self: {
+			onHit(source) {
+				for (const pokemon of source.side.foe.active) {
+					pokemon.addVolatile('trapped', source, null, 'trapper');
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7878,10 +7944,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Flapple",
-		onHit(target, source, move) {
-			for (const pokemon of target.side.active) {
-				this.boost({evasion: -1}, pokemon, source, move);
-			}
+		self: {
+			onHit(source) {
+				for (const pokemon of source.side.foe.active) {
+					this.boost({evasion: -1}, pokemon);
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7902,8 +7970,10 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Coalossal",
-		onHit(target, source, move) {
-			target.side.addSideCondition('gmaxvolcalith');
+		self: {
+			onHit(source) {
+				source.side.foe.addSideCondition('gmaxvolcalith');
+			},
 		},
 		effect: {
 			duration: 4,
@@ -7937,10 +8007,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Pikachu",
-		onHit(target, source, move) {
-			for (const pokemon of target.side.active) {
-				pokemon.trySetStatus('par', source, move);
-			}
+		self: {
+			onHit(source) {
+				for (const pokemon of source.side.foe.active) {
+					pokemon.trySetStatus('par', source);
+				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -7961,8 +8033,10 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Charizard",
-		onHit(target, source, move) {
-			target.side.addSideCondition('gmaxwildfire');
+		self: {
+			onHit(source) {
+				source.side.foe.addSideCondition('gmaxwildfire');
+			},
 		},
 		effect: {
 			duration: 4,
@@ -7989,7 +8063,7 @@ let BattleMovedex = {
 		basePower: 10,
 		category: "Physical",
 		// TODO: Test what G-Max Wind Rage actually removes from the field and from which sides
-		desc: "Removes Reflect, Light Screen, Aurora Veil, Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Mist, Safeguard, Metal Shard, and Terrains from the field. This move's Base Power scales with the base move's Base Power.",
+		desc: "Removes Reflect, Light Screen, Aurora Veil, Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Mist, Safeguard, G-Max Steelsurge, and Terrains from the field. This move's Base Power scales with the base move's Base Power.",
 		shortDesc: "Clears field. BP scales with base move's BP.",
 		id: "gmaxwindrage",
 		isNonstandard: "Custom",
@@ -7998,25 +8072,27 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Corviknight",
-		onHit(target, source, move) {
-			let success = false;
-			let removeTarget = ['reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'metalshard'];
-			let removeAll = ['spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'metalshard'];
-			for (const targetCondition of removeTarget) {
-				if (target.side.removeSideCondition(targetCondition)) {
-					if (!removeAll.includes(targetCondition)) continue;
-					this.add('-sideend', target.side, this.dex.getEffect(targetCondition).name, '[from] move: Defog', '[of] ' + source);
-					success = true;
+		self: {
+			onHit(source) {
+				let success = false;
+				let removeTarget = ['reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb'];
+				let removeAll = ['spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge'];
+				for (const targetCondition of removeTarget) {
+					if (source.side.foe.removeSideCondition(targetCondition)) {
+						if (!removeAll.includes(targetCondition)) continue;
+						this.add('-sideend', source.side.foe, this.dex.getEffect(targetCondition).name, '[from] move: G-Max Wind Rage', '[of] ' + source);
+						success = true;
+					}
 				}
-			}
-			for (const sideCondition of removeAll) {
-				if (source.side.removeSideCondition(sideCondition)) {
-					this.add('-sideend', source.side, this.dex.getEffect(sideCondition).name, '[from] move: Defog', '[of] ' + source);
-					success = true;
+				for (const sideCondition of removeAll) {
+					if (source.side.removeSideCondition(sideCondition)) {
+						this.add('-sideend', source.side, this.dex.getEffect(sideCondition).name, '[from] move: G-Max Wind Rage', '[of] ' + source);
+						success = true;
+					}
 				}
-			}
-			this.field.clearTerrain();
-			return success;
+				this.field.clearTerrain();
+				return success;
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -12136,14 +12212,9 @@ let BattleMovedex = {
 		name: "Magic Powder",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, reflectable: 1, mirror: 1, mystery: 1},
+		flags: {powder: 1, protect: 1, reflectable: 1, mirror: 1, mystery: 1},
 		onHit(target) {
-			if (target.getTypes().join() === 'Psychic' || !target.setType('Psychic')) {
-				// Soak should animate even when it fails.
-				// Returning false would suppress the animation.
-				this.add('-fail', target);
-				return null;
-			}
+			if (target.getTypes().join() === 'Psychic' || !target.setType('Psychic')) return false;
 			this.add('-start', target, 'typechange', 'Psychic');
 		},
 		secondary: null,
@@ -22452,6 +22523,44 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Fighting",
 		zMovePower: 130,
+		contestType: "Cool",
+	},
+	"volcanicash": {
+		num: -24,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		desc: "Damages opponent(s) by 1/8 of their maximum HP for four turns.",
+		shortDesc: "Damages foes for 4 turns.",
+		id: "volcanicash",
+		name: "Volcanic Ash",
+		pp: 15,
+		priority: 0,
+		flags: {},
+		onHit(target, source, move) {
+			target.side.addSideCondition('volcanicash');
+		},
+		effect: {
+			duration: 4,
+			onStart(targetSide) {
+				this.add('-sidestart', targetSide, 'Volcanic Ash');
+				this.add('-message', "The opposing Pokemon became surrounded by rocks!");
+			},
+			onResidual(targetSide) {
+				for (const pokemon of targetSide.active) {
+					this.damage(pokemon.maxhp / 8, pokemon);
+					this.add('-message', "The opposing Pokemon was hurt by Volcanic Ash's rocks!");
+				}
+			},
+			onEnd(targetSide) {
+				this.add('-sideend', targetSide, 'Volcanic Ash');
+				this.add('-message', "The Volcanic Ash settled down.");
+			},
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Rock",
+		zMoveBoost: {spe: 1},
 		contestType: "Cool",
 	},
 	"voltswitch": {
