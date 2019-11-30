@@ -1546,6 +1546,29 @@ let BattleItems = {
 		gen: 7,
 		desc: "If holder has a Dragon move, this item allows it to use a Dragon Z-Move.",
 	},
+	"drashberry": {
+		id: "drashberry",
+		name: "Drash Berry",
+		spritenum: 333,
+		isBerry: true,
+		naturalGift: {
+			basePower: 80,
+			type: "Fairy",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.status === 'bewitchment') {
+				pokemon.eatItem();
+			}
+		},
+		onEat(pokemon) {
+			if (pokemon.status === 'bewitchment') {
+				pokemon.cureStatus();
+			}
+		},
+		num: -28,
+		gen: 8,
+		desc: "Holder is cured if it is bewitched. Single use.",
+	},
 	"dreadplate": {
 		id: "dreadplate",
 		name: "Dread Plate",
@@ -1674,6 +1697,27 @@ let BattleItems = {
 		num: 805,
 		gen: 7,
 		desc: "If held by an Eevee with Veevee Volley, it can use Extreme Evoboost.",
+	},
+	"eggantberry": {
+		id: "eggantberry",
+		name: "Eggant Berry",
+		spritenum: 334,
+		isBerry: true,
+		naturalGift: {
+			basePower: 80,
+			type: "Normal",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.volatiles['infatuation']) {
+				pokemon.eatItem();
+			}
+		},
+		onEat(pokemon) {
+			pokemon.removeVolatile('infatuation');
+		},
+		num: -29,
+		gen: 8,
+		desc: "Holder is cured if it is infatuated. Single use.",
 	},
 	"ejectbutton": {
 		id: "ejectbutton",
@@ -2465,6 +2509,29 @@ let BattleItems = {
 		num: 789,
 		gen: 7,
 		desc: "If holder has a Ghost move, this item allows it to use a Ghost Z-Move.",
+	},
+	"ginemaberry": {
+		id: "ginemaberry",
+		name: "Ginema Berry",
+		spritenum: 567,
+		isBerry: true,
+		naturalGift: {
+			basePower: 80,
+			type: "Infinite",
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.type === 'Infinite' && target.getMoveHitData(move).typeMod > 0 && (!target.volatiles['substitute'] || move.flags['authentic'] || (move.infiltrates && this.gen >= 6))) {
+				if (target.eatItem()) {
+					this.debug('-50% reduction');
+					this.add('-enditem', target, this.effect, '[weaken]');
+					return this.chainModify(0.5);
+				}
+			}
+		},
+		onEat() { },
+		num: -32,
+		gen: 8,
+		desc: "Halves damage taken from a supereffective Infinite-type attack. Single use.",
 	},
 	"glalitite": {
 		id: "glalitite",
@@ -3263,6 +3330,32 @@ let BattleItems = {
 		num: 926,
 		gen: 7,
 		desc: "If held by a Kommo-o with Clanging Scales, it can use Clangorous Soulblaze.",
+	},
+	"kuoberry": {
+		id: "kuoberry",
+		name: "Kuo Berry",
+		spritenum: 5,
+		isBerry: true,
+		naturalGift: {
+			basePower: 120,
+			type: "Electric",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+				pokemon.eatItem();
+			}
+		},
+		onTryEatItem(item, pokemon) {
+			if (!this.runEvent('TryHeal', pokemon)) return false;
+		},
+		onEat(pokemon) {
+			this.heal(pokemon.maxhp * 0.5);
+			pokemon.trySetStatus('par', pokemon);
+			pokemon.trySetStatus('slp', pokemon);
+		},
+		num: -33,
+		gen: 8,
+		desc: "Restores 50% max HP at 1/4 max HP or less, but Paralyzes itself; if this fails, it puts itself to Sleep instead. Single use.",
 	},
 	"laggingtail": {
 		id: "laggingtail",
@@ -4307,6 +4400,32 @@ let BattleItems = {
 		gen: 2,
 		desc: "Holder's Ice-type attacks have 1.2x power.",
 	},
+	"ninikuberry": {
+		id: "ninikuberry",
+		name: "Niniku Berry",
+		spritenum: 5,
+		isBerry: true,
+		naturalGift: {
+			basePower: 120,
+			type: "Poison",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+				pokemon.eatItem();
+			}
+		},
+		onTryEatItem(item, pokemon) {
+			if (!this.runEvent('TryHeal', pokemon)) return false;
+		},
+		onEat(pokemon) {
+			this.heal(pokemon.maxhp * 0.5);
+			pokemon.trySetStatus('psn', pokemon);
+			pokemon.trySetStatus('slp', pokemon);
+		},
+		num: -36,
+		gen: 8,
+		desc: "Restores 50% max HP at 1/4 max HP or less, but Poisons itself; if this fails, it puts itself to Sleep instead. Single use.",
+	},
 	"nomelberry": {
 		id: "nomelberry",
 		name: "Nomel Berry",
@@ -4350,6 +4469,29 @@ let BattleItems = {
 		num: 776,
 		gen: 7,
 		desc: "If holder has a Normal move, this item allows it to use a Normal Z-Move.",
+	},
+	"nutpeaberry": {
+		id: "nutpeaberry",
+		name: "Nutpea Berry",
+		spritenum: 333,
+		isBerry: true,
+		naturalGift: {
+			basePower: 80,
+			type: "Dark",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.status === 'blindness') {
+				pokemon.eatItem();
+			}
+		},
+		onEat(pokemon) {
+			if (pokemon.status === 'blindness') {
+				pokemon.cureStatus();
+			}
+		},
+		num: -31,
+		gen: 8,
+		desc: "Holder is cured if it is blinded. Single use.",
 	},
 	"occaberry": {
 		id: "occaberry",
@@ -5047,6 +5189,29 @@ let BattleItems = {
 		num: 786,
 		gen: 7,
 		desc: "If holder has a Psychic move, this item allows it to use a Psychic Z-Move.",
+	},
+	"pumkinberry": {
+		id: "pumkinberry",
+		name: "Pumkin Berry",
+		spritenum: 333,
+		isBerry: true,
+		naturalGift: {
+			basePower: 80,
+			type: "Fighting",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.status === 'whiplash') {
+				pokemon.eatItem();
+			}
+		},
+		onEat(pokemon) {
+			if (pokemon.status === 'whiplash') {
+				pokemon.cureStatus();
+			}
+		},
+		num: -27,
+		gen: 8,
+		desc: "Holder is cured if it is whiplashed. Single use.",
 	},
 	"qualotberry": {
 		id: "qualotberry",
@@ -6310,6 +6475,27 @@ let BattleItems = {
 		gen: 7,
 		desc: "Evolves Milcery into Alcremie when held and spun around.",
 	},
+	"stribberry": {
+		id: "stribberry",
+		name: "Strib Berry",
+		spritenum: 334,
+		isBerry: true,
+		naturalGift: {
+			basePower: 80,
+			type: "Grass",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.volatiles['flinch']) {
+				pokemon.eatItem();
+			}
+		},
+		onEat(pokemon) {
+			pokemon.removeVolatile('flinch');
+		},
+		num: -30,
+		gen: 8,
+		desc: "Holder is cured if it is flinched. Single use.",
+	},
 	"sunstone": {
 		id: "sunstone",
 		name: "Sun Stone",
@@ -6508,6 +6694,58 @@ let BattleItems = {
 		num: -23,
 		gen: 8,
 		desc: "If held by a Togepi, Togetic, or Togekiss with Metronome, it can use Perfect-Tempo Symphony.",
+	},
+	"topoberry": {
+		id: "topoberry",
+		name: "Topo Berry",
+		spritenum: 5,
+		isBerry: true,
+		naturalGift: {
+			basePower: 120,
+			type: "Fairy",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+				pokemon.eatItem();
+			}
+		},
+		onTryEatItem(item, pokemon) {
+			if (!this.runEvent('TryHeal', pokemon)) return false;
+		},
+		onEat(pokemon) {
+			this.heal(pokemon.maxhp * 0.5);
+			pokemon.trySetStatus('bewitchment', pokemon);
+			pokemon.trySetStatus('slp', pokemon);
+		},
+		num: -37,
+		gen: 8,
+		desc: "Restores 50% max HP at 1/4 max HP or less, but Bewitches itself; if this fails, it puts itself to Sleep instead. Single use.",
+	},
+	"tougaberry": {
+		id: "tougaberry",
+		name: "Touga Berry",
+		spritenum: 5,
+		isBerry: true,
+		naturalGift: {
+			basePower: 120,
+			type: "Fire",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+				pokemon.eatItem();
+			}
+		},
+		onTryEatItem(item, pokemon) {
+			if (!this.runEvent('TryHeal', pokemon)) return false;
+		},
+		onEat(pokemon) {
+			this.heal(pokemon.maxhp * 0.5);
+			pokemon.trySetStatus('brn', pokemon);
+			pokemon.trySetStatus('slp', pokemon);
+		},
+		num: -35,
+		gen: 8,
+		desc: "Restores 50% max HP at 1/4 max HP or less, but Burns itself; if this fails, it puts itself to Sleep instead. Single use.",
 	},
 	"toxicorb": {
 		id: "toxicorb",
@@ -6924,6 +7162,32 @@ let BattleItems = {
 		num: 188,
 		gen: 4,
 		desc: "Halves damage taken from a supereffective Ice-type attack. Single use.",
+	},
+	"yagoberry": {
+		id: "yagoberry",
+		name: "Yago Berry",
+		spritenum: 5,
+		isBerry: true,
+		naturalGift: {
+			basePower: 120,
+			type: "Fighting",
+		},
+		onUpdate(pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+				pokemon.eatItem();
+			}
+		},
+		onTryEatItem(item, pokemon) {
+			if (!this.runEvent('TryHeal', pokemon)) return false;
+		},
+		onEat(pokemon) {
+			this.heal(pokemon.maxhp * 0.5);
+			pokemon.trySetStatus('whiplash', pokemon);
+			pokemon.trySetStatus('slp', pokemon);
+		},
+		num: -34,
+		gen: 8,
+		desc: "Restores 50% max HP at 1/4 max HP or less, but Whiplashes itself; if this fails, it puts itself to Sleep instead. Single use.",
 	},
 	"yanmegite": {
 		id: "yanmegite",
