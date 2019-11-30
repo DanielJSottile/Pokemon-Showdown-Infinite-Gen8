@@ -310,6 +310,7 @@ let BattleAbilities = {
 		desc: "This Pokemon's highest stat is raised by 1 stage if it attacks and knocks out another Pokemon.",
 		shortDesc: "This Pokemon's highest stat is raised by 1 if it attacks and KOes another Pokemon.",
 		onSourceFaint(target, source, effect) {
+			if (source.volatiles['dynamax']) return;
 			if (effect && effect.effectType === 'Move') {
 				let statName = 'atk';
 				let bestStat = 0;
@@ -2392,6 +2393,7 @@ let BattleAbilities = {
 		desc: "This Pokemon's Attack is raised by 1 stage if it attacks and knocks out another Pokemon.",
 		shortDesc: "This Pokemon's Attack is raised by 1 stage if it attacks and KOes another Pokemon.",
 		onSourceFaint(target, source, effect) {
+			if (source.volatiles['dynamax']) return;
 			if (effect && effect.effectType === 'Move') {
 				this.boost({atk: 1}, source);
 			}
@@ -3809,7 +3811,8 @@ let BattleAbilities = {
 		desc: "This Pokemon's Special Attack is raised by 1 stage when another Pokemon faints.",
 		shortDesc: "This Pokemon's Sp. Atk is raised by 1 stage when another Pokemon faints.",
 		onAnyFaintPriority: 1,
-		onAnyFaint() {
+		onAnyFaint(target) {
+			if (target.volatiles['dynamax']) return;
 			this.boost({spa: 1}, this.effectData.target);
 		},
 		id: "soulheart",
@@ -4309,8 +4312,9 @@ let BattleAbilities = {
 		num: 47,
 	},
 	"timetravel": {
-		desc: "If this Pokemon is Mebiusan-Past with Past's Assurance, it can transform into Mebiusan-Future with Future's Reckoning, and visa versa.",
-		shortDesc: "Let's it transform into Mebiusan-Past and Mebiusan-Future repsectively, swaps signature moves",
+		desc: "",
+		shortDesc: "This ability changes the signature move of Mebiusan depending on what form it is in.",
+		// probably implemented somewhere else
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,

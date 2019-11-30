@@ -3803,7 +3803,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "Lowers the target's evasiveness by 1 stage. If this move is successful and whether or not the target's evasiveness was affected, the effects of Reflect, Light Screen, Aurora Veil, Safeguard, Mist, Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the target's side, and the effects of Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the user's side. Ignores a target's substitute, although a substitute will still block the lowering of evasiveness.",
+		desc: "Lowers the target's evasiveness by 1 stage. If this move is successful and whether or not the target's evasiveness was affected, the effects of Reflect, Light Screen, Aurora Veil, Safeguard, Mist, Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the target's side, and the effects of Spikes, Toxic Spikes, Stealth Rock, and Sticky Web end for the user's side. This also clears all Terrains from the field.  Ignores a target's substitute, although a substitute will still block the lowering of evasiveness.",
 		shortDesc: "-1 evasion; clears user and target side's hazards.",
 		id: "defog",
 		isViable: true,
@@ -3829,6 +3829,7 @@ let BattleMovedex = {
 					success = true;
 				}
 			}
+			this.field.clearTerrain();
 			return success;
 		},
 		secondary: null,
@@ -8063,7 +8064,7 @@ let BattleMovedex = {
 		basePower: 10,
 		category: "Physical",
 		// TODO: Test what G-Max Wind Rage actually removes from the field and from which sides
-		desc: "Removes Reflect, Light Screen, Aurora Veil, Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Mist, Safeguard, G-Max Steelsurge, and Terrains from the field. This move's Base Power scales with the base move's Base Power.",
+		desc: "Removes Reflect, Light Screen, Aurora Veil, Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Mist, Safeguard, Metal Shard, and Terrains from the field. This move's Base Power scales with the base move's Base Power.",
 		shortDesc: "Clears field. BP scales with base move's BP.",
 		id: "gmaxwindrage",
 		isNonstandard: "Custom",

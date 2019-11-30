@@ -67349,6 +67349,7 @@ let BattleLearnsets = {
 		zingzap: ["8L50"],
 	}},
 	snom: {learnset: {
+		fierydance: ["8E"],
 		hiddenpower: ["8M"],
 		return: ["8M"],
 		frustration: ["8M"],
@@ -67371,6 +67372,7 @@ let BattleLearnsets = {
 		substitute: ["8M"],
 	}},
 	frosmoth: {learnset: {
+		fierydance: ["8E"],
 		hiddenpower: ["8M"],
 		return: ["8M"],
 		frustration: ["8M"],
