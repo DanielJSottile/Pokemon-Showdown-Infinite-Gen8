@@ -5058,45 +5058,45 @@ let BattleMovedex = {
 	"emaxeternalenergy": {
 		num: 1000,
 		accuracy: true,
-		basePower: 1,
+		basePower: 200,
 		basePowerCallback(pokemon, target, move) {
 			if (target.volatiles['dynamax']) {
 				return move.basePower * 2;
 			}
 			return move.basePower;
 		},
-		category: "Physical",
+		category: "Special",
 		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge. BP scales with base move's BP.",
 		id: "emaxeternalenergy",
 		isViable: true,
 		name: "E-Max Eternal Energy",
 		pp: 5,
 		priority: 0,
-		flags: {},
+		flags: {charge: 1, recharge: 1},
 		isMax: "Eternatus",
-		volatileStatus: 'emaxeternalenergy',
-		self: {
-			volatileStatus: 'mustrecharge',
-		},
-		secondary: {
-			chance: 100,
-			self: {
-				boosts: {
-					atk: 1,
-					def: 1,
-					spa: 1,
-					spd: 1,
-					spe: 1,
-				},
-			},
-		},
-		onTryMove(pokemon, target, move) {
-			if (!pokemon.volatiles['emaxeternalenergy']) return;
-			this.add('-fail', pokemon, 'move: E-Max Eternal Energy');
-			this.attrLastMove('[still]');
+		onTryMove(attacker, defender, move) {
+			if (attacker.removeVolatile(move.id)) {
+				return;
+			}
+			this.add('-prepare', attacker, "Geomancy", defender);
+			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal Energy")) {
+				return;
+			}
+			attacker.addVolatile('twoturnmove', defender);
 			return null;
 		},
-		target: "normal",
+		self: {
+			volatileStatus: 'mustrecharge',
+			boosts: {
+				atk: 1,
+				def: 1,
+				spa: 1,
+				spd: 1,
+				spe: 1,
+			},
+		},
+		secondary: null,
+		target: "adjacentfoe",
 		type: "Dragon",
 		contestType: "Cool",
 	},
