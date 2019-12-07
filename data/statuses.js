@@ -19,7 +19,7 @@ let BattleStatuses = {
 		// Damage reduction is handled directly in the sim/battle.js damage function
 		onResidualOrder: 9,
 		onResidual(pokemon) {
-			this.damage(pokemon.maxhp / 8);
+			this.damage(pokemon.baseMaxhp / 8);
 		},
 	},
 	par: {
@@ -133,7 +133,7 @@ let BattleStatuses = {
 		// Damage reduction is handled directly in the sim/battle.js damage function
 		onResidualOrder: 9,
 		onResidual(pokemon) {
-			this.damage(pokemon.maxhp / 8);
+			this.damage(pokemon.baseMaxhp / 8);
 		},
 	},
 	tox: {
@@ -204,7 +204,7 @@ let BattleStatuses = {
 		},
 		onResidualOrder: 9,
 		onResidual(pokemon) {
-			this.damage(pokemon.maxhp / 8);
+			this.damage(pokemon.baseMaxhp / 8);
 			this.add('-message', 'The target suffers from Whiplash!');
 		},
 	},
@@ -337,9 +337,9 @@ let BattleStatuses = {
 				return;
 			}
 			if (source.hasItem('bindingband')) {
-				this.damage(pokemon.maxhp / 6);
+				this.damage(pokemon.baseMaxhp / 6);
 			} else {
-				this.damage(pokemon.maxhp / 8);
+				this.damage(pokemon.baseMaxhp / 8);
 			}
 		},
 		onEnd(pokemon) {
@@ -742,7 +742,7 @@ let BattleStatuses = {
 		},
 		onWeather(target) {
 			if (target.item === "utilityumbrella") return;
-			this.damage(target.maxhp / 16);
+			this.damage(target.baseMaxhp / 16);
 		},
 		onEnd() {
 			this.add('-weather', 'none');
@@ -784,7 +784,7 @@ let BattleStatuses = {
 		},
 		onWeather(target) {
 			if (target.item === "utilityumbrella") return;
-			this.damage(target.maxhp / 16);
+			this.damage(target.baseMaxhp / 16);
 		},
 		onEnd() {
 			this.add('-weather', 'none');
@@ -819,7 +819,7 @@ let BattleStatuses = {
 		},
 		onWeather(target) {
 			if (target.item === "utilityumbrella") return;
-			this.damage(target.maxhp / 8);
+			this.damage(target.baseMaxhp / 8);
 		},
 		onEnd() {
 			this.add('-weather', 'none');
@@ -856,27 +856,24 @@ let BattleStatuses = {
 		name: 'Dynamax',
 		id: 'dynamax',
 		num: 0,
+		noCopy: true,
 		duration: 3,
 		onStart(pokemon) {
 			pokemon.removeVolatile('substitute');
 			this.add('-start', pokemon, 'Dynamax');
 			if (pokemon.canGigantamax) pokemon.formeChange(pokemon.canGigantamax);
 			if (pokemon.species === 'Shedinja') return;
-			let ratio = (1 / 1.5); // Changes based on dynamax level, max (LVL 5)
-			pokemon.maxhp = Math.floor(pokemon.maxhp / ratio);
-			pokemon.hp = Math.floor(pokemon.hp / ratio);
-			// TODO work on display for HP
+
+			// Changes based on dynamax level, 2 is max (at LVL 10)
+			const ratio = 2;
+
+			pokemon.maxhp = Math.floor(pokemon.maxhp * ratio);
+			pokemon.hp = Math.floor(pokemon.hp * ratio);
 			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
 		},
 		onFlinch: false,
 		onBeforeSwitchOut(pokemon) {
-			if (pokemon.canGigantamax) pokemon.formeChange(pokemon.baseTemplate.species);
-			if (pokemon.species === 'Shedinja') return;
-			let ratio = (1 / 1.5); // Changes based on dynamax level, max (LVL 5)
-			pokemon.maxhp = Math.floor(pokemon.maxhp * ratio); // TODO prevent maxhp loss
-			pokemon.hp = Math.floor(pokemon.hp * ratio);
-			if (pokemon.hp <= 0) pokemon.hp = 1;
-			this.hint("Dynamax ended.");
+			pokemon.removeVolatile('dynamax');
 		},
 		onDragOutPriority: 2,
 		onDragOut(pokemon) {
@@ -887,11 +884,8 @@ let BattleStatuses = {
 			this.add('-end', pokemon, 'Dynamax');
 			if (pokemon.canGigantamax) pokemon.formeChange(pokemon.baseTemplate.species);
 			if (pokemon.species === 'Shedinja') return;
-			let ratio = (1 / 2); // Changes based on dynamax level, static (LVL 10) until we know the levels
-			pokemon.maxhp = Math.floor(pokemon.maxhp * ratio); // TODO prevent maxhp loss
-			pokemon.hp = Math.floor(pokemon.hp * ratio);
-			if (pokemon.hp <= 0) pokemon.hp = 1;
-			// TODO work on display for HP
+			pokemon.hp = pokemon.getUndynamaxedHP();
+			pokemon.maxhp = pokemon.baseMaxhp;
 			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
 		},
 	},
@@ -908,7 +902,7 @@ let BattleStatuses = {
 		num: 493,
 		onTypePriority: 1,
 		onType(types, pokemon) {
-			if (pokemon.transformed) return types;
+			if (pokemon.transformed || pokemon.ability !== 'multitype' && this.gen >= 8) return types;
 			/** @type {string | undefined} */
 			let type = 'Normal';
 			if (pokemon.ability === 'multitype') {
@@ -926,7 +920,7 @@ let BattleStatuses = {
 		num: 773,
 		onTypePriority: 1,
 		onType(types, pokemon) {
-			if (pokemon.transformed) return types;
+			if (pokemon.transformed || pokemon.ability !== 'rkssystem' && this.gen >= 8) return types;
 			/** @type {string | undefined} */
 			let type = 'Normal';
 			if (pokemon.ability === 'rkssystem') {

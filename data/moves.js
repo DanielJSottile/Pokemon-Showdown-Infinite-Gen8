@@ -737,7 +737,7 @@ let BattleMovedex = {
 			},
 			onResidualOrder: 6,
 			onResidual(pokemon) {
-				this.heal(pokemon.maxhp / 16);
+				this.heal(pokemon.baseMaxhp / 16);
 			},
 		},
 		secondary: null,
@@ -3158,7 +3158,7 @@ let BattleMovedex = {
 		flags: {},
 		onHit(pokemon) {
 			let noCopycat = [
-				'assist', 'banefulbunker', 'bestow', 'celebrate', 'chatter', 'circlethrow', 'copycat', 'counter', 'covet', 'destinybond', 'detect', 'dragontail', 'endure', 'feint', 'focuspunch', 'followme', 'helpinghand', 'mefirst', 'metronome', 'mimic', 'mirrorcoat', 'mirrormove', 'naturepower', 'protect', 'ragepowder', 'roar', 'sketch', 'sleeptalk', 'snatch', 'struggle', 'switcheroo', 'thief', 'transform', 'trick', 'whirlwind',
+				'assist', 'banefulbunker', 'bestow', 'celebrate', 'chatter', 'circlethrow', 'copycat', 'counter', 'covet', 'craftyshield', 'destinybond', 'detect', 'dragontail', 'endure', 'feint', 'focuspunch', 'followme', 'helpinghand', 'holdhands', 'mefirst', 'kingsshield', 'matblock', 'mefirst', 'metronome', 'mimic', 'mirrorcoat', 'mirrormove', 'naturepower', 'obstruct', 'protect', 'ragepowder', 'roar', 'shelltrap', 'sketch', 'sleeptalk', 'snatch', 'spikyshield', 'spotlight', 'struggle', 'switcheroo', 'thief', 'transform', 'trick', 'whirlwind',
 			];
 			const move = this.lastMove;
 			if (!move || noCopycat.includes(move.id) || move.isZ || move.isMax) {
@@ -3608,7 +3608,7 @@ let BattleMovedex = {
 			},
 			onResidualOrder: 10,
 			onResidual(pokemon) {
-				this.damage(pokemon.maxhp / 4);
+				this.damage(pokemon.baseMaxhp / 4);
 			},
 		},
 		secondary: null,
@@ -4021,7 +4021,7 @@ let BattleMovedex = {
 		flags: {protect: 1, reflectable: 1, mirror: 1, authentic: 1},
 		volatileStatus: 'disable',
 		onTryHit(target) {
-			if (!target.lastMove || target.lastMove.isZ) {
+			if (!target.lastMove || target.lastMove.isZ || target.lastMove.isMax) {
 				return false;
 			}
 		},
@@ -5222,7 +5222,7 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-			return target.hp - pokemon.hp;
+			return target.getUndynamaxedHP - pokemon.hp;
 		},
 		category: "Physical",
 		desc: "Deals damage to the target equal to (target's current HP - user's current HP). The target is unaffected if its current HP is less than or equal to the user's current HP.",
@@ -5922,7 +5922,7 @@ let BattleMovedex = {
 			onResidual(side) {
 				for (const pokemon of side.active) {
 					if (pokemon && !pokemon.hasType('Fire')) {
-						this.damage(pokemon.maxhp / 8, pokemon);
+						this.damage(pokemon.baseMaxhp / 8, pokemon);
 					}
 				}
 			},
@@ -6103,7 +6103,7 @@ let BattleMovedex = {
 			}
 			for (const ally of target.side.active) {
 				if (ally && this.isAdjacent(target, ally)) {
-					this.damage(ally.maxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
+					this.damage(ally.baseMaxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
 				}
 			}
 		},
@@ -6113,7 +6113,7 @@ let BattleMovedex = {
 			}
 			for (const ally of target.side.active) {
 				if (ally && this.isAdjacent(target, ally)) {
-					this.damage(ally.maxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
+					this.damage(ally.baseMaxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
 				}
 			}
 		},
@@ -6718,7 +6718,7 @@ let BattleMovedex = {
 			},
 			onResidual(targetSide) {
 				for (const pokemon of targetSide.active) {
-					if (!pokemon.hasType('Fire')) this.damage(pokemon.maxhp / 6, pokemon);
+					if (!pokemon.hasType('Fire')) this.damage(pokemon.baseMaxhp / 6, pokemon);
 					this.add('-message', "The opposing Pokemon is burning up within the Forest Fire's flames!");
 				}
 			},
@@ -7432,7 +7432,7 @@ let BattleMovedex = {
 		self: {
 			onHit(source) {
 				for (let pokemon of source.side.foe.active) {
-					pokemon.addVolatile('partiallytrapped');
+					pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('Fire Spin'), 'trapper');
 				}
 			},
 		},
@@ -7737,9 +7737,7 @@ let BattleMovedex = {
 		self: {
 			onHit(source) {
 				for (let pokemon of source.side.foe.active) {
-					if (!pokemon.volatiles['substitute']) {
-						pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('Sand Tomb'), 'trapper');
-					}
+					pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('Sand Tomb'), 'trapper');
 				}
 			},
 		},
@@ -7890,14 +7888,9 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Appletun",
 		self: {
-			onHit(source, pokemon, move) {
+			onHit(source) {
 				this.add('-activate', source, 'move: G-Max Sweetness');
 				for (const ally of source.side.pokemon) {
-					// TODO: test move's interaction with sap sipper and Substitute
-					if (ally !== source && ((ally.hasAbility('sapsipper')) ||
-							(ally.volatiles['substitute'] && !move.infiltrates))) {
-						continue;
-					}
 					ally.cureStatus();
 				}
 			},
@@ -7983,7 +7976,7 @@ let BattleMovedex = {
 			},
 			onResidual(targetSide) {
 				for (const pokemon of targetSide.active) {
-					this.damage(pokemon.maxhp / 8, pokemon);
+					this.damage(pokemon.baseMaxhp / 8, pokemon);
 				}
 			},
 			onEnd(targetSide) {
@@ -8046,7 +8039,7 @@ let BattleMovedex = {
 			},
 			onResidual(targetSide) {
 				for (const pokemon of targetSide.active) {
-					if (!pokemon.hasType('Fire')) this.damage(pokemon.maxhp / 6, pokemon);
+					if (!pokemon.hasType('Fire')) this.damage(pokemon.baseMaxhp / 6, pokemon);
 				}
 			},
 			onEnd(targetSide) {
@@ -8284,7 +8277,7 @@ let BattleMovedex = {
 			onTerrain(pokemon) {
 				if (pokemon.isGrounded() && !pokemon.isSemiInvulnerable()) {
 					this.debug('Pokemon is grounded, healing through Grassy Terrain.');
-					this.heal(pokemon.maxhp / 16, pokemon, pokemon);
+					this.heal(pokemon.baseMaxhp / 16, pokemon, pokemon);
 				}
 			},
 			onEnd() {
@@ -8516,16 +8509,18 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-			if (target.volatiles['banefulbunker'] || target.volatiles['kingsshield'] || target.volatiles['alphabeticalorder'] || target.side.getSideCondition('matblock') || target.volatiles['protect'] || target.volatiles['spikyshield']) {
+			const hp75 = Math.floor(target.getUndynamaxedHP() * 3 / 4);
+			if (target.volatiles['banefulbunker'] || target.volatiles['kingsshield'] || target.side.getSideCondition('matblock') || target.volatiles['protect'] || target.volatiles['spikyshield']) {
 				this.add('-zbroken', target);
-				return this.clampIntRange(Math.ceil(Math.floor(target.hp * 3 / 4) / 4 - 0.5), 1);
+				return this.dex.clampIntRange(Math.ceil(hp75 / 4 - 0.5), 1);
 			}
-			return this.clampIntRange(Math.floor(target.hp * 3 / 4), 1);
+			return this.dex.clampIntRange(hp75, 1);
 		},
 		category: "Special",
 		desc: "Deals damage to the target equal to 3/4 of its current HP, rounded down, but not less than 1 HP.",
 		shortDesc: "Does damage equal to 3/4 target's current HP.",
 		id: "guardianofalola",
+		isNonstandard: "Past",
 		name: "Guardian of Alola",
 		pp: 1,
 		priority: 0,
@@ -9724,7 +9719,7 @@ let BattleMovedex = {
 		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1},
 		hasCustomRecoil: true,
 		onMoveFail(target, source, move) {
-			this.damage(source.maxhp / 2, source, source, this.dex.getEffect('High Jump Kick'));
+			this.damage(source.baseMaxhp / 2, source, source, this.dex.getEffect('High Jump Kick'));
 		},
 		secondary: null,
 		target: "normal",
@@ -10524,7 +10519,7 @@ let BattleMovedex = {
 			},
 			onResidualOrder: 7,
 			onResidual(pokemon) {
-				this.heal(pokemon.maxhp / 16);
+				this.heal(pokemon.baseMaxhp / 16);
 			},
 			onTrapPokemon(pokemon) {
 				pokemon.tryTrap();
@@ -11220,6 +11215,7 @@ let BattleMovedex = {
 		desc: "If this attack is not successful, the user loses half of its maximum HP, rounded down, as crash damage. Pokemon with the Magic Guard Ability are unaffected by crash damage.",
 		shortDesc: "User is hurt by 50% of its max HP if it misses.",
 		id: "jumpkick",
+		isNonstandard: "Past",
 		isViable: true,
 		name: "Jump Kick",
 		pp: 10,
@@ -11227,7 +11223,7 @@ let BattleMovedex = {
 		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1},
 		hasCustomRecoil: true,
 		onMoveFail(target, source, move) {
-			this.damage(source.maxhp / 2, source, source, this.dex.getEffect('Jump Kick'));
+			this.damage(source.baseMaxhp / 2, source, source, this.dex.getEffect('Jump Kick'));
 		},
 		secondary: null,
 		target: "normal",
@@ -11604,7 +11600,7 @@ let BattleMovedex = {
 					this.debug('Nothing to leech into');
 					return;
 				}
-				let damage = this.damage(pokemon.maxhp / 8, pokemon, target);
+				let damage = this.damage(pokemon.baseMaxhp / 8, pokemon, target);
 				if (damage) {
 					this.heal(damage, target, pokemon);
 				}
@@ -13452,7 +13448,7 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {},
-		noMetronome: ['afteryou', 'assist', 'banefulbunker', 'beakblast', 'belch', 'bestow', 'celebrate', 'chatter', 'copycat', 'counter', 'covet', 'craftyshield', 'destinybond', 'detect', 'diamondstorm', 'dragonascent', 'endure', 'feint', 'fleurcannon', 'focuspunch', 'followme', 'freezeshock', 'helpinghand', 'holdhands', 'hyperspacefury', 'hyperspacehole', 'iceburn', 'instruct', 'kingsshield', 'lightofruin', 'matblock', 'mefirst', 'metronome', 'mimic', 'mindblown', 'mirrorcoat', 'mirrormove', 'naturepower', 'originpulse', 'photongeyser', 'plasmafists', 'precipiceblades', 'protect', 'quash', 'quickguard', 'ragepowder', 'relicsong', 'secretsword', 'shelltrap', 'sketch', 'sleeptalk', 'snarl', 'snatch', 'snore', 'spectralthief', 'spikyshield', 'spotlight', 'steameruption', 'struggle', 'switcheroo', 'technoblast', 'thief', 'thousandarrows', 'thousandwaves', 'transform', 'trick', 'vcreate', 'wideguard'],
+		noMetronome: ['alphabeticalorder', 'revealingjudgment', 'alphastrike', 'apocalypticmaelstrom', 'futuresreckoning', 'pastsassurance', 'timesarrow', 'afteryou', 'assist', 'banefulbunker', 'beakblast', 'behemothbash', 'behemothblade', 'belch', 'bestow', 'celebrate', 'chatter', 'copycat', 'counter', 'covet', 'craftyshield', 'destinybond', 'detect', 'diamondstorm', 'dragonascent', 'dynamaxcannon', 'endure', 'eternabeam', 'feint', 'fleurcannon', 'focuspunch', 'followme', 'freezeshock', 'helpinghand', 'holdhands', 'hyperspacefury', 'hyperspacehole', 'iceburn', 'instruct', 'kingsshield', 'lightofruin', 'matblock', 'mefirst', 'metronome', 'mimic', 'mindblown', 'mirrorcoat', 'mirrormove', 'naturepower', 'originpulse', 'photongeyser', 'plasmafists', 'precipiceblades', 'protect', 'quash', 'quickguard', 'ragepowder', 'relicsong', 'secretsword', 'shelltrap', 'sketch', 'sleeptalk', 'snarl', 'snatch', 'snore', 'spectralthief', 'spikyshield', 'spotlight', 'steameruption', 'struggle', 'switcheroo', 'technoblast', 'thief', 'thousandarrows', 'thousandwaves', 'transform', 'trick', 'vcreate', 'wideguard'],
 		onHit(target, source, effect) {
 			const moves = [];
 			for (const id in exports.BattleMovedex) {
@@ -14285,7 +14281,7 @@ let BattleMovedex = {
 		accuracy: 90,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-			return this.clampIntRange(Math.floor(target.hp / 2), 1);
+			return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 2), 1);
 		},
 		category: "Special",
 		desc: "Deals damage to the target equal to half of its current HP, rounded down, but not less than 1 HP.",
@@ -14385,7 +14381,7 @@ let BattleMovedex = {
 			},
 			onResidualOrder: 9,
 			onResidual(pokemon) {
-				this.damage(pokemon.maxhp / 4);
+				this.damage(pokemon.baseMaxhp / 4);
 			},
 		},
 		secondary: null,
@@ -14652,6 +14648,9 @@ let BattleMovedex = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onTryImmunity(target) {
+			return this.dex.getImmunity('trapped', target);
+		},
 		volatileStatus: 'octolock',
 		effect: {
 			duration: 4,
@@ -14834,8 +14833,10 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1, mystery: 1},
 		onHit(target, pokemon) {
-			let averagehp = Math.floor((target.hp + pokemon.hp) / 2) || 1;
-			target.sethp(averagehp);
+			const targetHP = target.getUndynamaxedHP();
+			let averagehp = Math.floor((targetHP + pokemon.hp) / 2) || 1;
+			let targetChange = targetHP - averagehp;
+			target.sethp(target.hp - targetChange);
 			this.add('-sethp', target, target.getHealth, '[from] move: Pain Split', '[silent]');
 			pokemon.sethp(averagehp);
 			this.add('-sethp', pokemon, pokemon.getHealth, '[from] move: Pain Split');
@@ -14845,31 +14846,6 @@ let BattleMovedex = {
 		type: "Normal",
 		zMoveBoost: {def: 1},
 		contestType: "Clever",
-	},
-	"paleowave": {
-		num: 0,
-		accuracy: 100,
-		basePower: 85,
-		category: "Special",
-		desc: "Has a 20% chance to lower the target's Attack by 1 stage.",
-		shortDesc: "20% chance to lower the target's Attack by 1.",
-		id: "paleowave",
-		isNonstandard: "CAP",
-		isViable: true,
-		name: "Paleo Wave",
-		pp: 15,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		secondary: {
-			chance: 20,
-			boosts: {
-				atk: -1,
-			},
-		},
-		target: "normal",
-		type: "Rock",
-		zMovePower: 150,
-		contestType: "Beautiful",
 	},
 	"paraboliccharge": {
 		num: 570,
@@ -16001,6 +15977,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {authentic: 1, mystery: 1},
 		onHit(target, source) {
+			if (target.volatiles['maxguard']) return false;
 			for (let i in target.boosts) {
 				// @ts-ignore
 				source.boosts[i] = target.boosts[i];
@@ -19718,7 +19695,7 @@ let BattleMovedex = {
 					}
 				}
 				if (move.flags['contact']) {
-					this.damage(source.maxhp / 8, source, target);
+					this.damage(source.baseMaxhp / 8, source, target);
 					if (target.template.species === 'Chesnaught-Clemont' && target.hasAbility('battlebond')) {
 						this.heal((target.maxhp * 2) / 3);
 					}
@@ -19727,7 +19704,7 @@ let BattleMovedex = {
 			},
 			onHit(target, source, move) {
 				if (move.isZPowered && move.flags['contact']) {
-					this.damage(source.maxhp / 8, source, target);
+					this.damage(source.baseMaxhp / 8, source, target);
 					if (target.template.species === 'Chesnaught-Clemont' && target.hasAbility('battlebond')) {
 						this.heal(target.maxhp / 3);
 					}
@@ -20683,7 +20660,7 @@ let BattleMovedex = {
 		accuracy: 90,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-			return this.clampIntRange(Math.floor(target.hp / 2), 1);
+			return this.dex.clampIntRange(target.getUndynamaxedHP() / 2, 1);
 		},
 		category: "Physical",
 		desc: "Deals damage to the target equal to half of its current HP, rounded down, but not less than 1 HP.",
@@ -21176,7 +21153,7 @@ let BattleMovedex = {
 			onEffectiveness(typeMod, target, type, move) {
 				if (move.type !== 'Fire') return;
 				if (!target || !target.volatiles['tarshot']) return;
-				return this.dex.getEffectiveness('Fire', target) + 1;
+				return typeMod + 1;
 			},
 			onResidualOrder: 21,
 			onEnd(pokemon) {
@@ -21924,11 +21901,10 @@ let BattleMovedex = {
 			},
 			onSwitchIn(pokemon) {
 				if (!pokemon.isGrounded()) return;
-				if (pokemon.hasItem('heavydutyboots')) return;
 				if (pokemon.hasType('Poison')) {
 					this.add('-sideend', pokemon.side, 'move: Toxic Spikes', '[of] ' + pokemon);
 					pokemon.side.removeSideCondition('toxicspikes');
-				} else if (pokemon.hasType('Steel')) {
+				} else if (pokemon.hasType('Steel') || pokemon.hasItem('heavydutyboots')) {
 					return;
 				} else if (this.effectData.layers >= 2) {
 					pokemon.trySetStatus('tox', pokemon.side.foe.active[0]);
@@ -21979,7 +21955,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {mystery: 1},
 		onHit(target, pokemon) {
-			if (!pokemon.transformInto(target)) {
+			if (target.volatiles['maxguard'] || !pokemon.transformInto(target)) {
 				return false;
 			}
 		},
@@ -22551,7 +22527,7 @@ let BattleMovedex = {
 			},
 			onResidual(targetSide) {
 				for (const pokemon of targetSide.active) {
-					this.damage(pokemon.maxhp / 8, pokemon);
+					this.damage(pokemon.baseMaxhp / 8, pokemon);
 					this.add('-message', "The opposing Pokemon was hurt by Volcanic Ash's rocks!");
 				}
 			},

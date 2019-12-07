@@ -5998,7 +5998,7 @@ let BattleFormatsData = {
 		tier: "OU",
 		doublesTier: "DUU",
 	},
-	darmanitangalarzen: {
+	darmanitanzengalar: {
 		randomBattleMoves: ["earthquake", "flareblitz", "iciclecrash", "superpower", "uturn", "bellydrum"],
 		tier: "OU",
 		doublesTier: "DUU",
@@ -7924,7 +7924,7 @@ let BattleFormatsData = {
 		],
 		eventOnly: true,
 	},
-	mimikyutotembusted: {
+	mimikyubustedtotem: {
 		requiredAbility: 'Disguise',
 		battleOnly: true,
 	},
@@ -8428,9 +8428,11 @@ let BattleFormatsData = {
 		doublesTier: "DOU",
 	},
 	cramorantgulping: {
+		requiredAbility: "Gulp Missile",
 		battleOnly: true,
 	},
 	cramorantgorging: {
+		requiredAbility: "Gulp Missile",
 		battleOnly: true,
 	},
 	arrokuda: {
@@ -8562,6 +8564,7 @@ let BattleFormatsData = {
 		doublesTier: "DOU",
 	},
 	eiscuenoice: {
+		requiredAbility: "Ice Face",
 		battleOnly: true,
 	},
 	indeedee: {
@@ -8580,6 +8583,7 @@ let BattleFormatsData = {
 		doublesTier: "DOU",
 	},
 	morpekohangry: {
+		requiredAbility: "Hunger Switch",
 		battleOnly: true,
 	},
 	cufant: {

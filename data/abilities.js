@@ -82,7 +82,7 @@ let BattleAbilities = {
 		onAfterDamageOrder: 1,
 		onAfterDamage(damage, target, source, move) {
 			if (source && source !== target && move && move.flags['contact'] && !target.hp) {
-				this.damage(source.maxhp / 4, source, target);
+				this.damage(source.baseMaxhp / 4, source, target);
 			}
 		},
 		rating: 2.5,
@@ -240,7 +240,7 @@ let BattleAbilities = {
 			for (const target of pokemon.side.foe.active) {
 				if (!target || !target.hp) continue;
 				if (target.status === 'slp' || target.hasAbility('comatose')) {
-					this.damage(target.maxhp / 8, target, pokemon);
+					this.damage(target.baseMaxhp / 8, target, pokemon);
 				}
 			}
 		},
@@ -338,7 +338,7 @@ let BattleAbilities = {
 			const lastAttackedBy = target.getLastAttackedBy();
 			if (!lastAttackedBy) return;
 			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+			if (target.hp <= target.baseMaxhp / 2 && target.hp + damage > target.baseMaxhp / 2) {
 				this.boost({spa: 1});
 			}
 		},
@@ -368,14 +368,14 @@ let BattleAbilities = {
 		shortDesc: "At 1/3 or less of its max HP, this Pokemon's attacking stat is 1.5x with Fire attacks.",
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Fire' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Fire' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Blaze boost');
 				return this.chainModify(1.5);
 			}
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Fire' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Fire' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Blaze boost');
 				return this.chainModify(1.5);
 			}
@@ -403,7 +403,7 @@ let BattleAbilities = {
 		desc: "If this Pokemon eats a Berry, it restores 1/3 of its maximum HP, rounded down, in addition to the Berry's effect.",
 		shortDesc: "If this Pokemon eats a Berry, it restores 1/3 of its max HP after the Berry's effect.",
 		onEatItem(item, pokemon) {
-			this.heal(pokemon.maxhp / 3);
+			this.heal(pokemon.baseMaxhp / 3);
 		},
 		id: "cheekpouch",
 		name: "Cheek Pouch",
@@ -681,13 +681,13 @@ let BattleAbilities = {
 		shortDesc: "While this Pokemon has 1/2 or less of its max HP, its Attack and Sp. Atk are halved.",
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 2) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 2) {
 				return this.chainModify(0.5);
 			}
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 2) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 2) {
 				return this.chainModify(0.5);
 			}
 		},
@@ -788,9 +788,9 @@ let BattleAbilities = {
 		},
 		onUpdate(pokemon) {
 			if (['mimikyu', 'mimikyutotem'].includes(pokemon.template.speciesid) && this.effectData.busted) {
-				let templateid = pokemon.template.speciesid + 'busted';
+				let templateid = pokemon.template.speciesid === 'mimikyutotem' ? 'Mimikyu-Busted-Totem' : 'Mimikyu-Busted';
 				pokemon.formeChange(templateid, this.effect, true);
-				this.damage(pokemon.maxhp / 8, pokemon, pokemon);
+				this.damage(pokemon.baseMaxhp / 8, pokemon, pokemon);
 			}
 		},
 		id: "disguise",
@@ -853,7 +853,7 @@ let BattleAbilities = {
 		shortDesc: "This Pokemon is healed 1/4 by Water, 1/8 by Rain; is hurt 1.25x by Fire, 1/8 by Sun.",
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Water') {
-				if (!this.heal(target.maxhp / 4)) {
+				if (!this.heal(target.baseMaxhp / 4)) {
 					this.add('-immune', target, '[from] ability: Dry Skin');
 				}
 				return null;
@@ -869,9 +869,9 @@ let BattleAbilities = {
 		onWeather(target, source, effect) {
 			if (target.item === "utilityumbrella") return;
 			if (effect.id === 'raindance' || effect.id === 'primordialsea') {
-				this.heal(target.maxhp / 8);
+				this.heal(target.baseMaxhp / 8);
 			} else if (effect.id === 'sunnyday' || effect.id === 'desolateland') {
-				this.damage(target.maxhp / 8, target, target);
+				this.damage(target.baseMaxhp / 8, target, target);
 			}
 		},
 		id: "dryskin",
@@ -925,7 +925,7 @@ let BattleAbilities = {
 			const lastAttackedBy = target.getLastAttackedBy();
 			if (!lastAttackedBy) return;
 			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+			if (target.hp <= target.baseMaxhp / 2 && target.hp + damage > target.baseMaxhp / 2) {
 				if (!this.canSwitch(target.side) || target.forceSwitchFlag || target.switchFlag) return;
 				target.switchFlag = true;
 				source.switchFlag = false;
@@ -934,7 +934,7 @@ let BattleAbilities = {
 		},
 		onAfterDamage(damage, target, source, effect) {
 			if (!target.hp || effect.effectType === 'Move') return;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+			if (target.hp <= target.baseMaxhp / 2 && target.hp + damage > target.baseMaxhp / 2) {
 				if (!this.canSwitch(target.side) || target.forceSwitchFlag || target.switchFlag) return;
 				target.switchFlag = true;
 				this.add('-activate', target, 'ability: Emergency Exit');
@@ -1280,7 +1280,7 @@ let BattleAbilities = {
 	"galewings": {
 		shortDesc: "If this Pokemon is above half HP, its Flying-type moves have their priority increased by 1.",
 		onModifyPriority(priority, pokemon, target, move) {
-			if (move && move.type === 'Flying' && pokemon.hp > (pokemon.maxhp / 2)) return priority + 1;
+			if (move && move.type === 'Flying' && pokemon.hp > (pokemon.baseMaxhp / 2)) return priority + 1;
 		},
 		id: "galewings",
 		name: "Gale Wings",
@@ -1392,7 +1392,7 @@ let BattleAbilities = {
 		onWeather(target, source, effect) {
 			if (target.item === "utilityumbrella") return;
 			if (effect.id === 'maelstrom') {
-				this.heal(target.maxhp / 8);
+				this.heal(target.baseMaxhp / 8);
 			}
 		},
 		onImmunity(type, pokemon) {
@@ -1404,7 +1404,7 @@ let BattleAbilities = {
 		num: 0,
 	},
 	"gulpmissile": {
-		desc: "When the Pokémon uses Surf or Dive, it will come back with prey. When it takes damage, it will spit out the prey to attack.",
+		desc: "When the Pokémon uses Surf or Dive, it will come back with prey. When it takes damage, it will spit out the prey to deal 25% damage. If the base HP is below 50%, the prey will be a Pikachu and paralyze the opponent after being damaged. Otherwise, the prey is an Arrokuda and will lower the opponent's Def by 1 stage after being damaged.",
 		shortDesc: "Get prey with Surf/Dive. When taking damage, prey is used to attack.",
 		onDamagePriority: -1,
 		onDamage(damage, target, source, effect) {
@@ -1414,7 +1414,7 @@ let BattleAbilities = {
 				const forme = target.template.speciesid;
 				target.formeChange('cramorant', effect);
 
-				this.damage(source.maxhp / 4, source, target, effect);
+				this.damage(source.baseMaxhp / 4, source, target);
 				if (forme === 'cramorantgulping') {
 					this.boost({def: -1}, source, target, null, true);
 				} else {
@@ -1422,11 +1422,10 @@ let BattleAbilities = {
 				}
 			}
 		},
-		onAfterMove(source, target, move) {
-			if (!['surf', 'dive'].includes(move.id) || source.volatiles['dive'] || source.speciesid !== 'cramorant' || source.transformed) return;
-
-			const forme = source.hp <= source.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
-			source.formeChange(forme, move);
+		onAfterMove(pokemon, target, move) {
+			if (pokemon.template.species !== 'Cramorant' || pokemon.transformed || !['dive', 'surf'].includes(move.id) || pokemon.volatiles['dive']) return;
+			const forme = pokemon.hp <= pokemon.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
+			pokemon.formeChange(forme, move);
 		},
 		id: "gulpmissile",
 		name: "Gulp Missile",
@@ -1605,7 +1604,7 @@ let BattleAbilities = {
 		onWeather(target, source, effect) {
 			if (target.item === "utilityumbrella") return;
 			if (effect.id === 'hail') {
-				this.heal(target.maxhp / 16);
+				this.heal(target.baseMaxhp / 16);
 			}
 		},
 		onImmunity(type, pokemon) {
@@ -1869,7 +1868,7 @@ let BattleAbilities = {
 		onAfterDamageOrder: 1,
 		onAfterDamage(damage, target, source, move) {
 			if (source && source !== target && move && move.flags['contact']) {
-				this.damage(source.maxhp / 8, source, target);
+				this.damage(source.baseMaxhp / 8, source, target);
 			}
 		},
 		id: "ironbarbs",
@@ -2406,7 +2405,7 @@ let BattleAbilities = {
 	"multiscale": {
 		shortDesc: "If this Pokemon is at full HP, damage taken from attacks is halved.",
 		onSourceModifyDamage(damage, source, target, move) {
-			if (target.hp >= target.maxhp) {
+			if (target.hp >= target.baseMaxhp) {
 				this.debug('Multiscale weaken');
 				return this.chainModify(0.5);
 			}
@@ -2650,14 +2649,14 @@ let BattleAbilities = {
 		shortDesc: "At 1/3 or less of its max HP, this Pokemon's attacking stat is 1.5x with Grass attacks.",
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Grass' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Grass' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Overgrow boost');
 				return this.chainModify(1.5);
 			}
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Grass' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Grass' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Overgrow boost');
 				return this.chainModify(1.5);
 			}
@@ -2857,7 +2856,7 @@ let BattleAbilities = {
 		onDamagePriority: 1,
 		onDamage(damage, target, source, effect) {
 			if (effect.id === 'psn' || effect.id === 'tox') {
-				this.heal(target.maxhp / 8);
+				this.heal(target.baseMaxhp / 8);
 				return false;
 			}
 		},
@@ -2905,12 +2904,12 @@ let BattleAbilities = {
 		onResidualOrder: 27,
 		onResidual(pokemon) {
 			if (pokemon.baseTemplate.baseSpecies !== 'Zygarde' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.template.speciesid === 'zygardecomplete' || pokemon.hp > pokemon.maxhp / 2) return;
+			if (pokemon.template.speciesid === 'zygardecomplete' || pokemon.hp > pokemon.baseMaxhp / 2) return;
 			this.add('-activate', pokemon, 'ability: Power Construct');
 			pokemon.formeChange('Zygarde-Complete', this.effect, true);
 			let newHP = Math.floor(Math.floor(2 * pokemon.template.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100) * pokemon.level / 100 + 10);
-			pokemon.hp = newHP - (pokemon.maxhp - pokemon.hp);
-			pokemon.maxhp = newHP;
+			pokemon.hp = newHP - (pokemon.baseMaxhp - pokemon.hp);
+			pokemon.baseMaxhp = newHP;
 			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
 		},
 		id: "powerconstruct",
@@ -2924,7 +2923,7 @@ let BattleAbilities = {
 		onSourceFaint(target, source) {
 			if (!this.effectData.target.hp) return;
 			let ability = this.dex.getAbility(target.ability);
-			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
+			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
 			if (bannedAbilities.includes(target.ability)) return;
 			this.add('-ability', this.effectData.target, ability, '[from] ability: Power of Alchemy', '[of] ' + target);
 			this.effectData.target.setAbility(ability);
@@ -2932,7 +2931,7 @@ let BattleAbilities = {
 		onAllyFaint(target) {
 			if (!this.effectData.target.hp) return;
 			let ability = this.dex.getAbility(target.ability);
-			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
+			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
 			if (bannedAbilities.includes(target.ability)) return;
 			this.add('-ability', this.effectData.target, ability, '[from] ability: Power of Alchemy', '[of] ' + target);
 			this.effectData.target.setAbility(ability);
@@ -3133,7 +3132,7 @@ let BattleAbilities = {
 		onWeather(target, source, effect) {
 			if (target.item === "utilityumbrella") return;
 			if (effect.id === 'raindance' || effect.id === 'primordialsea') {
-				this.heal(target.maxhp / 16);
+				this.heal(target.baseMaxhp / 16);
 			}
 		},
 		id: "raindish",
@@ -3165,7 +3164,7 @@ let BattleAbilities = {
 		onAllyFaint(target) {
 			if (!this.effectData.target.hp) return;
 			let ability = this.dex.getAbility(target.ability);
-			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
+			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
 			if (bannedAbilities.includes(target.ability)) return;
 			this.add('-ability', this.effectData.target, ability, '[from] ability: Receiver', '[of] ' + target);
 			this.effectData.target.setAbility(ability);
@@ -3212,7 +3211,7 @@ let BattleAbilities = {
 	"regenerator": {
 		shortDesc: "This Pokemon restores 1/4 of its maximum HP, rounded down, when it switches out.",
 		onSwitchOut(pokemon) {
-			pokemon.heal(pokemon.maxhp / 4);
+			pokemon.heal(pokemon.baseMaxhp / 4);
 		},
 		id: "regenerator",
 		name: "Regenerator",
@@ -3303,7 +3302,7 @@ let BattleAbilities = {
 		onAfterDamageOrder: 1,
 		onAfterDamage(damage, target, source, move) {
 			if (source && source !== target && move && move.flags['contact']) {
-				this.damage(source.maxhp / 8, source, target);
+				this.damage(source.baseMaxhp / 8, source, target);
 			}
 		},
 		id: "roughskin",
@@ -3423,7 +3422,7 @@ let BattleAbilities = {
 		shortDesc: "If user is Wishiwashi, changes to School Form if it has > 1/4 max HP, else Solo Form.",
 		onStart(pokemon) {
 			if (pokemon.baseTemplate.baseSpecies !== 'Wishiwashi' || pokemon.level < 20 || pokemon.transformed) return;
-			if (pokemon.hp > pokemon.maxhp / 4) {
+			if (pokemon.hp > pokemon.baseMaxhp / 4) {
 				if (pokemon.template.speciesid === 'wishiwashi') {
 					pokemon.formeChange('Wishiwashi-School');
 				}
@@ -3436,7 +3435,7 @@ let BattleAbilities = {
 		onResidualOrder: 27,
 		onResidual(pokemon) {
 			if (pokemon.baseTemplate.baseSpecies !== 'Wishiwashi' || pokemon.level < 20 || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.hp > pokemon.maxhp / 4) {
+			if (pokemon.hp > pokemon.baseMaxhp / 4) {
 				if (pokemon.template.speciesid === 'wishiwashi') {
 					pokemon.formeChange('Wishiwashi-School');
 				}
@@ -3504,7 +3503,7 @@ let BattleAbilities = {
 		desc: "If this Pokemon is at full HP, damage taken from attacks is halved. Moongeist Beam, Sunsteel Strike, and the Mold Breaker, Teravolt, and Turboblaze Abilities cannot ignore this Ability.",
 		shortDesc: "If this Pokemon is at full HP, damage taken from attacks is halved.",
 		onSourceModifyDamage(damage, source, target, move) {
-			if (target.hp >= target.maxhp) {
+			if (target.hp >= target.baseMaxhp) {
 				this.debug('Shadow Shield weaken');
 				return this.chainModify(0.5);
 			}
@@ -3617,7 +3616,7 @@ let BattleAbilities = {
 		shortDesc: "If Minior, switch-in/end of turn it changes to Core at 1/2 max HP or less, else Meteor.",
 		onStart(pokemon) {
 			if (pokemon.baseTemplate.baseSpecies !== 'Minior' || pokemon.transformed) return;
-			if (pokemon.hp > pokemon.maxhp / 2) {
+			if (pokemon.hp > pokemon.baseMaxhp / 2) {
 				if (pokemon.template.speciesid === 'minior') {
 					pokemon.formeChange('Minior-Meteor');
 				}
@@ -3630,7 +3629,7 @@ let BattleAbilities = {
 		onResidualOrder: 27,
 		onResidual(pokemon) {
 			if (pokemon.baseTemplate.baseSpecies !== 'Minior' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.hp > pokemon.maxhp / 2) {
+			if (pokemon.hp > pokemon.baseMaxhp / 2) {
 				if (pokemon.template.speciesid === 'minior') {
 					pokemon.formeChange('Minior-Meteor');
 				}
@@ -3786,7 +3785,7 @@ let BattleAbilities = {
 		},
 		onWeather(target, source, effect) {
 			if (effect.id === 'sunnyday' || effect.id === 'desolateland') {
-				this.damage(target.maxhp / 8, target, target);
+				this.damage(target.baseMaxhp / 8, target, target);
 			}
 		},
 		id: "solarpower",
@@ -4083,7 +4082,7 @@ let BattleAbilities = {
 		},
 		onDamagePriority: -100,
 		onDamage(damage, target, source, effect) {
-			if (target.hp === target.maxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
+			if (target.hp === target.baseMaxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
 				this.add('-ability', target, 'Sturdy');
 				return target.hp - 1;
 			}
@@ -4132,14 +4131,14 @@ let BattleAbilities = {
 		shortDesc: "At 1/3 or less of its max HP, this Pokemon's attacking stat is 1.5x with Bug attacks.",
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Bug' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Bug' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Swarm boost');
 				return this.chainModify(1.5);
 			}
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Bug' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Bug' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Swarm boost');
 				return this.chainModify(1.5);
 			}
@@ -4338,14 +4337,14 @@ let BattleAbilities = {
 		shortDesc: "At 1/3 or less of its max HP, this Pokemon's attacking stat is 1.5x with Water attacks.",
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Water' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Water' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Torrent boost');
 				return this.chainModify(1.5);
 			}
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Water' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Water' && attacker.hp <= attacker.baseMaxhp / 3) {
 				this.debug('Torrent boost');
 				return this.chainModify(1.5);
 			}
@@ -4398,7 +4397,7 @@ let BattleAbilities = {
 				if (possibleTargets.length > 1) rand = this.random(possibleTargets.length);
 				let target = possibleTargets[rand];
 				let ability = this.dex.getAbility(target.ability);
-				let bannedAbilities = ['noability', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'zenmode'];
+				let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'noability', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'zenmode'];
 				if (bannedAbilities.includes(target.ability)) {
 					possibleTargets.splice(rand, 1);
 					continue;
@@ -4439,7 +4438,7 @@ let BattleAbilities = {
 			onBeforeMove(pokemon, target, move) {
 				if (pokemon.removeVolatile('truant')) {
 					this.add('cant', pokemon, 'ability: Truant');
-					this.heal(pokemon.maxhp / 3);
+					this.heal(pokemon.baseMaxhp / 3);
 					return false;
 				}
 			},
@@ -4477,6 +4476,7 @@ let BattleAbilities = {
 			}
 			if (target === this.activePokemon && source === this.activeTarget) {
 				boosts['atk'] = 0;
+				boosts['def'] = 0;
 				boosts['spa'] = 0;
 				boosts['accuracy'] = 0;
 			}
@@ -4527,12 +4527,12 @@ let BattleAbilities = {
 		onResidualOrder: 27,
 		onResidual(pokemon) {
 			if (pokemon.baseTemplate.baseSpecies !== 'Unown' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.template.speciesid === 'unownalphabet' || pokemon.hp > pokemon.maxhp / 2) return;
+			if (pokemon.template.speciesid === 'unownalphabet' || pokemon.hp > pokemon.baseMaxhp / 2) return;
 			this.add('-activate', pokemon, "ability: Unown's Spell");
 			pokemon.formeChange('Unown-Alphabet', this.effect, true);
 			let newHP = Math.floor(Math.floor(2 * pokemon.template.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100) * pokemon.level / 100 + 10);
-			pokemon.hp = newHP - (pokemon.maxhp - pokemon.hp);
-			pokemon.maxhp = newHP;
+			pokemon.hp = newHP - (pokemon.baseMaxhp - pokemon.hp);
+			pokemon.baseMaxhp = newHP;
 			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
 		},
 		id: "unownspell",
@@ -4576,7 +4576,7 @@ let BattleAbilities = {
 		shortDesc: "This Pokemon heals 1/4 of its max HP when hit by Electric moves; Electric immunity.",
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Electric') {
-				if (!this.heal(target.maxhp / 4)) {
+				if (!this.heal(target.baseMaxhp / 4)) {
 					this.add('-immune', target, '[from] ability: Volt Absorb');
 				}
 				return null;
@@ -4592,7 +4592,7 @@ let BattleAbilities = {
 		shortDesc: "Exchanges abilities when hitting a Pokémon with a contact move.",
 		onAfterDamage(damage, target, source, move) {
 			// Are these actually banned? Makes sense for them to be banned to me
-			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'illusion', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'wonderguard', 'zenmode'];
+			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'illusion', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'wonderguard', 'zenmode'];
 			if (source && source !== target && move && move.flags['contact'] && !bannedAbilities.includes(source.ability)) {
 				let targetAbility = this.dex.getAbility(target.ability);
 				let sourceAbility = this.dex.getAbility(source.ability);
@@ -4623,7 +4623,7 @@ let BattleAbilities = {
 		shortDesc: "This Pokemon heals 1/4 of its max HP when hit by Water moves; Water immunity.",
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Water') {
-				if (!this.heal(target.maxhp / 4)) {
+				if (!this.heal(target.baseMaxhp / 4)) {
 					this.add('-immune', target, '[from] ability: Water Absorb');
 				}
 				return null;
@@ -4753,7 +4753,7 @@ let BattleAbilities = {
 			const lastAttackedBy = target.getLastAttackedBy();
 			if (!lastAttackedBy) return;
 			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+			if (target.hp <= target.baseMaxhp / 2 && target.hp + damage > target.baseMaxhp / 2) {
 				if (!this.canSwitch(target.side) || target.forceSwitchFlag || target.switchFlag) return;
 				target.switchFlag = true;
 				source.switchFlag = false;
@@ -4762,7 +4762,7 @@ let BattleAbilities = {
 		},
 		onAfterDamage(damage, target, source, effect) {
 			if (!target.hp || effect.effectType === 'Move') return;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+			if (target.hp <= target.baseMaxhp / 2 && target.hp + damage > target.baseMaxhp / 2) {
 				if (!this.canSwitch(target.side) || target.forceSwitchFlag || target.switchFlag) return;
 				target.switchFlag = true;
 				this.add('-activate', target, 'ability: Wimp Out');

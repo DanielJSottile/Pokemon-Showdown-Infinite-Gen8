@@ -122,7 +122,7 @@ let BattleItems = {
 			type: "Dragon",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -130,7 +130,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.33);
+			this.heal(pokemon.baseMaxhp * 0.33);
 			if (pokemon.getNature().minus === 'spd') {
 				pokemon.addVolatile('confusion');
 			}
@@ -241,7 +241,7 @@ let BattleItems = {
 			type: "Ground",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -423,7 +423,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 2) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 2) {
 				if (this.runEvent('TryHeal', pokemon) && pokemon.useItem()) {
 					this.heal(20);
 				}
@@ -522,17 +522,17 @@ let BattleItems = {
 		onResidual(pokemon) {
 			if (this.field.isTerrain('grassyterrain')) return;
 			if (pokemon.hasType('Poison')) {
-				this.heal(pokemon.maxhp / 16);
+				this.heal(pokemon.baseMaxhp / 16);
 			} else {
-				this.damage(pokemon.maxhp / 8);
+				this.damage(pokemon.baseMaxhp / 8);
 			}
 		},
 		onTerrain(pokemon) {
 			if (!this.field.isTerrain('grassyterrain')) return;
 			if (pokemon.hasType('Poison')) {
-				this.heal(pokemon.maxhp / 16);
+				this.heal(pokemon.baseMaxhp / 16);
 			} else {
-				this.damage(pokemon.maxhp / 8);
+				this.damage(pokemon.baseMaxhp / 8);
 			}
 		},
 		num: 281,
@@ -1227,7 +1227,7 @@ let BattleItems = {
 		},
 		onModifyPriorityPriority: -1,
 		onModifyPriority(priority, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				if (pokemon.eatItem()) {
 					this.add('-activate', pokemon, 'item: Custap Berry', '[consumed]');
 					pokemon.removeVolatile('custapberry');
@@ -1876,7 +1876,7 @@ let BattleItems = {
 		onHit(target, source, move) {
 			if (move && target.getMoveHitData(move).typeMod > 0) {
 				if (target.eatItem()) {
-					this.heal(target.maxhp / 4);
+					this.heal(target.baseMaxhp / 4);
 				}
 			}
 		},
@@ -2044,7 +2044,7 @@ let BattleItems = {
 			type: "Bug",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -2052,7 +2052,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.33);
+			this.heal(pokemon.baseMaxhp * 0.33);
 			if (pokemon.getNature().minus === 'atk') {
 				pokemon.addVolatile('confusion');
 			}
@@ -2299,7 +2299,7 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onDamage(damage, target, source, effect) {
-			if (target.hp === target.maxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
+			if (target.hp === target.baseMaxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
 				if (target.useItem()) {
 					return target.hp - 1;
 				}
@@ -2405,7 +2405,7 @@ let BattleItems = {
 			type: "Ice",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -2911,7 +2911,7 @@ let BattleItems = {
 			type: "Dark",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -2919,7 +2919,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.33);
+			this.heal(pokemon.baseMaxhp * 0.33);
 			if (pokemon.getNature().minus === 'def') {
 				pokemon.addVolatile('confusion');
 			}
@@ -3162,7 +3162,7 @@ let BattleItems = {
 		onAfterDamage(damage, target, source, move) {
 			if (source && source.hp && source !== target && move && move.category === 'Physical') {
 				if (target.eatItem()) {
-					this.damage(source.maxhp / 8, source, target);
+					this.damage(source.baseMaxhp / 8, source, target);
 				}
 			}
 		},
@@ -3341,7 +3341,7 @@ let BattleItems = {
 			type: "Electric",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -3349,7 +3349,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.5);
+			this.heal(pokemon.baseMaxhp * 0.5);
 			pokemon.trySetStatus('par', pokemon);
 			pokemon.trySetStatus('slp', pokemon);
 		},
@@ -3381,7 +3381,7 @@ let BattleItems = {
 			type: "Flying",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -3478,11 +3478,11 @@ let BattleItems = {
 		onResidualSubOrder: 2,
 		onResidual(pokemon) {
 			if (this.field.isTerrain('grassyterrain')) return;
-			this.heal(pokemon.maxhp / 16);
+			this.heal(pokemon.baseMaxhp / 16);
 		},
 		onTerrain(pokemon) {
 			if (!this.field.isTerrain('grassyterrain')) return;
-			this.heal(pokemon.maxhp / 16);
+			this.heal(pokemon.baseMaxhp / 16);
 		},
 		num: 234,
 		gen: 2,
@@ -3534,7 +3534,7 @@ let BattleItems = {
 			type: "Grass",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -3557,7 +3557,7 @@ let BattleItems = {
 		},
 		onAfterMoveSecondarySelf(source, target, move) {
 			if (source && source !== target && move && move.category !== 'Status') {
-				this.damage(source.maxhp / 10, source, source, this.dex.getItem('lifeorb'));
+				this.damage(source.baseMaxhp / 10, source, source, this.dex.getItem('lifeorb'));
 			}
 		},
 		num: 270,
@@ -3820,7 +3820,7 @@ let BattleItems = {
 			type: "Ghost",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -3828,7 +3828,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.33);
+			this.heal(pokemon.baseMaxhp * 0.33);
 			if (pokemon.getNature().minus === 'spe') {
 				pokemon.addVolatile('confusion');
 			}
@@ -4171,7 +4171,7 @@ let BattleItems = {
 			type: "Rock",
 		},
 		onResidual(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -4410,7 +4410,7 @@ let BattleItems = {
 			type: "Poison",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -4418,7 +4418,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.5);
+			this.heal(pokemon.baseMaxhp * 0.5);
 			pokemon.trySetStatus('psn', pokemon);
 			pokemon.trySetStatus('slp', pokemon);
 		},
@@ -4569,7 +4569,7 @@ let BattleItems = {
 			type: "Poison",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 2) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 2) {
 				pokemon.eatItem();
 			}
 		},
@@ -4718,7 +4718,7 @@ let BattleItems = {
 			type: "Poison",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -5575,7 +5575,7 @@ let BattleItems = {
 		onAfterDamageOrder: 2,
 		onAfterDamage(damage, target, source, move) {
 			if (source && source !== target && move && move.flags['contact']) {
-				this.damage(source.maxhp / 6, source, target);
+				this.damage(source.baseMaxhp / 6, source, target);
 			}
 		},
 		num: 540,
@@ -5661,7 +5661,7 @@ let BattleItems = {
 		onAfterDamage(damage, target, source, move) {
 			if (source && source.hp && source !== target && move && move.category === 'Special') {
 				if (target.eatItem()) {
-					this.damage(source.maxhp / 8, source, target);
+					this.damage(source.baseMaxhp / 8, source, target);
 				}
 			}
 		},
@@ -5778,7 +5778,7 @@ let BattleItems = {
 			type: "Fighting",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -6040,7 +6040,7 @@ let BattleItems = {
 			type: "Psychic",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 2) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 2) {
 				pokemon.eatItem();
 			}
 		},
@@ -6048,7 +6048,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp / 4);
+			this.heal(pokemon.baseMaxhp / 4);
 		},
 		num: 158,
 		gen: 3,
@@ -6286,7 +6286,7 @@ let BattleItems = {
 			type: "Psychic",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -6412,7 +6412,7 @@ let BattleItems = {
 		onResidualOrder: 26,
 		onResidualSubOrder: 2,
 		onResidual(pokemon) {
-			this.damage(pokemon.maxhp / 8);
+			this.damage(pokemon.baseMaxhp / 8);
 		},
 		onHit(target, source, move) {
 			if (source && source !== target && !source.item && move && move.flags['contact']) {
@@ -6705,7 +6705,7 @@ let BattleItems = {
 			type: "Fairy",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -6713,7 +6713,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.5);
+			this.heal(pokemon.baseMaxhp * 0.5);
 			pokemon.trySetStatus('bewitchment', pokemon);
 			pokemon.trySetStatus('slp', pokemon);
 		},
@@ -6731,7 +6731,7 @@ let BattleItems = {
 			type: "Fire",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -6739,7 +6739,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.5);
+			this.heal(pokemon.baseMaxhp * 0.5);
 			pokemon.trySetStatus('brn', pokemon);
 			pokemon.trySetStatus('slp', pokemon);
 		},
@@ -7118,7 +7118,7 @@ let BattleItems = {
 			type: "Rock",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -7126,7 +7126,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.33);
+			this.heal(pokemon.baseMaxhp * 0.33);
 			if (pokemon.getNature().minus === 'spa') {
 				pokemon.addVolatile('confusion');
 			}
@@ -7185,7 +7185,7 @@ let BattleItems = {
 			type: "Fighting",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 4 || (pokemon.hp <= pokemon.maxhp / 2 && pokemon.hasAbility('gluttony'))) {
+			if (pokemon.hp <= pokemon.baseMaxhp / 4 || (pokemon.hp <= pokemon.baseMaxhp / 2 && pokemon.hasAbility('gluttony'))) {
 				pokemon.eatItem();
 			}
 		},
@@ -7193,7 +7193,7 @@ let BattleItems = {
 			if (!this.runEvent('TryHeal', pokemon)) return false;
 		},
 		onEat(pokemon) {
-			this.heal(pokemon.maxhp * 0.5);
+			this.heal(pokemon.baseMaxhp * 0.5);
 			pokemon.trySetStatus('whiplash', pokemon);
 			pokemon.trySetStatus('slp', pokemon);
 		},

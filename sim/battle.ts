@@ -2414,9 +2414,7 @@ export class Battle {
 			}
 		}
 		if (!action.speed) {
-			if ((action.choice === 'switch' || action.choice === 'instaswitch') && action.target) {
-				action.speed = action.target.getActionSpeed();
-			} else if (!action.pokemon) {
+			if (!action.pokemon) {
 				action.speed = 1;
 			} else if (!deferPriority) {
 				action.speed = action.pokemon.getActionSpeed();

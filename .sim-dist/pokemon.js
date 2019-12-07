@@ -62,7 +62,7 @@ var _state = require('./state');
 	 * calculated purely from the species base stats, level, IVs, EVs,
 	 * and Nature, before modifications from item, ability, etc.
 	 *
-	 * `storedStats` are reset to `baseStoredStats` on switch-out.
+	 * Forme changes affect these, but Transform doesn't.
 	 */
 	
 	/**
@@ -76,8 +76,6 @@ var _state = require('./state');
 	 *
 	 * (Except in Gen 1, where stat multipliers are stored, leading
 	 * to several famous glitches.)
-	 *
-	 * `storedStats` are reset to `baseStoredStats` on switch-out.
 	 */
 	
 	
@@ -99,6 +97,8 @@ var _state = require('./state');
 	
 	
 
+	
+	/** This is the max HP before Dynamaxing; it's updated for Power Construct etc */
 	
 	
 	
@@ -387,7 +387,9 @@ var _state = require('./state');
 		// This is used in gen 1 only, here to avoid code repetition.
 		// Only declared if gen 1 to avoid declaring an object we aren't going to need.
 		if (this.battle.gen === 1) this.modifiedStats = {atk: 0, def: 0, spa: 0, spd: 0, spe: 0};
-
+		this.maxhp = 0;
+		this.baseMaxhp = 0;
+		this.hp = 0;
 		this.clearVolatile();
 		this.maxhp = this.template.maxHP || this.baseStoredStats.hp;
 		this.hp = this.maxhp;
@@ -592,6 +594,13 @@ var _state = require('./state');
 
 	nearbyFoes() {
 		return this.foes().filter(foe => this.battle.isAdjacent(this, foe));
+	}
+
+	getUndynamaxedHP() {
+		if (this.volatiles['dynamax']) {
+			return Math.ceil(this.hp * this.baseMaxhp / this.maxhp);
+		}
+		return this.hp;
 	}
 
 	getMoveTargets(move, target) {
@@ -918,9 +927,10 @@ var _state = require('./state');
 		const template = pokemon.template;
 		if (pokemon.fainted || pokemon.illusion || (pokemon.volatiles['substitute'] && this.battle.gen >= 5) ||
 			(pokemon.transformed && this.battle.gen >= 2) || (this.transformed && this.battle.gen >= 5) ||
-			!this.setTemplate(template)) {
+			template.species === 'Eternatus-Eternamax') {
  			return false;
 		}
+		if (!this.setTemplate(template, null, true)) return false;
 		this.transformed = true;
 		this.weighthg = pokemon.weighthg;
 
@@ -996,7 +1006,7 @@ var _state = require('./state');
 	 * This function only handles changes to stats and type.
 	 * Use formChange to handle changes to ability and sending client messages.
 	 */
-	setTemplate(rawTemplate, source = this.battle.effect) {
+	setTemplate(rawTemplate, source = this.battle.effect, isTransform = false) {
 		const template = this.battle.runEvent('ModifyTemplate', this, null, source, rawTemplate);
 		if (!template) return null;
 		this.template = template;
@@ -1008,11 +1018,18 @@ var _state = require('./state');
 		this.weighthg = template.weighthg;
 
 		const stats = this.battle.dex.spreadModify(this.template.baseStats, this.set);
-		if (!this.baseStoredStats) this.baseStoredStats = stats;
+		if (this.template.maxHP) stats.hp = this.template.maxHP;
+
+		if (!this.maxhp) {
+			this.baseMaxhp = stats.hp;
+			this.maxhp = stats.hp;
+			this.hp = stats.hp;
+		}
+
+		if (!isTransform) this.baseStoredStats = stats;
 		let statName;
 		for (statName in this.storedStats) {
 			this.storedStats[statName] = stats[statName];
-			this.baseStoredStats[statName] = stats[statName];
 			if (this.modifiedStats) this.modifiedStats[statName] = stats[statName]; // Gen 1: Reset modified stats.
 		}
 		if (this.battle.gen <= 1) {
