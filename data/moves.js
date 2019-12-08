@@ -4693,7 +4693,7 @@ let BattleMovedex = {
 	"drumbeating": {
 		num: 778,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 100,
 		category: "Physical",
 		desc: "Has a 100% chance to lower the target's Speed by 1 stage.",
 		shortDesc: "100% chance to lower the target's Speed by 1.",
@@ -16370,8 +16370,8 @@ let BattleMovedex = {
 	},
 	"pyroball": {
 		num: 780,
-		accuracy: 90,
-		basePower: 120,
+		accuracy: 100,
+		basePower: 100,
 		category: "Physical",
 		desc: "Has a 10% chance to burn the target.",
 		shortDesc: "10% chance to burn the target.",
@@ -19210,7 +19210,7 @@ let BattleMovedex = {
 	"snipeshot": {
 		num: 745,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 100,
 		category: "Special",
 		desc: "Has a higher chance for a critical hit.",
 		shortDesc: "High critical hit ratio.",
