@@ -4313,7 +4313,6 @@ let BattleAbilities = {
 	"timetravel": {
 		desc: "",
 		shortDesc: "This ability changes the signature move of Mebiusan depending on what form it is in.",
-		// probably implemented somewhere else
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,

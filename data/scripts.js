@@ -1142,16 +1142,12 @@ let BattleScripts = {
 			pokemon.getItem().id === 'ultranecroziumz') {
 			return "Necrozma-Ultra";
 		}
-		if ('Mebiusan-Past'.includes(pokemon.baseTemplate.species) &&
+		if ('Mebiusan-Past'.includes(pokemon.template.species) &&
 			pokemon.getAbility().id === 'timetravel') {
-			let targetForme = pokemon.template.species === 'Mebiusan-Past' ? 'Mebiusan-Future' : 'Mebiusan-Past';
-			pokemon.formeChange(targetForme);
 			return "Mebiusan-Future";
 		}
-		if ('Mebiusan-Future'.includes(pokemon.baseTemplate.species) &&
+		if ('Mebiusan-Future'.includes(pokemon.template.species) &&
 			pokemon.getAbility().id === 'timetravel') {
-			let targetForme = pokemon.template.species === 'Mebiusan-Future' ? 'Mebiusan-Past' : 'Mebiusan-Future';
-			pokemon.formeChange(targetForme);
 			return "Mebiusan-Past";
 		}
 		return null;
@@ -1249,20 +1245,19 @@ let BattleScripts = {
 		}
 
 		pokemon.formeChange(templateid, pokemon.getItem(), true);
+		pokemon.formeChange(templateid, pokemon.getAbility(), true);
 
 		// Limit one mega evolution
 		let wasMega = pokemon.canMegaEvo;
 		for (const ally of side.pokemon) {
 			if (wasMega) {
 				ally.canMegaEvo = null;
-			} else if (['Mebiusan-Past', 'Mebiusan-Future'].includes(pokemon.baseTemplate.species) &&
-			pokemon.getAbility().id === 'timetravel') {
-				ally.canUltraBurst = true;
-				pokemon.canUltraBurst = true;
-			} else {
-				ally.canUltraBurst = null;
-			}
+			} 
+			// else {
+				// ally.canUltraBurst = null;
 		}
+
+		// TODO: Make it so only Mebiusan can continue to UB.  Just a weird visual glitch for Necrozma, not needed functionally
 
 		this.runEvent('AfterMega', pokemon);
 		return true;
