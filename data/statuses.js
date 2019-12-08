@@ -932,6 +932,39 @@ let BattleStatuses = {
 			return [type];
 		},
 	},
+
+	// Mebiusan's Ultra Burst/Time Travel is implemented here.
+	// They are always Infinite type, but transforming a second time
+	// doesn't normally happen, so we have to make sure their type
+	// is returned and set.  This may or may not work.
+	mebiusanpast: {
+		name: 'Mebiusan-Past',
+		id: 'mebiusanpast',
+		num: 0,
+		onTypePriority: 1,
+		onType(types, pokemon) {
+			pokemon.setType('Infinite');
+			pokemon.ability = /** @type {ID} */('timetravel');
+			pokemon.baseAbility = /** @type {ID} */('timetravel');
+			/** @type {string | undefined} */
+			let type = 'Infinite';
+			return [type];
+		},
+	},
+	mebiusanfuture: {
+		name: 'Mebiusan-Future',
+		id: 'mebiusanfuture',
+		num: 0,
+		onTypePriority: 1,
+		onType(types, pokemon) {
+			pokemon.setType('Infinite');
+			pokemon.ability = /** @type {ID} */('timetravel');
+			pokemon.baseAbility = /** @type {ID} */('timetravel');
+			/** @type {string | undefined} */
+			let type = 'Infinite';
+			return [type];
+		},
+	},
 };
 
 exports.BattleStatuses = BattleStatuses;

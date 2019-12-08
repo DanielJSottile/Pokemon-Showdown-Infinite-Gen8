@@ -1142,6 +1142,18 @@ let BattleScripts = {
 			pokemon.getItem().id === 'ultranecroziumz') {
 			return "Necrozma-Ultra";
 		}
+		if ('Mebiusan-Past'.includes(pokemon.baseTemplate.species) &&
+			pokemon.getAbility().id === 'timetravel') {
+			let targetForme = pokemon.template.species === 'Mebiusan-Past' ? 'Mebiusan-Future' : 'Mebiusan-Past';
+			pokemon.formeChange(targetForme);
+			return "Mebiusan-Future";
+		}
+		if ('Mebiusan-Future'.includes(pokemon.baseTemplate.species) &&
+			pokemon.getAbility().id === 'timetravel') {
+			let targetForme = pokemon.template.species === 'Mebiusan-Future' ? 'Mebiusan-Past' : 'Mebiusan-Future';
+			pokemon.formeChange(targetForme);
+			return "Mebiusan-Past";
+		}
 		return null;
 	},
 
@@ -1180,7 +1192,6 @@ let BattleScripts = {
 			if (pokemon.getItem().id === 'ultranecroziumz') return;
 			if (pokemon.getItem().id === 'redorb') return;
 			if (pokemon.getItem().id === 'blueorb') return;
-			// TODO ban specific species from dynamaxing based on reserach
 			const cannotDynamax = ['zacian', 'zamazenta', 'apocalylidae', 'mebiusan-past', 'mebiusan-future', 'rayquazamega'];
 			if (cannotDynamax.includes(toID(pokemon.template.baseSpecies))) {
 				return;
@@ -1244,6 +1255,10 @@ let BattleScripts = {
 		for (const ally of side.pokemon) {
 			if (wasMega) {
 				ally.canMegaEvo = null;
+			} else if (['Mebiusan-Past', 'Mebiusan-Future'].includes(pokemon.baseTemplate.species) &&
+			pokemon.getAbility().id === 'timetravel') {
+				ally.canUltraBurst = true;
+				pokemon.canUltraBurst = true;
 			} else {
 				ally.canUltraBurst = null;
 			}
