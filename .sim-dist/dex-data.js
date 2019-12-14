@@ -607,7 +607,7 @@ const toID = Tools.getId;
 	/** True if the only way to get this pokemon is from events. */
 	
 	/** List of event data for each event. */
-	 
+	
 
 	/**
 	 * Singles Tier. The Pokemon's location in the Smogon tier system.

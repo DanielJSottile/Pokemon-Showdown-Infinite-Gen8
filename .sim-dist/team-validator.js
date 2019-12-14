@@ -1103,6 +1103,15 @@ var _dex = require('./dex');
 				}
 			}
 		}
+		const crowned = {
+			'Zacian-Crowned': 'behemothblade', 'Zamazenta-Crowned': 'behemothbash',
+		};
+		if (set.species in crowned) {
+			const ironHead = set.moves.indexOf('ironhead');
+			if (ironHead >= 0) {
+				set.moves[ironHead] = crowned[set.species];
+			}
+		}
 		return problems;
 	}
 
@@ -1838,7 +1847,7 @@ var _dex = require('./dex');
 			return template;
 		} else if (template.inheritsLearnsetFrom) {
 			// For Pokemon like Rotom, Necrozma, and Gmax formes whose movesets are extensions are their base formes
-			return this.dex.getTemplate(template.inheritsLearnsetFrom);
+			return this.dex.getTemplate(Array.isArray(template.inheritsFrom) ? template.inheritsFrom[0] : template.inheritsFrom);
 		}
 		return null;
 	}

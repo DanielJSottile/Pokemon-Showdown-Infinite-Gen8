@@ -4303,25 +4303,26 @@ let BattleAbilities = {
 	"timetravel": {
 		desc: "",
 		shortDesc: "This ability changes the signature move of Mebiusan depending on what form it is in.",
-		onModifyMove(move) {
-			const past: {[k: string]: string} = {
+		// TODO: make this work
+		// onModifyMove(move) {
+			// const past : {[k: string]: string} = {
 				'Mebiusan-Past': 'pastsassurance',
-			};
-			const future: {[k: string]: string} = {
+			// };
+			// const future : {[k: string]: string} = {
 				'Mebiusan-Future': 'futuresreckoning',
-			};
-			if (set.species in past) {
-				const futuresReckoning = set.moves.indexOf('futuresreckoning');
-				if (futuresReckoning >= 0) {
-					set.moves[futuresreckoning] = past[set.species];
-				}
-			if (set.species in future) {
-				const pastsAssurance = set.moves.indexOf('pastsassurance');
-				if (pastsAssurance >= 0) {
-					set.moves[pastsassurance] = future[set.species];
-				}
-			}
-		},
+			// };
+			// if (set.species in past) {
+				// const futuresReckoning = set.moves.indexOf('futuresreckoning');
+				// if (futuresReckoning >= 0) {
+					// set.moves[futuresreckoning] = past[set.species];
+				// }
+			// if (set.species in future) {
+				// const pastsAssurance = set.moves.indexOf('pastsassurance');
+				// if (pastsAssurance >= 0) {
+					// set.moves[pastsassurance] = future[set.species];
+				// }
+			// }
+		// },
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,

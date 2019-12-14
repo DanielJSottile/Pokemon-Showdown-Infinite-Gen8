@@ -18611,7 +18611,7 @@ let BattleMovedex = {
 		flags: {protect: 1, mirror: 1, authentic: 1, mystery: 1},
 		onTryHit(target, source) {
 			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'illusion', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'wonderguard', 'zenmode'];
-			if ((target.volatiles['dynamax'] || bannedAbilities.includes(target.ability) || bannedAbilities.includes(source.ability)) {
+			if (target.volatiles['dynamax'] || bannedAbilities.includes(target.ability) || bannedAbilities.includes(source.ability)) {
 				return false;
 			}
 		},
