@@ -5402,6 +5402,7 @@ let BattleFormatsData = {
 		randomDoubleBattleMoves: ["dracometeor", "shadowsneak", "tailwind", "hiddenpowerfire", "willowisp", "calmmind", "substitute", "dragonpulse", "shadowball", "aurasphere", "protect", "earthquake"],
 		eventOnly: true,
 		requiredItem: "Griseous Orb",
+		requiredAbility: "Levitate",
 		tier: "AG",
 		doublesTier: "DUber",
 	},
@@ -8650,6 +8651,7 @@ let BattleFormatsData = {
 		tier: "AG",
 		doublesTier: "DUber",
 		requiredItem: "Rusted Sword",
+		requiredAbility: "Intrepid Sword",
 	},
 	zamazenta: {
 		randomBattleMoves: ["closecombat", "crunch", "ironhead", "psychicfangs"],
@@ -8661,6 +8663,7 @@ let BattleFormatsData = {
 		tier: "AG",
 		doublesTier: "DUber",
 		requiredItem: "Rusted Shield",
+		requiredAbility: "Dauntless Shield",
 	},
 	eternatus: {
 		randomBattleMoves: ["dynamaxcannon", "flamethrower", "recover", "sludgewave"],
