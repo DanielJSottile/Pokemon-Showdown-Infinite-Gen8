@@ -5998,7 +5998,7 @@ let BattleFormatsData = {
 		tier: "OU",
 		doublesTier: "DUU",
 	},
-	darmanitanzengalar: {
+	darmanitangalarzen: {
 		randomBattleMoves: ["earthquake", "flareblitz", "iciclecrash", "superpower", "uturn", "bellydrum"],
 		tier: "OU",
 		doublesTier: "DUU",
