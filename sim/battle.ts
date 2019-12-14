@@ -2018,6 +2018,7 @@ export class Battle {
 			attack = attacker.calculateStat(attackStat, atkBoosts);
 		}
 
+		attackStat = (category === 'Physical' ? 'atk' : 'spa');
 		defense = defender.calculateStat(defenseStat, defBoosts);
 
 		// Apply Stat Modifiers
@@ -2628,7 +2629,9 @@ export class Battle {
 				}
 			}
 			action.pokemon.illusion = null;
-			this.singleEvent('End', this.dex.getAbility(action.pokemon.ability), action.pokemon.abilityData, action.pokemon);
+			if (action.pokemon.hp) {
+				this.singleEvent('End', this.dex.getAbility(action.pokemon.ability), action.pokemon.abilityData, action.pokemon);
+			} else if (!action.pokemon.fainted) {
 			if (!action.pokemon.hp && !action.pokemon.fainted) {
 				// a pokemon fainted from Pursuit before it could switch
 				if (this.gen <= 4) {

@@ -923,7 +923,7 @@ interface TemplateData {
 	otherForms?: string[]
 	otherFormes?: string[]
 	prevo?: string
-	inheritsLearnsetFrom?: string
+	inheritsFrom?: string | string[]
 }
 
 interface ModdedTemplateData extends Partial<TemplateData> {

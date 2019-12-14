@@ -673,6 +673,7 @@ export class Pokemon {
 		// Check if any active pokemon have the ability Neutralizing Gas
 		let neutralizinggas = false;
 		for (const pokemon of this.battle.getAllActive()) {
+			// can't use hasAbility because it would lead to infinite recursion
 			if (pokemon.ability === ('neutralizinggas' as ID) && !pokemon.volatiles['gastroacid']
 				&& !pokemon.abilityData.ending) {
 				neutralizinggas = true;
@@ -781,8 +782,12 @@ export class Pokemon {
 				}
 			}
 			let disabled = moveSlot.disabled;
-			if ((moveSlot.pp <= 0 && !this.volatiles['partialtrappinglock']) || disabled &&
-				this.side.active.length >= 2 && this.battle.targetTypeChoices(target!)) {
+			if (this.volatiles['dynamax']) {
+				disabled = false;
+			} else if (
+				(moveSlot.pp <= 0 && !this.volatiles['partialtrappinglock']) || disabled &&
+				this.side.active.length >= 2 && this.battle.targetTypeChoices(target!)
+			) {
 				disabled = true;
 			} else if (disabled === 'hidden' && restrictData) {
 				disabled = false;
@@ -803,12 +808,18 @@ export class Pokemon {
 	}
 
 	getRequestData() {
-		const lockedMove = this.getLockedMove();
+		let lockedMove = this.getLockedMove();
 
 		// Information should be restricted for the last active Pokémon
 		const isLastActive = this.isLastActive();
 		const canSwitchIn = this.battle.canSwitch(this.side) > 0;
-		const moves = this.getMoves(lockedMove, isLastActive);
+		let moves = this.getMoves(lockedMove, isLastActive);
+
+		if (!moves.length) {
+			moves = [{move: 'Struggle', id: 'struggle', target: 'randomNormal', disabled: false}];
+			lockedMove = 'struggle';
+		}
+
 		const data: {
 			moves: {move: string, id: string, target?: string, disabled?: string | boolean}[],
 			maybeDisabled?: boolean,
@@ -819,7 +830,9 @@ export class Pokemon {
 			canZMove?: AnyObject | null,
 			canDynamax?: boolean,
 			maxMoves?: DynamaxOptions,
-		} = {moves: moves.length ? moves : [{move: 'Struggle', id: 'struggle', target: 'randomNormal', disabled: false}]};
+		} = {
+			moves,
+		};
 
 		if (isLastActive) {
 			if (this.maybeDisabled) {
@@ -1705,6 +1718,7 @@ export class Pokemon {
 		return totalTypeMod;
 	}
 
+	/** false = immune, true = not immune */
 	runImmunity(type: string, message?: string | boolean) {
 		if (!type || type === '???') return true;
 		if (!(type in this.battle.dex.data.TypeChart)) {

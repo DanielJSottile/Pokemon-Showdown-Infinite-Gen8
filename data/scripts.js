@@ -430,7 +430,7 @@ let BattleScripts = {
 					if (move.ohko === 'Ice' && this.gen >= 7 && !pokemon.hasType('Ice')) {
 						accuracy = 20;
 					}
-					if (pokemon.level >= target.level && (move.ohko === true || !target.hasType(move.ohko))) {
+					if (!target.volatiles['dynamax'] && pokemon.level >= target.level && (move.ohko === true || !target.hasType(move.ohko))) {
 						accuracy += (pokemon.level - target.level);
 					} else {
 						this.add('-immune', target, '[ohko]');
@@ -1181,10 +1181,11 @@ let BattleScripts = {
 		let item = pokemon.getItem();
 		if (!skipChecks) {
 			if (!pokemon.canDynamax) return;
+			if (pokemon.template.isMega || pokemon.template.isPrimal || pokemon.template.forme === "Ultra" || pokemon.getItem().zMove || this.canMegaEvo(pokemon)) {
+				return;
+			}
 			if (this.canZMove(pokemon)) return;
-			if (this.canMegaEvo(pokemon)) return;
 			if (item.megaStone) return;
-			if (item.zMove) return;
 			if (pokemon.getItem().id === 'ultranecroziumz') return;
 			if (pokemon.getItem().id === 'redorb') return;
 			if (pokemon.getItem().id === 'blueorb') return;

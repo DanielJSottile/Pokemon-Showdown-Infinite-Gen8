@@ -563,7 +563,7 @@ let BattleStatuses = {
 		},
 		onWeatherModifyDamage(damage, attacker, defender, move) {
 			if (move.type === 'Water') {
-				if (defender.item === "utilityumbrella") return;
+				if (defender.hasitem('utilityumbrella')) return;
 				this.debug('rain water boost');
 				return this.chainModify(1.5);
 			}
@@ -606,7 +606,7 @@ let BattleStatuses = {
 		},
 		onWeatherModifyDamage(damage, attacker, defender, move) {
 			if (move.type === 'Water') {
-				if (defender.item === "utilityumbrella") return;
+				if (defender.hasitem('utilityumbrella')) return;
 				this.debug('Rain water boost');
 				return this.chainModify(1.5);
 			}
@@ -637,12 +637,12 @@ let BattleStatuses = {
 		},
 		onWeatherModifyDamage(damage, attacker, defender, move) {
 			if (move.type === 'Fire') {
-				if (defender.item === "utilityumbrella") return;
+				if (defender.hasitem('utilityumbrella')) return;
 				this.debug('Sunny Day fire boost');
 				return this.chainModify(1.5);
 			}
 			if (move.type === 'Water') {
-				if (defender.item === "utilityumbrella") return;
+				if (defender.hasitem('utilityumbrella')) return;
 				this.debug('Sunny Day water suppress');
 				return this.chainModify(0.5);
 			}
@@ -656,7 +656,7 @@ let BattleStatuses = {
 			}
 		},
 		onImmunity(type, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (type === 'frz') return false;
 		},
 		onResidualOrder: 1,
@@ -685,7 +685,7 @@ let BattleStatuses = {
 		},
 		onWeatherModifyDamage(damage, attacker, defender, move) {
 			if (move.type === 'Fire') {
-				if (defender.item === "utilityumbrella") return;
+				if (defender.hasitem('utilityumbrella')) return;
 				this.debug('Sunny Day fire boost');
 				return this.chainModify(1.5);
 			}
@@ -694,7 +694,7 @@ let BattleStatuses = {
 			this.add('-weather', 'DesolateLand', '[from] ability: ' + effect, '[of] ' + source);
 		},
 		onImmunity(type, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (type === 'frz') return false;
 		},
 		onResidualOrder: 1,
@@ -722,7 +722,7 @@ let BattleStatuses = {
 		// So we give it increased priority.
 		onModifySpDPriority: 10,
 		onModifySpD(spd, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (pokemon.hasType('Rock') && this.field.isWeather('sandstorm')) {
 				return this.modify(spd, 1.5);
 			}
@@ -741,7 +741,7 @@ let BattleStatuses = {
 			if (this.field.isWeather('sandstorm')) this.eachEvent('Weather');
 		},
 		onWeather(target) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			this.damage(target.baseMaxhp / 16);
 		},
 		onEnd() {
@@ -772,7 +772,7 @@ let BattleStatuses = {
 		// So we give it increased priority.
 		onModifyDefPriority: 10,
 		onModifyDef(def, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (pokemon.hasType('Ice') && this.field.isWeather('hail')) {
 				return this.modify(def, 1.5);
 			}
@@ -783,7 +783,7 @@ let BattleStatuses = {
 			if (this.field.isWeather('hail')) this.eachEvent('Weather');
 		},
 		onWeather(target) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			this.damage(target.baseMaxhp / 16);
 		},
 		onEnd() {
@@ -818,7 +818,7 @@ let BattleStatuses = {
 			if (this.field.isWeather('maelstrom')) this.eachEvent('Weather');
 		},
 		onWeather(target) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			this.damage(target.baseMaxhp / 8);
 		},
 		onEnd() {
@@ -833,7 +833,7 @@ let BattleStatuses = {
 		effectType: 'Weather',
 		duration: 0,
 		onEffectiveness(typeMod, target, type, move) {
-			if (target && target.item === "utilityumbrella") return;
+			if (target && target.hasitem('utilityumbrella')) return;
 			if (move && move.effectType === 'Move' && move.category !== 'Status' && type === 'Flying' && typeMod > 0) {
 				this.add('-activate', '', 'deltastream');
 				return 0;
@@ -877,7 +877,7 @@ let BattleStatuses = {
 		},
 		onDragOutPriority: 2,
 		onDragOut(pokemon) {
-			this.add('-fail', pokemon, 'Dynamax');
+			this.add('-block', pokemon, 'Dynamax');
 			return null;
 		},
 		onEnd(pokemon) {

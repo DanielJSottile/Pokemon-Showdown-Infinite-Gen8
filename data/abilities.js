@@ -414,7 +414,7 @@ let BattleAbilities = {
 		desc: "If Sunny Day is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
 		shortDesc: "If Sunny Day is active, this Pokemon's Speed is multiplied by 1.8x.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				return this.chainModify(1.8);
 			}
@@ -867,7 +867,7 @@ let BattleAbilities = {
 			}
 		},
 		onWeather(target, source, effect) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			if (effect.id === 'raindance' || effect.id === 'primordialsea') {
 				this.heal(target.baseMaxhp / 8);
 			} else if (effect.id === 'sunnyday' || effect.id === 'desolateland') {
@@ -1059,7 +1059,7 @@ let BattleAbilities = {
 			delete this.effectData.forme;
 		},
 		onUpdate(pokemon) {
-			if (!pokemon.isActive || pokemon.baseTemplate.baseSpecies !== 'Cherrim' || pokemon.transformed || pokemon.item === "utilityumbrella") return;
+			if (!pokemon.isActive || pokemon.baseTemplate.baseSpecies !== 'Cherrim' || pokemon.transformed || pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				if (pokemon.template.speciesid !== 'cherrimsunshine') {
 					pokemon.formeChange('Cherrim-Sunshine', this.effect, false, '[msg]');
@@ -1073,7 +1073,7 @@ let BattleAbilities = {
 		onAllyModifyAtkPriority: 3,
 		onAllyModifyAtk(atk, pokemon) {
 			if (this.effectData.target.baseTemplate.baseSpecies !== 'Cherrim') return;
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				return this.chainModify(1.5);
 			}
@@ -1081,7 +1081,7 @@ let BattleAbilities = {
 		onModifySpDPriority: 4,
 		onAllyModifySpD(spd, pokemon) {
 			if (this.effectData.target.baseTemplate.baseSpecies !== 'Cherrim') return;
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				return this.chainModify(1.5);
 			}
@@ -1390,7 +1390,7 @@ let BattleAbilities = {
 		desc: "If Maelstrom is active, this Pokemon restores 1/8th of its maximum HP, rounded down, at the end of each turn. This Pokemon takes no damage from Maelstrom.",
 		shortDesc: "If Maelstrom is active, this Pokemon heals 1/8th of its max HP each turn; immunity to Maelstrom.",
 		onWeather(target, source, effect) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			if (effect.id === 'maelstrom') {
 				this.heal(target.baseMaxhp / 8);
 			}
@@ -1602,7 +1602,7 @@ let BattleAbilities = {
 		desc: "If Hail is active and not holding Utility Umbrella, this Pokemon restores 1/16 of its maximum HP, rounded down, at the end of each turn. This Pokemon takes no damage from Hail.",
 		shortDesc: "If Hail is active, this Pokemon heals 1/16 of its max HP each turn; immunity to Hail.",
 		onWeather(target, source, effect) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			if (effect.id === 'hail') {
 				this.heal(target.baseMaxhp / 16);
 			}
@@ -1616,9 +1616,16 @@ let BattleAbilities = {
 		num: 115,
 	},
 	"iceface": {
-		desc: "The Pokémon's ice head can take a physical attack as a substitute, but the attack also changes the Pokémon's appearance. The ice will be restored when it hails.",
-		shortDesc: "Pokémon's head functions as substitute for a physical attack. Restored in hail.",
+		desc: "If this Pokemon is a Eiscue, the first physical hit it takes will deal 0 damage. Its ice head is then broken, it changes to Noice Form. The ice will be restored when hail is summoned or when the Pokemon is switched in while hail is active.",
+		shortDesc: "(Eiscue only) First physical hit deals 0 damage, breaks ice head.",
 		onDamagePriority: 1,
+		onStart(pokemon) {
+			if (this.field.isWeather('hail') && pokemon.template.speciesid === 'eiscuenoice' && !pokemon.transformed) {
+				this.add('-activate', pokemon, 'ability: Ice Face');
+				this.effectData.busted = false;
+				pokemon.formeChange('Eiscue', this.effect, true);
+			}
+		},
 		onDamage(damage, target, source, effect) {
 			if (effect && effect.effectType === 'Move' && effect.category === 'Physical' && target.template.speciesid === 'eiscue' && !target.transformed) {
 				this.add('-activate', target, 'ability: Ice Face');
@@ -1637,31 +1644,14 @@ let BattleAbilities = {
 				pokemon.formeChange('Eiscue-Noice', this.effect, true);
 			}
 		},
-		// TODO Incomplete. Use one of these depending on how mechanics research determines this works exactly.
-		/*
-		// End of turn restore if hailing
-		onResidualOrder: 27,
-		onResidual(pokemon) {
-			if (this.field.isWeather('hail') && pokemon.template.speciesid === 'eiscuemelted' && !pokemon.transformed) {
-				this.effectData.melted = false;
-				pokemon.formeChange('Eiscue', this.effect, true);
-			}
-		},
-		// On switch-in if hailing
-		onStart(pokemon) {
-			if (this.field.isWeather('hail') && pokemon.template.speciesid === 'eiscuemelted' && !pokemon.transformed) {
-				this.effectData.melted = false;
-				pokemon.formeChange('Eiscue', this.effect, true);
-			}
-		},
-		// On start of hail
 		onAnyWeatherStart() {
-			if (this.field.isWeather('hail') && this.effectData.target.template.speciesid === 'eiscuenoice' && !this.effectData.target.transformed) {
+			const pokemon = this.effectData.target;
+			if (this.field.isWeather('hail') && pokemon.template.speciesid === 'eiscuenoice' && !pokemon.transformed) {
+				this.add('-activate', pokemon, 'ability: Ice Face');
 				this.effectData.busted = false;
-				this.effectData.target.formeChange('Eiscue', this.effect, true);
+				pokemon.formeChange('Eiscue', this.effect, true);
 			}
 		},
-		*/
 		id: "iceface",
 		name: "Ice Face",
 		rating: 3.5,
@@ -1937,14 +1927,14 @@ let BattleAbilities = {
 		shortDesc: "If Sunny Day is active, this Pokemon cannot be statused and Rest will fail for it.",
 		onSetStatus(status, target, source, effect) {
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
-				if (target.item === "utilityumbrella") return;
+				if (target.hasitem('utilityumbrella')) return;
 				if (effect && effect.status) this.add('-immune', target, '[from] ability: Leaf Guard');
 				return false;
 			}
 		},
 		onTryAddVolatile(status, target) {
 			if (status.id === 'yawn' && this.field.isWeather(['sunnyday', 'desolateland'])) {
-				if (target.item === "utilityumbrella") return;
+				if (target.hasitem('utilityumbrella')) return;
 				this.add('-immune', target, '[from] ability: Leaf Guard');
 				return null;
 			}
@@ -3130,7 +3120,7 @@ let BattleAbilities = {
 		desc: "If Rain Dance is active, this Pokemon restores 1/16 of its maximum HP, rounded down, at the end of each turn. If this Pokemon is holding Utility Umbrella, its HP does not get restored.",
 		shortDesc: "If Rain Dance is active, this Pokemon heals 1/16 of its max HP each turn.",
 		onWeather(target, source, effect) {
-			if (target.item === "utilityumbrella") return;
+			if (target.hasitem('utilityumbrella')) return;
 			if (effect.id === 'raindance' || effect.id === 'primordialsea') {
 				this.heal(target.baseMaxhp / 16);
 			}
@@ -3341,7 +3331,7 @@ let BattleAbilities = {
 		desc: "If Sandstorm is active and not holding Utility Umbrella, this Pokemon's Speed is multiplied by 1.8x. This Pokemon takes no damage from Sandstorm.",
 		shortDesc: "If Sandstorm is active, this Pokemon's Speed is multiplied by 1.8; immunity to Sandstorm.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather('sandstorm')) {
 				return this.chainModify(1.8);
 			}
@@ -3723,7 +3713,7 @@ let BattleAbilities = {
 	"slushrush": {
 		shortDesc: "If Hail is active and the user is not holding Utility Umbrella, this Pokemon's Speed is multiplied by 1.8x.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather('hail')) {
 				return this.chainModify(1.8);
 			}
@@ -4173,7 +4163,7 @@ let BattleAbilities = {
 		desc: "If Rain Dance is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
 		shortDesc: "If Rain Dance is active, this Pokemon's Speed is doubled.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea'])) {
 				return this.chainModify(2);
 			}
@@ -4313,6 +4303,25 @@ let BattleAbilities = {
 	"timetravel": {
 		desc: "",
 		shortDesc: "This ability changes the signature move of Mebiusan depending on what form it is in.",
+		onModifyMove(move) {
+			const past: {[k: string]: string} = {
+				'Mebiusan-Past': 'pastsassurance',
+			};
+			const future: {[k: string]: string} = {
+				'Mebiusan-Future': 'futuresreckoning',
+			};
+			if (set.species in past) {
+				const futuresReckoning = set.moves.indexOf('futuresreckoning');
+				if (futuresReckoning >= 0) {
+					set.moves[futuresreckoning] = past[set.species];
+				}
+			if (set.species in future) {
+				const pastsAssurance = set.moves.indexOf('pastsassurance');
+				if (pastsAssurance >= 0) {
+					set.moves[pastsassurance] = future[set.species];
+				}
+			}
+		},
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
@@ -4810,9 +4819,9 @@ let BattleAbilities = {
 			if (pokemon.baseTemplate.baseSpecies !== 'Darmanitan' || pokemon.transformed) {
 				return;
 			}
-			if (pokemon.hp <= pokemon.maxhp / 2 && pokemon.template.forme !== 'Zen') {
+			if (pokemon.hp <= pokemon.maxhp / 2 && !['Zen', 'Galar-Zen'].includes(pokemon.template.forme)) {
 				pokemon.addVolatile('zenmode');
-			} else if (pokemon.hp > pokemon.maxhp / 2 && pokemon.template.forme === 'Zen') {
+			} else if (pokemon.hp > pokemon.maxhp / 2 && ['Zen', 'Galar-Zen'].includes(pokemon.template.forme)) {
 				pokemon.addVolatile('zenmode'); // in case of base Darmanitan-Zen
 				pokemon.removeVolatile('zenmode');
 			}
@@ -4821,7 +4830,7 @@ let BattleAbilities = {
 			if (!pokemon.volatiles['zenmode'] || !pokemon.hp) return;
 			pokemon.transformed = false;
 			delete pokemon.volatiles['zenmode'];
-			pokemon.formeChange(pokemon.template.baseSpecies, this.effect, false, '[silent]');
+			pokemon.formeChange(/** @type {string} */ (pokemon.template.inheritsFrom), this.effect, false, '[silent]');
 		},
 		effect: {
 			onStart(pokemon) {
@@ -4832,7 +4841,9 @@ let BattleAbilities = {
 				}
 			},
 			onEnd(pokemon) {
-				if (pokemon.template.forme === 'Zen') pokemon.formeChange(pokemon.template.baseSpecies);
+				if (['Zen', 'Galar-Zen'].includes(pokemon.template.forme)) {
+					pokemon.formeChange(/** @type {string} */ (pokemon.template.inheritsFrom));
+				}
 			},
 		},
 		id: "zenmode",

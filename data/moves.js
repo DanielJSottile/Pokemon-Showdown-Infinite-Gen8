@@ -1097,7 +1097,8 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {snatch: 1},
 		sideCondition: 'auroraveil',
-		onTryHitSide() {
+		onTryHitSide(pokemon) {
+			if (pokemon.hasItem('utilityumbrella')) return false;
 			if (!this.field.isWeather('hail')) return false;
 		},
 		effect: {
@@ -1450,7 +1451,6 @@ let BattleMovedex = {
 			return move.basePower;
 		},
 		category: "Physical",
-		// TODO: Check to see if power doubles against Gigantamax
 		desc: "Deals double damage against Dynamax and Gigantamax Pokemon.",
 		shortDesc: "Double damage against Dynamax/Gigantamax.",
 		id: "behemothbash",
@@ -1475,7 +1475,6 @@ let BattleMovedex = {
 			return move.basePower;
 		},
 		category: "Physical",
-		// TODO: Check to see if power doubles against Gigantamax
 		desc: "Deals double damage against Dynamax and Gigantamax Pokemon.",
 		shortDesc: "Double damage against Dynamax/Gigantamax.",
 		id: "behemothblade",
@@ -3862,6 +3861,10 @@ let BattleMovedex = {
 			onFaint(target, source, effect) {
 				if (!source || !effect || target.side === source.side) return;
 				if (effect.effectType === 'Move' && !effect.isFutureMove) {
+					if (source.volatiles['dynamax']) {
+						this.add('-hint', "Dynamaxed Pokémon are immune to Destiny Bond.");
+						return;
+					}
 					this.add('-activate', target, 'move: Destiny Bond');
 					source.faint();
 				}
@@ -4486,6 +4489,12 @@ let BattleMovedex = {
 				move.multihit = 1;
 				move.spreadModifier = 1;
 				move.target = "allAdjacentFoes";
+				for (const currentTarget of target.side.active) {
+					if (currentTarget.volatiles['protect'] || !currentTarget.runImmunity('Dragon') || currentTarget.fainted) {
+						move.multihit = 2;
+						break;
+					}
+				}
 			}
 		},
 		target: "normal",
@@ -7420,7 +7429,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		desc: "Traps and damages the opponent(s) for 4-5 turns. Base Power scales with the base move's Base Power.",
+		desc: "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1/8 of its maximum HP (1/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, Teleport, U-turn, or Volt Switch. The effect ends if target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move. Base Power scales with the base move's Base Power.",
 		shortDesc: "Traps/damages foes. BP scales w/ base move.",
 		id: "gmaxcentiferno",
 		isNonstandard: "Custom",
@@ -7432,7 +7441,7 @@ let BattleMovedex = {
 		self: {
 			onHit(source) {
 				for (let pokemon of source.side.foe.active) {
-					pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('Fire Spin'), 'trapper');
+					pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('G-Max Centiferno'), 'trapper');
 				}
 			},
 		},
@@ -7542,7 +7551,7 @@ let BattleMovedex = {
 		self: {
 			onAfterHit(source) {
 				for (let pokemon of source.side.active) {
-					this.heal(pokemon.maxhp / 6, pokemon, source);
+					this.heal(pokemon.maxhp / 2, pokemon, source);
 				}
 			},
 		},
@@ -7685,6 +7694,7 @@ let BattleMovedex = {
 		isMax: "Snorlax",
 		self: {
 			onHit(source) {
+				if (this.random(2) === 0) return;
 				for (let pokemon of source.side.active) {
 					if (!pokemon.item && pokemon.lastItem && this.dex.getItem(pokemon.lastItem).isBerry) {
 						let item = pokemon.lastItem;
@@ -7726,6 +7736,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
+		desc: "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1/8 of its maximum HP (1/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, Teleport, U-turn, or Volt Switch. The effect ends if target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move. Base Power scales with the base move's Base Power.",
 		shortDesc: "Traps/damages foes. BP scales w/ base move.",
 		id: "gmaxsandblast",
 		isNonstandard: "Custom",
@@ -7737,7 +7748,7 @@ let BattleMovedex = {
 		self: {
 			onHit(source) {
 				for (let pokemon of source.side.foe.active) {
-					pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('Sand Tomb'), 'trapper');
+					pokemon.addVolatile('partiallytrapped', source, this.dex.getActiveMove('G-Max Sandblast'), 'trapper');
 				}
 			},
 		},
@@ -7784,14 +7795,15 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		isMax: "Grimmsnarl",
-		self: {
-			onHit(source) {
-				for (let pokemon of source.side.foe.active) {
-					if (!pokemon.status && pokemon.runStatusImmunity('slp')) {
-						pokemon.addVolatile('yawn');
-					}
-				}
-			},
+		onHit(target) {
+			if (target.status || !target.runStatusImmunity('slp')) return;
+			if (this.random(2) === 0) return;
+			target.addVolatile('yawn');
+		},
+		onAfterSubDamage(damage, target) {
+			if (target.status || !target.runStatusImmunity('slp')) return;
+			if (this.random(2) === 0) return;
+			target.addVolatile('yawn');
 		},
 		secondary: null,
 		target: "adjacentFoe",
@@ -8131,11 +8143,12 @@ let BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, nonsky: 1},
-		onTryHit(pokemon, target, move) {
-			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', source, 'move: Grass Knot', '[from] Dynamax');
-			this.attrLastMove('[still]');
-			return null;
+		onTryHit(target, pokemon, move) {
+			if (target.volatiles['dynamax']) {
+				this.add('-fail', pokemon, 'Dynamax');
+				this.attrLastMove('[still]');
+				return null;
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -8451,7 +8464,8 @@ let BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		flags: {snatch: 1},
-		onModifyMove(move) {
+		onModifyMove(move, pokemon, target) {
+			if (target.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) move.boosts = {atk: 2, spa: 2};
 		},
 		boosts: {
@@ -9102,11 +9116,12 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, nonsky: 1},
-		onTryHit(pokemon, target, move) {
-			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', source, 'move: Heat Crash', '[from] Dynamax');
-			this.attrLastMove('[still]');
-			return null;
+		onTryHit(target, pokemon, move) {
+			if (target.volatiles['dynamax']) {
+				this.add('-fail', pokemon, 'Dynamax');
+				this.attrLastMove('[still]');
+				return null;
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -9167,11 +9182,12 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, nonsky: 1},
-		onTryHit(pokemon, target, move) {
-			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', source, 'move: Heavy Slam', '[from] Dynamax');
-			this.attrLastMove('[still]');
-			return null;
+		onTryHit(target, pokemon, move) {
+			if (target.volatiles['dynamax']) {
+				this.add('-fail', pokemon, 'Dynamax');
+				this.attrLastMove('[still]');
+				return null;
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -9878,7 +9894,8 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, distance: 1},
-		onModifyMove(move) {
+		onModifyMove(move, pokemon, target) {
+			if (target.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea'])) {
 				move.accuracy = true;
 			} else if (this.field.isWeather(['sunnyday', 'desolateland'])) {
@@ -11921,11 +11938,12 @@ let BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
-		onTryHit(pokemon, target, move) {
-			if (!pokemon.volatiles['dynamax']) return;
-			this.add('-fail', source, 'move: Low Kick', '[from] Dynamax');
-			this.attrLastMove('[still]');
-			return null;
+		onTryHit(target, pokemon, move) {
+			if (target.volatiles['dynamax']) {
+				this.add('-fail', pokemon, 'Dynamax');
+				this.attrLastMove('[still]');
+				return null;
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -13969,6 +13987,8 @@ let BattleMovedex = {
 				factor = 0.667;
 			} else if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				factor = 0.25;
+			} else if (pokemon.hasItem('utilityumbrella')) {
+				factor = 0.5;
 			}
 			return !!this.heal(this.modify(pokemon.maxhp, factor));
 		},
@@ -13997,6 +14017,8 @@ let BattleMovedex = {
 				factor = 0.667;
 			} else if (this.field.isWeather(['raindance', 'primordialsea', 'sandstorm', 'hail'])) {
 				factor = 0.25;
+			} else if (pokemon.hasItem('utilityumbrella')) {
+				factor = 0.5;
 			}
 			return !!this.heal(this.modify(pokemon.maxhp, factor));
 		},
@@ -18386,6 +18408,8 @@ let BattleMovedex = {
 			let factor = 0.5;
 			if (this.field.isWeather('sandstorm')) {
 				factor = 0.667;
+			} else if (pokemon.hasItem('utilityumbrella')) {
+				factor = 0.5;
 			}
 			return !!this.heal(this.modify(pokemon.maxhp, factor));
 		},
@@ -18587,7 +18611,7 @@ let BattleMovedex = {
 		flags: {protect: 1, mirror: 1, authentic: 1, mystery: 1},
 		onTryHit(target, source) {
 			let bannedAbilities = ['battlebond', 'comatose', 'disguise', 'illusion', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'wonderguard', 'zenmode'];
-			if (bannedAbilities.includes(target.ability) || bannedAbilities.includes(source.ability)) {
+			if ((target.volatiles['dynamax'] || bannedAbilities.includes(target.ability) || bannedAbilities.includes(source.ability)) {
 				return false;
 			}
 		},
@@ -19327,7 +19351,7 @@ let BattleMovedex = {
 			return null;
 		},
 		onBasePower(basePower, pokemon, target) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea', 'sandstorm', 'hail'])) {
 				this.debug('weakened by weather');
 				return this.chainModify(0.5);
@@ -19368,7 +19392,7 @@ let BattleMovedex = {
 			return null;
 		},
 		onBasePower(basePower, pokemon, target) {
-			if (pokemon.item === "utilityumbrella") return;
+			if (pokemon.hasitem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea', 'sandstorm', 'hail'])) {
 				this.debug('weakened by weather');
 				return this.chainModify(0.5);
@@ -21247,25 +21271,34 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {authentic: 1},
-		onTryMove(pokemon, target, move) {
-			for (const side of this.sides) {
-				for (const active of side.active) {
+		onHitField(target, source, move) {
+			let result = false;
+			for (const active of this.getAllActive()) {
+				if (!this.runEvent('Invulnerability', active, source, move)) {
+					this.add('-miss', source, active);
+					result = true;
+				} else {
 					let item = active.getItem();
 					if (active.hp && item.isBerry) {
-						this.add('-enditem', target, item.name, '[from] eat', '[move] Tea Time', '[of] ' + active);
+						// Not using `eatItem` as we need to bypass Unnerve.
+						this.add('-enditem', target, item.name, '[from] eat', '[move] Teatime', '[of] ' + active);
 						if (this.singleEvent('Eat', item, null, active, null, null)) {
 							this.runEvent('EatItem', active, null, null, item);
 							// TODO: Test
 							if (item.id === 'leppaberry') active.staleness = 'external';
 						}
 						if (item.onEat) active.ateBerry = true;
+						result = true;
 					}
 				}
 			}
+			return result;
 		},
 		secondary: null,
-		target: "any",
+		target: "all",
 		type: "Normal",
+		zMoveBoost: {atk: 1, def: 1, spa: 1, spd: 1, spe: 1},
+		contestType: "Cute",
 	},
 	"technoblast": {
 		num: 546,
@@ -21608,7 +21641,8 @@ let BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onModifyMove(move) {
+		onModifyMove(move, pokemon, target) {
+			if (target.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea'])) {
 				move.accuracy = true;
 			} else if (this.field.isWeather(['sunnyday', 'desolateland'])) {
@@ -22843,33 +22877,33 @@ let BattleMovedex = {
 			switch (this.field.effectiveWeather()) {
 			case 'sunnyday':
 			case 'desolateland':
-				if (pokemon.item === "utilityumbrella") break;
+				if (pokemon.hasitem('utilityumbrella')) break;
 				move.type = 'Fire';
 				move.basePower *= 2;
 				break;
 			case 'raindance':
 			case 'primordialsea':
-				if (pokemon.item === "utilityumbrella") break;
+				if (pokemon.hasitem('utilityumbrella')) break;
 				move.type = 'Water';
 				move.basePower *= 2;
 				break;
 			case 'sandstorm':
-				if (pokemon.item === "utilityumbrella") break;
+				if (pokemon.hasitem('utilityumbrella')) break;
 				move.type = 'Rock';
 				move.basePower *= 2;
 				break;
 			case 'hail':
-				if (pokemon.item === "utilityumbrella") break;
+				if (pokemon.hasitem('utilityumbrella')) break;
 				move.type = 'Ice';
 				move.basePower *= 2;
 				break;
 			case 'maelstrom':
-				if (pokemon.item === "utilityumbrella") break;
+				if (pokemon.hasitem('utilityumbrella')) break;
 				move.type = 'Infinite';
 				move.basePower *= 2;
 				break;
 			case 'deltastream':
-				if (pokemon.item === "utilityumbrella") break;
+				if (pokemon.hasitem('utilityumbrella')) break;
 				move.type = 'Flying';
 				move.basePower *= 2;
 				break;
