@@ -5084,14 +5084,6 @@ let BattleMovedex = {
 		pp: 5,
 		priority: 0,
 		flags: {charge: 1, recharge: 1},
-		onEffectiveness(typeMod, target, type, move) {
-			if (move.type !== 'Dragon') return;
-			if (!target) return; // avoid crashing when called from a chat plugin
-			// ignore effectiveness if the target is Fairy type and immune to Dragon
-			if (!target.runImmunity('Dragon')) {
-				if (target.hasType('Fairy')) return 0;
-			}
-		},
 		isMax: "Eternatus",
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
@@ -5114,6 +5106,7 @@ let BattleMovedex = {
 				spe: 1,
 			},
 		},
+		ignoreImmunity: {'Fairy': true},
 		secondary: null,
 		target: "adjacentfoe",
 		type: "Dragon",
