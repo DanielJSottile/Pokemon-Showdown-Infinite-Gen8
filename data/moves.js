@@ -5078,7 +5078,7 @@ let BattleMovedex = {
 		},
 		category: "Special",
 		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge, ignores Fairy Immunity. BP scales with base move's BP.",
-		id: "emaxeternalenergyreuption",
+		id: "emaxeternalenergyeruption",
 		isViable: true,
 		name: "E-Max Eternal-Energy Eruption",
 		pp: 5,
