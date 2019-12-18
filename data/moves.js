@@ -5080,7 +5080,7 @@ let BattleMovedex = {
 		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge, ignores Fairy Immunity. BP scales with base move's BP.",
 		id: "emaxeternalenergyeruption",
 		isViable: true,
-		name: "E-Max Eternal-Energy Eruption",
+		name: "E-Max Eternal Energy Eruption",
 		pp: 5,
 		priority: 0,
 		flags: {charge: 1, recharge: 1},
@@ -5098,7 +5098,7 @@ let BattleMovedex = {
 				return;
 			}
 			this.add('-prepare', attacker, "Geomancy", defender);
-			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal-Energy Eruption")) {
+			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal Energy Eruption")) {
 				return;
 			}
 			attacker.addVolatile('twoturnmove', defender);
