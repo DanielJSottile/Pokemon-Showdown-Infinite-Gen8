@@ -737,7 +737,7 @@ export class TeamValidator {
 				if (set.ivs[stat as 'hp'] >= 31) perfectIVs++;
 			}
 			if (perfectIVs < 3) {
-				const reason = (this.format.requirePentagon ? ` and this format requires gen ${dex.gen} Pokémon` : ` in gen 6`);
+				const minPastGen = this.format.minSourceGen || 1;
 				const reason = (minPastGen === 6 ? ` and this format requires gen ${dex.gen} Pokémon` : ` in gen 6`);
 				problems.push(`${name} must have at least three perfect IVs because it's a legendary${reason}.`);
 			}
