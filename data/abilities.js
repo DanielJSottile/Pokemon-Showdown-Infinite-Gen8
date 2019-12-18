@@ -414,7 +414,7 @@ let BattleAbilities = {
 		desc: "If Sunny Day is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
 		shortDesc: "If Sunny Day is active, this Pokemon's Speed is multiplied by 1.8x.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				return this.chainModify(1.8);
 			}
@@ -867,7 +867,7 @@ let BattleAbilities = {
 			}
 		},
 		onWeather(target, source, effect) {
-			if (target.hasitem('utilityumbrella')) return;
+			if (target.hasItem('utilityumbrella')) return;
 			if (effect.id === 'raindance' || effect.id === 'primordialsea') {
 				this.heal(target.baseMaxhp / 8);
 			} else if (effect.id === 'sunnyday' || effect.id === 'desolateland') {
@@ -1059,7 +1059,7 @@ let BattleAbilities = {
 			delete this.effectData.forme;
 		},
 		onUpdate(pokemon) {
-			if (!pokemon.isActive || pokemon.baseTemplate.baseSpecies !== 'Cherrim' || pokemon.transformed || pokemon.hasitem('utilityumbrella')) return;
+			if (!pokemon.isActive || pokemon.baseTemplate.baseSpecies !== 'Cherrim' || pokemon.transformed || pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				if (pokemon.template.speciesid !== 'cherrimsunshine') {
 					pokemon.formeChange('Cherrim-Sunshine', this.effect, false, '[msg]');
@@ -1073,7 +1073,7 @@ let BattleAbilities = {
 		onAllyModifyAtkPriority: 3,
 		onAllyModifyAtk(atk, pokemon) {
 			if (this.effectData.target.baseTemplate.baseSpecies !== 'Cherrim') return;
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				return this.chainModify(1.5);
 			}
@@ -1081,7 +1081,7 @@ let BattleAbilities = {
 		onModifySpDPriority: 4,
 		onAllyModifySpD(spd, pokemon) {
 			if (this.effectData.target.baseTemplate.baseSpecies !== 'Cherrim') return;
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
 				return this.chainModify(1.5);
 			}
@@ -1390,7 +1390,7 @@ let BattleAbilities = {
 		desc: "If Maelstrom is active, this Pokemon restores 1/8th of its maximum HP, rounded down, at the end of each turn. This Pokemon takes no damage from Maelstrom.",
 		shortDesc: "If Maelstrom is active, this Pokemon heals 1/8th of its max HP each turn; immunity to Maelstrom.",
 		onWeather(target, source, effect) {
-			if (target.hasitem('utilityumbrella')) return;
+			if (target.hasItem('utilityumbrella')) return;
 			if (effect.id === 'maelstrom') {
 				this.heal(target.baseMaxhp / 8);
 			}
@@ -1602,7 +1602,7 @@ let BattleAbilities = {
 		desc: "If Hail is active and not holding Utility Umbrella, this Pokemon restores 1/16 of its maximum HP, rounded down, at the end of each turn. This Pokemon takes no damage from Hail.",
 		shortDesc: "If Hail is active, this Pokemon heals 1/16 of its max HP each turn; immunity to Hail.",
 		onWeather(target, source, effect) {
-			if (target.hasitem('utilityumbrella')) return;
+			if (target.hasItem('utilityumbrella')) return;
 			if (effect.id === 'hail') {
 				this.heal(target.baseMaxhp / 16);
 			}
@@ -1927,14 +1927,14 @@ let BattleAbilities = {
 		shortDesc: "If Sunny Day is active, this Pokemon cannot be statused and Rest will fail for it.",
 		onSetStatus(status, target, source, effect) {
 			if (this.field.isWeather(['sunnyday', 'desolateland'])) {
-				if (target.hasitem('utilityumbrella')) return;
+				if (target.hasItem('utilityumbrella')) return;
 				if (effect && effect.status) this.add('-immune', target, '[from] ability: Leaf Guard');
 				return false;
 			}
 		},
 		onTryAddVolatile(status, target) {
 			if (status.id === 'yawn' && this.field.isWeather(['sunnyday', 'desolateland'])) {
-				if (target.hasitem('utilityumbrella')) return;
+				if (target.hasItem('utilityumbrella')) return;
 				this.add('-immune', target, '[from] ability: Leaf Guard');
 				return null;
 			}
@@ -2325,8 +2325,8 @@ let BattleAbilities = {
 		num: 104,
 	},
 	"moody": {
-		desc: "This Pokemon has a random stat other than accuracy or evasion raised by 2 stages and another stat lowered by 1 stage at the end of each turn.",
-		shortDesc: "Raises a random stat by 2 and lowers another stat by 1 at the end of each turn, excluding accuracy and evasion.",
+		desc: "This Pokemon has a random stat other than accuracy or evasion raised by 2 stages and another stat lowered by 2 stages at the end of each turn.",
+		shortDesc: "Raises a random stat by 2 and lowers another stat by 2 at the end of each turn, excluding accuracy and evasion.",
 		onResidualOrder: 26,
 		onResidualSubOrder: 1,
 		onResidual(pokemon) {
@@ -2353,7 +2353,7 @@ let BattleAbilities = {
 			}
 			randomStat = stats.length ? this.sample(stats) : "";
 			// @ts-ignore
-			if (randomStat) boost[randomStat] = -1;
+			if (randomStat) boost[randomStat] = -2;
 
 			this.boost(boost);
 		},
@@ -3120,7 +3120,7 @@ let BattleAbilities = {
 		desc: "If Rain Dance is active, this Pokemon restores 1/16 of its maximum HP, rounded down, at the end of each turn. If this Pokemon is holding Utility Umbrella, its HP does not get restored.",
 		shortDesc: "If Rain Dance is active, this Pokemon heals 1/16 of its max HP each turn.",
 		onWeather(target, source, effect) {
-			if (target.hasitem('utilityumbrella')) return;
+			if (target.hasItem('utilityumbrella')) return;
 			if (effect.id === 'raindance' || effect.id === 'primordialsea') {
 				this.heal(target.baseMaxhp / 16);
 			}
@@ -3311,8 +3311,9 @@ let BattleAbilities = {
 		desc: "If Sandstorm is active, this Pokemon's Ground-, Rock-, and Steel-type attacks have their power multiplied by 1.3. This Pokemon takes no damage from Sandstorm.",
 		shortDesc: "This Pokemon's Ground/Rock/Steel attacks do 1.3x in Sandstorm; immunity to it.",
 		onBasePowerPriority: 8,
-		onBasePower(basePower, attacker, defender, move) {
+		onBasePower(basePower, attacker, defender, move, pokemon) {
 			if (this.field.isWeather('sandstorm')) {
+				if (pokemon.hasItem('utilityumbrella')) return;
 				if (move.type === 'Rock' || move.type === 'Ground' || move.type === 'Steel') {
 					this.debug('Sand Force boost');
 					return this.chainModify([0x14CD, 0x1000]);
@@ -3331,7 +3332,7 @@ let BattleAbilities = {
 		desc: "If Sandstorm is active and not holding Utility Umbrella, this Pokemon's Speed is multiplied by 1.8x. This Pokemon takes no damage from Sandstorm.",
 		shortDesc: "If Sandstorm is active, this Pokemon's Speed is multiplied by 1.8; immunity to Sandstorm.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather('sandstorm')) {
 				return this.chainModify(1.8);
 			}
@@ -3372,7 +3373,8 @@ let BattleAbilities = {
 		onImmunity(type, pokemon) {
 			if (type === 'sandstorm') return false;
 		},
-		onModifyAccuracy(accuracy) {
+		onModifyAccuracy(accuracy, pokemon) {
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (typeof accuracy !== 'number') return;
 			if (this.field.isWeather('sandstorm')) {
 				this.debug('Sand Veil - decreasing accuracy');
@@ -3713,7 +3715,7 @@ let BattleAbilities = {
 	"slushrush": {
 		shortDesc: "If Hail is active and the user is not holding Utility Umbrella, this Pokemon's Speed is multiplied by 1.8x.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather('hail')) {
 				return this.chainModify(1.8);
 			}
@@ -3742,9 +3744,10 @@ let BattleAbilities = {
 		onImmunity(type, pokemon) {
 			if (type === 'hail') return false;
 		},
-		onModifyAccuracy(accuracy) {
+		onModifyAccuracy(accuracy, pokemon) {
 			if (typeof accuracy !== 'number') return;
 			if (this.field.isWeather('hail')) {
+				if (pokemon.hasItem('utilityumbrella')) return;
 				this.debug('Snow Cloak - decreasing accuracy');
 				return accuracy * 0.8;
 			}
@@ -4163,7 +4166,7 @@ let BattleAbilities = {
 		desc: "If Rain Dance is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
 		shortDesc: "If Rain Dance is active, this Pokemon's Speed is doubled.",
 		onModifySpe(spe, pokemon) {
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea'])) {
 				return this.chainModify(2);
 			}

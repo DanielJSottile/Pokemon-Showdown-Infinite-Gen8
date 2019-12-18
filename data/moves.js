@@ -1754,7 +1754,8 @@ let BattleMovedex = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onModifyMove(move) {
+		onModifyMove(move, target) {
+			if (target.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather('hail')) move.accuracy = true;
 		},
 		secondary: {
@@ -5065,7 +5066,7 @@ let BattleMovedex = {
 		zMovePower: 90,
 		contestType: "Beautiful",
 	},
-	"emaxeternalenergy": {
+	"emaxeternalenergyeruption": {
 		num: 1000,
 		accuracy: true,
 		basePower: 200,
@@ -5076,20 +5077,28 @@ let BattleMovedex = {
 			return move.basePower;
 		},
 		category: "Special",
-		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge. BP scales with base move's BP.",
-		id: "emaxeternalenergy",
+		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge, ignores Fairy Immunity. BP scales with base move's BP.",
+		id: "emaxeternalenergyreuption",
 		isViable: true,
-		name: "E-Max Eternal Energy",
+		name: "E-Max Eternal-Energy Eruption",
 		pp: 5,
 		priority: 0,
 		flags: {charge: 1, recharge: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (move.type !== 'Dragon') return;
+			if (!target) return; // avoid crashing when called from a chat plugin
+			// ignore effectiveness if the target is Fairy type and immune to Dragon
+			if (!target.runImmunity('Dragon')) {
+				if (target.hasType('Fairy')) return 0;
+			}
+		},
 		isMax: "Eternatus",
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
 				return;
 			}
 			this.add('-prepare', attacker, "Geomancy", defender);
-			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal Energy")) {
+			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal-Energy Eruption")) {
 				return;
 			}
 			attacker.addVolatile('twoturnmove', defender);
@@ -11699,8 +11708,8 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "The user restores 1/4 of its maximum HP, rounded half up. If there is an adjacent ally, the user restores 1/4 of both its and its ally's maximum HP, rounded up.",
-		shortDesc: "Heals the user (and allies) by 1/4 amount.",
+		desc: "The user restores 1/3 of its maximum HP, rounded half up. If there is an adjacent ally, the user restores 1/3 of both its and its ally's maximum HP, rounded up.",
+		shortDesc: "Heals the user (and allies) by 1/3 amount.",
 		id: "lifedew",
 		isViable: true,
 		name: "Life Dew",
@@ -11709,7 +11718,7 @@ let BattleMovedex = {
 		flags: {snatch: 1, heal: 1, authentic: 1},
 		onHit(target, source) {
 			for (const pokemon of source.side.active) {
-				this.heal(Math.ceil(pokemon.maxhp / 4), pokemon, source);
+				this.heal(Math.ceil(pokemon.maxhp / 3), pokemon, source);
 			}
 		},
 		secondary: null,
@@ -14802,7 +14811,7 @@ let BattleMovedex = {
 	"overdrive": {
 		num: 786,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 110,
 		category: "Special",
 		desc: "No additional effect.",
 		shortDesc: "No additional effect.",
@@ -19351,7 +19360,7 @@ let BattleMovedex = {
 			return null;
 		},
 		onBasePower(basePower, pokemon, target) {
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea', 'sandstorm', 'hail'])) {
 				this.debug('weakened by weather');
 				return this.chainModify(0.5);
@@ -19392,7 +19401,7 @@ let BattleMovedex = {
 			return null;
 		},
 		onBasePower(basePower, pokemon, target) {
-			if (pokemon.hasitem('utilityumbrella')) return;
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea', 'sandstorm', 'hail'])) {
 				this.debug('weakened by weather');
 				return this.chainModify(0.5);
@@ -21004,6 +21013,8 @@ let BattleMovedex = {
 				factor = 0.667;
 			} else if (this.field.isWeather(['raindance', 'primordialsea', 'sandstorm', 'hail'])) {
 				factor = 0.25;
+			} else if (pokemon.hasItem('utilityumbrella')) {
+				factor = 0.5;
 			}
 			return !!this.heal(this.modify(pokemon.maxhp, factor));
 		},
@@ -22877,33 +22888,33 @@ let BattleMovedex = {
 			switch (this.field.effectiveWeather()) {
 			case 'sunnyday':
 			case 'desolateland':
-				if (pokemon.hasitem('utilityumbrella')) break;
+				if (pokemon.hasItem('utilityumbrella')) break;
 				move.type = 'Fire';
 				move.basePower *= 2;
 				break;
 			case 'raindance':
 			case 'primordialsea':
-				if (pokemon.hasitem('utilityumbrella')) break;
+				if (pokemon.hasItem('utilityumbrella')) break;
 				move.type = 'Water';
 				move.basePower *= 2;
 				break;
 			case 'sandstorm':
-				if (pokemon.hasitem('utilityumbrella')) break;
+				if (pokemon.hasItem('utilityumbrella')) break;
 				move.type = 'Rock';
 				move.basePower *= 2;
 				break;
 			case 'hail':
-				if (pokemon.hasitem('utilityumbrella')) break;
+				if (pokemon.hasItem('utilityumbrella')) break;
 				move.type = 'Ice';
 				move.basePower *= 2;
 				break;
 			case 'maelstrom':
-				if (pokemon.hasitem('utilityumbrella')) break;
+				if (pokemon.hasItem('utilityumbrella')) break;
 				move.type = 'Infinite';
 				move.basePower *= 2;
 				break;
 			case 'deltastream':
-				if (pokemon.hasitem('utilityumbrella')) break;
+				if (pokemon.hasItem('utilityumbrella')) break;
 				move.type = 'Flying';
 				move.basePower *= 2;
 				break;
