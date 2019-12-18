@@ -5106,7 +5106,7 @@ let BattleMovedex = {
 				spe: 1,
 			},
 		},
-		ignoreImmunity: {'Fairy': true},
+		ignoreImmunity: {'Dragon': true},
 		secondary: null,
 		target: "adjacentfoe",
 		type: "Dragon",
