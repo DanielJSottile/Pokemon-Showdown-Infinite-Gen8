@@ -939,8 +939,7 @@ export class Pokemon {
 	transformInto(pokemon: Pokemon, effect: Effect | null = null) {
 		const template = pokemon.template;
 		if (pokemon.fainted || pokemon.illusion || (pokemon.volatiles['substitute'] && this.battle.gen >= 5) ||
-			(pokemon.transformed && this.battle.gen >= 2) || (this.transformed && this.battle.gen >= 5) ||
-			template.species === 'Eternatus-Eternamax') {
+			(pokemon.transformed && this.battle.gen >= 2) || (this.transformed && this.battle.gen >= 5)) {
  			return false;
 		}
 		if (!this.setTemplate(template, null, true)) return false;

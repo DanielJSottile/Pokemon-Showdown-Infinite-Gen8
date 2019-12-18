@@ -5066,7 +5066,7 @@ let BattleMovedex = {
 		zMovePower: 90,
 		contestType: "Beautiful",
 	},
-	"emaxeternalenergyeruption": {
+	"emaxeternalenergy": {
 		num: 1000,
 		accuracy: true,
 		basePower: 200,
@@ -5078,9 +5078,9 @@ let BattleMovedex = {
 		},
 		category: "Special",
 		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge, ignores Fairy Immunity. BP scales with base move's BP.",
-		id: "emaxeternalenergyeruption",
+		id: "emaxeternalenergy",
 		isViable: true,
-		name: "E-Max Eternal Energy Eruption",
+		name: "E-Max Eternal Energy",
 		pp: 5,
 		priority: 0,
 		flags: {charge: 1, recharge: 1},
@@ -5098,7 +5098,7 @@ let BattleMovedex = {
 				return;
 			}
 			this.add('-prepare', attacker, "Geomancy", defender);
-			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal Energy Eruption")) {
+			if (!this.runEvent('ChargeMove', attacker, defender, "E-Max Eternal Energy")) {
 				return;
 			}
 			attacker.addVolatile('twoturnmove', defender);
