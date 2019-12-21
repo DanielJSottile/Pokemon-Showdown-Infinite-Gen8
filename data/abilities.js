@@ -820,6 +820,23 @@ let BattleAbilities = {
 		rating: 3.5,
 		num: 88,
 	},
+	"dragonscales": {
+		desc: "This Pokemon reduces 1/3 damage from Super Effective moves, but double damage from Critical Hits.",
+		shortDesc: "This Pokemon reduces 1/3 damage from Super Effective moves, 2x damage from Critical Hits.",
+		onSourceModifyDamage(damage, source, target, move) {
+			let mod = 1;
+			if (target.getMoveHitData(move).typeMod > 0) {
+				this.debug('Dragon Scales neutralize');
+				return this.chainModify(0.66);
+			}
+			if (move && move.effectType === 'Move' && target.getMoveHitData(move).crit) mod *= 2;
+			return this.chainModify(mod);
+		},
+		id: "dragonscales",
+		name: "Dragon Scales",
+		rating: 3,
+		num: -2,
+	},
 	"drizzle": {
 		shortDesc: "On switch-in, this Pokemon summons Rain Dance.",
 		onStart(source) {
@@ -4329,7 +4346,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -3,
+		num: -4,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",
@@ -4550,7 +4567,7 @@ let BattleAbilities = {
 		id: "unownspell",
 		name: "Unown's Spell",
 		rating: 5,
-		num: -2,
+		num: -3,
 	},
 	"victorystar": {
 		shortDesc: "This Pokemon and its allies' moves have their accuracy multiplied by 1.1.",

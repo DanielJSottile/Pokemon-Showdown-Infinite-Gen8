@@ -8536,6 +8536,11 @@ let BattleFormatsData = {
 		tier: "OU",
 		doublesTier: "DOU",
 	},
+	alcremieblackforest: {
+		randomBattleMoves: ["aromatherapy", "calmmind", "dazzlinggleam", "mysticalfire", "celebrate", "recover"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
 	falinks: {
 		randomBattleMoves: ["closecombat", "megahorn", "noretreat", "poisonjab", "rockslide", "throatchop"],
 		tier: "OU",

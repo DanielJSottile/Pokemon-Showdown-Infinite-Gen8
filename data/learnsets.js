@@ -65789,7 +65789,6 @@ let BattleLearnsets = {
 		tackle: ["8L1"],
 		taunt: ["8M"],
 		uturn: ["8M"],
-		wildcharge: ["8L1"],
 		workup: ["8M"],
 		zenheadbutt: ["8M"],
 	}},
@@ -68020,6 +68019,9 @@ let BattleLearnsets = {
 		tackle: ["8L1"],
 		triattack: ["8M"],
 		wonderroom: ["8M"],
+	}},
+	alcremieblackforest: {learnset: {
+		celebrate: ["8L1"],
 	}},
 	falinks: {learnset: {
 		hiddenpower: ["8M"],

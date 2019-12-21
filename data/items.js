@@ -189,6 +189,18 @@ let BattleItems = {
 		gen: 6,
 		desc: "If held by an Alakazam, this item allows it to Mega Evolve in battle.",
 	},
+	"alcremiumz": {
+		id: "alcremiumz",
+		name: "Alcremium Z",
+		spritenum: 690,
+		onTakeItem: false,
+		zMove: "Fallacious Pastry",
+		zMoveFrom: "Celebrate",
+		itemUser: "Alcremie-Black-Forest",
+		num: -38,
+		gen: 8,
+		desc: "If held by an Alcremie with Celebrate, it can use Fallacious Pastry.",
+	},
 	"aloraichiumz": {
 		id: "aloraichiumz",
 		name: "Aloraichium Z",

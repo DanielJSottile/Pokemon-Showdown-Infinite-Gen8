@@ -5629,6 +5629,35 @@ let BattleMovedex = {
 		zMoveBoost: {spa: 1},
 		contestType: "Cute",
 	},
+	"fallaciouspastry": {
+		num: -25,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		desc: "Every Pokemon in the user's party is cured of its major status condition and healed to full, outside of fainted Pokemon. However, the user faints.",
+		shortDesc: "Cures the user's party of all status conditions and healed to full, user faints.",
+		id: "fallaciouspastry",
+		name: "Fallacious Pastry",
+		pp: 1,
+		priority: 0,
+		flags: {snatch: 1, distance: 1, authentic: 1},
+		onHit(pokemon, source) {
+			this.add('-activate', source, 'move: Fallacious Pastry');
+			let side = pokemon.side;
+			let success = false;
+			for (const ally of side.pokemon) {
+				if (ally.heal(ally.maxhp)) success = true;
+				if (ally.cureStatus()) success = true;
+			}
+			return success;
+		},
+		selfdestruct: "ifHit",
+		isZ: "alcremiumz",
+		secondary: null,
+		target: "allyTeam",
+		type: "Normal",
+		contestType: "Cute",
+	},
 	"falsesurrender": {
 		num: 793,
 		accuracy: true,
