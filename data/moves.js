@@ -5333,7 +5333,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1, mystery: 1},
 		onTryHit(target, source) {
-			if (target === source) return false;
+			if (target === source || target.volatiles['dynamax']) return false;
 			let bannedTargetAbilities = ['battlebond', 'comatose', 'disguise', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'truant'];
 			let bannedSourceAbilities = ['battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'zenmode'];
 			if (bannedTargetAbilities.includes(target.ability) || bannedSourceAbilities.includes(source.ability) || target.ability === source.ability) {
@@ -15152,7 +15152,7 @@ let BattleMovedex = {
 			let result = false;
 			let message = false;
 			for (const pokemon of this.getAllActive()) {
-				if (!this.runEvent('Accuracy', pokemon, source, move, true)) {
+				if (this.runEvent('Invulnerability', pokemon, source, move) === false) {
 					this.add('-miss', source, pokemon);
 					result = true;
 				} else if (this.runEvent('TryHit', pokemon, source, move) === null) {
@@ -21278,7 +21278,7 @@ let BattleMovedex = {
 		onHitField(target, source, move) {
 			let result = false;
 			for (const active of this.getAllActive()) {
-				if (!this.runEvent('Invulnerability', active, source, move)) {
+				if (this.runEvent('Invulnerability', active, source, move) === false) {
 					this.add('-miss', source, active);
 					result = true;
 				} else {
