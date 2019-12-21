@@ -1722,8 +1722,8 @@ let BattleFormatsData = {
 		randomBattleMoves: ["fakeout", "seismictoss", "bodyslam", "suckerpunch", "crunch"],
 		randomDoubleBattleMoves: ["fakeout", "return", "suckerpunch", "earthquake", "doubleedge", "poweruppunch", "drainpunch", "crunch", "protect"],
 		requiredItem: "Kangaskhanite",
-		tier: "AG",
-		doublesTier: "DUber",
+		tier: "OU",
+		doublesTier: "DOU",
 	},
 	horsea: {
 		eventPokemon: [
@@ -4751,7 +4751,7 @@ let BattleFormatsData = {
 		randomBattleMoves: ["spikes", "stealthrock", "recover", "taunt", "toxic", "seismictoss", "knockoff"],
 		randomDoubleBattleMoves: ["protect", "stealthrock", "recover", "taunt", "reflect", "seismictoss", "lightscreen", "trickroom", "psychic"],
 		eventOnly: true,
-		tier: "AG",
+		tier: "OU",
 		doublesTier: "(DUU)",
 	},
 	deoxysspeed: {
@@ -6784,7 +6784,7 @@ let BattleFormatsData = {
 			{"generation": 6, "level": 100, "moves": ["technoblast", "magnetbomb", "solarbeam", "signalbeam"], "pokeball": "cherishball"},
 		],
 		eventOnly: true,
-		tier: "AG",
+		tier: "OU",
 		doublesTier: "DOU",
 	},
 	genesectburn: {
