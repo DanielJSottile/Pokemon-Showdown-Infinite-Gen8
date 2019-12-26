@@ -5402,7 +5402,6 @@ let BattleFormatsData = {
 		randomDoubleBattleMoves: ["dracometeor", "shadowsneak", "tailwind", "hiddenpowerfire", "willowisp", "calmmind", "substitute", "dragonpulse", "shadowball", "aurasphere", "protect", "earthquake"],
 		eventOnly: true,
 		requiredItem: "Griseous Orb",
-		requiredAbility: "Levitate",
 		tier: "AG",
 		doublesTier: "DUber",
 	},

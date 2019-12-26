@@ -860,6 +860,7 @@ let BattleStatuses = {
 		duration: 3,
 		onStart(pokemon) {
 			pokemon.removeVolatile('substitute');
+			if (pokemon.illusion) this.singleEvent('End', this.dex.getAbility('Illusion'), pokemon.abilityData, pokemon);
 			this.add('-start', pokemon, 'Dynamax');
 			if (pokemon.canGigantamax) pokemon.formeChange(pokemon.canGigantamax);
 			if (pokemon.species === 'Shedinja') return;
@@ -874,6 +875,11 @@ let BattleStatuses = {
 		onFlinch: false,
 		onBeforeSwitchOut(pokemon) {
 			pokemon.removeVolatile('dynamax');
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.id === 'behemothbash' || move.id === 'behemothblade' || move.id === 'dynamaxcannon' || move.id === 'emaxeternalenergy') {
+				return this.chainModify(2);
+			}
 		},
 		onDragOutPriority: 2,
 		onDragOut(pokemon) {

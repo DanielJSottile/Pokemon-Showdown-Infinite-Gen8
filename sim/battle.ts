@@ -1196,30 +1196,34 @@ export class Battle {
 		return true;
 	}
 
-	switchIn(pokemon: Pokemon, pos?: number, sourceEffect: Effect | null = null) {
-		if (!pokemon || pokemon.isActive) return false;
-		if (!pos) pos = 0;
+	switchIn(pokemon: Pokemon, pos: number, sourceEffect: Effect | null = null) {
+		if (!pokemon || pokemon.isActive) {
+			this.hint("A switch failed because the Pokémon trying to switch in is already in.");
+			return false;
+		}
+
 		const side = pokemon.side;
 		if (pos >= side.active.length) {
-			throw new Error("Invalid switch position");
+			throw new Error(`Invalid switch position ${pos}`);
 		}
-		let newMove = null;
-		if (side.active[pos]) {
-			const oldActive = side.active[pos];
+		const oldActive = side.active[pos];
+		if (oldActive) {
+			// if a pokemon is forced out by Whirlwind/etc or Eject Button/Pack, it no longer takes its turn
+			this.cancelAction(oldActive);
+
+			let newMove = null;
 			if (this.gen === 4 && sourceEffect) {
 				newMove = oldActive.lastMove;
 			}
-			this.cancelMove(oldActive);
 			if (oldActive.switchCopyFlag) {
 				oldActive.switchCopyFlag = false;
 				pokemon.copyVolatileFrom(oldActive);
 			}
+			if (newMove) pokemon.lastMove = newMove;
 		}
-		if (newMove) pokemon.lastMove = newMove;
 		pokemon.isActive = true;
 		this.runEvent('BeforeSwitchIn', pokemon);
-		if (side.active[pos]) {
-			const oldActive = side.active[pos];
+		if (oldActive) {
 			oldActive.isActive = false;
 			oldActive.isStarted = false;
 			oldActive.usedItemThisTurn = false;
@@ -1227,7 +1231,6 @@ export class Battle {
 			pokemon.position = pos;
 			side.pokemon[pokemon.position] = pokemon;
 			side.pokemon[oldActive.position] = oldActive;
-			this.cancelMove(oldActive);
 			oldActive.clearVolatile();
 		}
 		side.active[pos] = pokemon;
@@ -2252,19 +2255,20 @@ export class Battle {
 		}
 		let faintData;
 		while (this.faintQueue.length) {
-			faintData = this.faintQueue[0];
-			this.faintQueue.shift();
-			if (!faintData.target.fainted &&
-					this.runEvent('BeforeFaint', faintData.target, faintData.source, faintData.effect)) {
-				this.add('faint', faintData.target);
-				faintData.target.side.pokemonLeft--;
-				this.runEvent('Faint', faintData.target, faintData.source, faintData.effect);
-				this.singleEvent('End', this.dex.getAbility(faintData.target.ability), faintData.target.abilityData, faintData.target);
-				faintData.target.clearVolatile(false);
-				faintData.target.fainted = true;
-				faintData.target.isActive = false;
-				faintData.target.isStarted = false;
-				faintData.target.side.faintedThisTurn = true;
+			faintData = this.faintQueue.shift()!;
+			const pokemon: Pokemon = faintData.target;
+			if (!pokemon.fainted &&
+					this.runEvent('BeforeFaint', pokemon, faintData.source, faintData.effect)) {
+				this.add('faint', pokemon);
+				pokemon.side.pokemonLeft--;
+				this.runEvent('Faint', pokemon, faintData.source, faintData.effect);
+				this.singleEvent('End', this.dex.getAbility(pokemon.ability), pokemon.abilityData, pokemon);
+				pokemon.clearVolatile(false);
+				pokemon.fainted = true;
+				pokemon.illusion = null;
+				pokemon.isActive = false;
+				pokemon.isStarted = false;
+				pokemon.side.faintedThisTurn = true;
 			}
 		}
 
@@ -2368,7 +2372,7 @@ export class Battle {
 						pokemon: action.pokemon,
 					});
 				}
-			} else if (action.choice === 'switch' || action.choice === 'instaswitch') {
+			} else if (['switch', 'instaswitch'].includes(action.choice)) {
 				if (typeof action.pokemon.switchFlag === 'string') {
 					action.sourceEffect = this.dex.getMove(action.pokemon.switchFlag as ID) as any;
 				}
@@ -2505,10 +2509,11 @@ export class Battle {
 	}
 
 	cancelAction(pokemon: Pokemon) {
-		const length = this.queue.length;
+		const oldLength = this.queue.length;
 		this.queue = this.queue.filter(action =>
-			!(action.pokemon === pokemon && action.priority >= -100));
-		return this.queue.length !== length;
+			action.pokemon !== pokemon
+		);
+		return this.queue.length !== oldLength;
 	}
 
 	cancelMove(pokemon: Pokemon) {
@@ -2523,7 +2528,7 @@ export class Battle {
 
 	willSwitch(pokemon: Pokemon) {
 		for (const action of this.queue) {
-			if ((action.choice === 'switch' || action.choice === 'instaswitch') && action.pokemon === pokemon) {
+			if (['switch', 'instaswitch'].includes(action.choice) && action.pokemon === pokemon) {
 				return action;
 			}
 		}
@@ -2628,25 +2633,19 @@ export class Battle {
 					break;
 				}
 			}
-			action.pokemon.illusion = null;
 			if (action.pokemon.hp) {
+				action.pokemon.illusion = null;
 				this.singleEvent('End', this.dex.getAbility(action.pokemon.ability), action.pokemon.abilityData, action.pokemon);
 			} else if (!action.pokemon.fainted) {
 				// a pokemon fainted from Pursuit before it could switch
 				if (this.gen <= 4) {
 					// in gen 2-4, the switch still happens
-					action.priority = -101;
-					this.queue.unshift(action);
 					this.hint("Previously chosen switches continue in Gen 2-4 after a Pursuit target faints.");
+				} else {
+					// in gen 5+, the switch is cancelled
+					this.hint("A Pokemon can't switch between when it runs out of HP and when it faints");
 					break;
 				}
-				// in gen 5+, the switch is cancelled
-				this.hint("A Pokemon can't switch between when it runs out of HP and when it faints");
-				break;
-			}
-			if (action.target.isActive) {
-				this.hint("A switch failed because the Pokémon trying to switch in is already in.");
-				break;
 			}
 			this.switchIn(action.target, action.pokemon.position, action.sourceEffect);
 			break;

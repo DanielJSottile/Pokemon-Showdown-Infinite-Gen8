@@ -1359,15 +1359,17 @@ var _state = require('./state');
 		return this.battle.dex.getEffectByID(this.status);
 	}
 
-	eatItem(source, sourceEffect) {
+	eatItem(force, source, sourceEffect) {
 		if (!this.hp || !this.isActive) return false;
 		if (!this.item) return false;
 
 		if (!sourceEffect && this.battle.effect) sourceEffect = this.battle.effect;
 		if (!source && this.battle.event && this.battle.event.target) source = this.battle.event.target;
 		const item = this.getItem();
-		if (this.battle.runEvent('UseItem', this, null, null, item) &&
-			this.battle.runEvent('TryEatItem', this, null, null, item)) {
+		if (
+			this.battle.runEvent('UseItem', this, null, null, item) &&
+			(force || this.battle.runEvent('TryEatItem', this, null, null, item))
+		) {
 
 			this.battle.add('-enditem', this, item, '[eat]');
 
@@ -1377,11 +1379,11 @@ var _state = require('./state');
 			if (item.id === 'leppaberry') {
 				switch (this.pendingStaleness) {
 				case 'internal':
-						if (this.staleness !== 'external') this.staleness = 'internal';
-						break;
+					if (this.staleness !== 'external') this.staleness = 'internal';
+					break;
 				case 'external':
-						this.staleness = 'external';
-						break;
+					this.staleness = 'external';
+					break;
 				}
 				this.pendingStaleness = undefined;
 			}

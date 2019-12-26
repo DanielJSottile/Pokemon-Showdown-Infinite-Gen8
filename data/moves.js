@@ -1444,12 +1444,6 @@ let BattleMovedex = {
 		num: 782,
 		accuracy: 100,
 		basePower: 100,
-		basePowerCallback(pokemon, target, move) {
-			if (target.volatiles['dynamax']) {
-				return move.basePower * 2;
-			}
-			return move.basePower;
-		},
 		category: "Physical",
 		desc: "Deals double damage against Dynamax and Gigantamax Pokemon.",
 		shortDesc: "Double damage against Dynamax/Gigantamax.",
@@ -1468,12 +1462,6 @@ let BattleMovedex = {
 		num: 781,
 		accuracy: 100,
 		basePower: 100,
-		basePowerCallback(pokemon, target, move) {
-			if (target.volatiles['dynamax']) {
-				return move.basePower * 2;
-			}
-			return move.basePower;
-		},
 		category: "Physical",
 		desc: "Deals double damage against Dynamax and Gigantamax Pokemon.",
 		shortDesc: "Double damage against Dynamax/Gigantamax.",
@@ -2159,8 +2147,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 60,
 		category: "Physical",
-		desc: "100% chance to lower the foe's Defense by 1 stage. Hits all adjecent foes.",
-		shortDesc: "100% chance to lower adjacent foes' Def by 1.",
+		desc: "100% chance to lower the foe's Attack by 1 stage. Hits all adjecent foes.",
+		shortDesc: "100% chance to lower adjacent foes' Att by 1.",
 		id: "breakingswipe",
 		name: "Breaking Swipe",
 		pp: 15,
@@ -2169,7 +2157,7 @@ let BattleMovedex = {
 		secondary: {
 			chance: 100,
 			boosts: {
-				def: -1,
+				att: -1,
 			},
 		},
 		target: "allAdjacentFoes",
@@ -3341,6 +3329,7 @@ let BattleMovedex = {
 		desc: "Switches the Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Light Screen, Reflect, Aurora Veil, and Tailwind from the user's side to the target's side and vice versa.",
 		shortDesc: "Switches sides of field effects",
 		id: "courtchange",
+		isViable: true,
 		name: "Court Change",
 		pp: 10,
 		priority: 0,
@@ -3349,29 +3338,65 @@ let BattleMovedex = {
 			const sideConditions = [
 				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'lightscreen', 'reflect', 'auroraveil', 'tailwind',
 			];
-			const side1 = this.sides[0];
-			const side2 = this.sides[1];
+			const side1 = source.side;
+			const side2 = source.side.foe;
+			let success = false;
 			for (let id of sideConditions) {
 				let sourceLayers = side1.sideConditions[id] ? (side1.sideConditions[id].layers || 1) : 0;
 				let targetLayers = side2.sideConditions[id] ? (side2.sideConditions[id].layers || 1) : 0;
 				if (sourceLayers === targetLayers) continue;
 				const effectName = this.dex.getEffect(id).name;
 				if (side1.removeSideCondition(id)) {
-					this.add('-sideend', side1, effectName, '[from] move: Court Change', '[of] ' + source);
+					this.add('-sideend', side1, effectName, '[silent]');
+					success = true;
 				}
 				if (side2.removeSideCondition(id)) {
-					this.add('-sideend', side2, effectName, '[from] move: Court Change', '[of] ' + source);
+					this.add('-sideend', side2, effectName, '[silent]');
+					success = true;
 				}
 				for (; targetLayers > 0; targetLayers--) {
 					side1.addSideCondition(id, source);
 				}
 				for (; sourceLayers > 0; sourceLayers--) {
-					side2.addSideCondition(id, source);
+					side2.addSideCondition(id, side2.active[0]);
 				}
 			}
+			if (!success) return false;
+			this.add('-activate', source, 'move: Court Change');
 		},
 		secondary: null,
 		target: "all",
+		type: "Normal",
+	},
+	"covet": {
+		num: 343,
+		accuracy: 100,
+		basePower: 60,
+		category: "Physical",
+		desc: "If this attack was successful and the user has not fainted, it steals the target's held item if the user is not holding one. The target's item is not stolen if it is a Mail or Z-Crystal, or if the target is a Kyogre holding a Blue Orb, a Groudon holding a Red Orb, a Giratina holding a Griseous Orb, an Arceus holding a Plate, a Genesect holding a Drive, a Silvally holding a Memory, or a Pokemon that can Mega Evolve holding the Mega Stone for its species. Items lost to this move cannot be regained with Recycle or the Harvest Ability.",
+		shortDesc: "If the user has no item, it steals the target's.",
+		id: "covet",
+		name: "Covet",
+		pp: 25,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		onAfterHit(target, source, move) {
+			if (source.item || source.volatiles['gem']) {
+				return;
+			}
+			let yourItem = target.takeItem(source);
+			if (!yourItem) {
+				return;
+			}
+			if (!this.singleEvent('TakeItem', yourItem, target.itemData, source, target, move, yourItem) || !source.setItem(yourItem)) {
+				target.item = yourItem.id; // bypass setItem so we don't break choicelock or anything
+				return;
+			}
+			this.add('-item', source, yourItem, '[from] move: Covet', '[of] ' + target);
+		},
+		secondary: null,
+		target: "all",
+		zMoveBoost: {spe: 1},
 		type: "Normal",
 	},
 	"covet": {
@@ -4747,12 +4772,6 @@ let BattleMovedex = {
 		num: 744,
 		accuracy: 100,
 		basePower: 100,
-		basePowerCallback(pokemon, target, move) {
-			if (target.volatiles['dynamax']) {
-				return move.basePower * 2;
-			}
-			return move.basePower;
-		},
 		category: "Special",
 		// TODO: Check to see if power doubles against Gigantamax
 		desc: "Deals double damage against Dynamax and Gigantamax Pokemon.",
@@ -5070,12 +5089,6 @@ let BattleMovedex = {
 		num: 1000,
 		accuracy: true,
 		basePower: 200,
-		basePowerCallback(pokemon, target, move) {
-			if (target.volatiles['dynamax']) {
-				return move.basePower * 2;
-			}
-			return move.basePower;
-		},
 		category: "Special",
 		shortDesc: "Boosts all stats by +1, double against Dmax - needs to recharge, ignores Fairy Immunity. BP scales with base move's BP.",
 		id: "emaxeternalenergy",
@@ -5634,8 +5647,8 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "Every Pokemon in the user's party is cured of its major status condition and healed to full, outside of fainted Pokemon. However, the user faints.",
-		shortDesc: "Cures the user's party of all status conditions and healed to full, user faints.",
+		desc: "Every Pokemon in the user's party is cured of its major status condition and HP healed by half of max, outside of fainted Pokemon. However, the user faints.",
+		shortDesc: "Cures the user's party of all status conditions and healed by 1/2, user faints.",
 		id: "fallaciouspastry",
 		name: "Fallacious Pastry",
 		pp: 1,
@@ -5643,12 +5656,14 @@ let BattleMovedex = {
 		flags: {snatch: 1, distance: 1, authentic: 1},
 		onHit(pokemon, source) {
 			this.add('-activate', source, 'move: Fallacious Pastry');
+			this.add('-anim', source, 'HealBell', source);
 			let side = pokemon.side;
 			let success = false;
 			for (const ally of side.pokemon) {
-				if (ally.heal(ally.maxhp)) success = true;
+				if (ally.heal(ally.maxhp / 2)) success = true;
 				if (ally.cureStatus()) success = true;
 			}
+			this.add('-message', "Alcremie's party memebers were healed by the mysterious pastry!");
 			return success;
 		},
 		selfdestruct: "ifHit",
@@ -8340,13 +8355,18 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 80,
 		category: "Physical",
-		desc: "Has a 100% chance to lower the target's Defense by 1 stage.",
-		shortDesc: "100% chance to lower the target's Defense by 1.",
+		desc: "Has a 100% chance to lower the target's Defense by 1 stage. This move's base power is 1.5x stronger in Gravity.",
+		shortDesc: "Foe: 100% -1 Def. 1.5x Power in Gravity.",
 		id: "gravapple",
 		name: "Grav Apple",
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onBasePower(basePower) {
+			if (this.field.getPseudoWeather('gravity')) {
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -8445,14 +8465,19 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 90,
 		category: "Special",
-		desc: "Has a 10% chance to confuse the target.",
-		shortDesc: "10% chance to confuse the target.",
+		desc: "Has a 10% chance to confuse the target. 1.5x in Gravity",
+		shortDesc: "10% chance to confuse; 1.5x in Gravity.",
 		id: "gravitybeam",
 		isViable: true,
 		name: "Gravity Beam",
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onBasePower(basePower) {
+			if (this.field.getPseudoWeather('gravity')) {
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: {
 			chance: 10,
 			volatileStatus: 'confusion',
@@ -20497,7 +20522,7 @@ let BattleMovedex = {
 		flags: {snatch: 1},
 		onTryHit(target, source, move) {
 			let item = source.getItem();
-			if (item.isBerry && source.eatItem()) {
+			if (item.isBerry && source.eatItem(true)) {
 				this.boost({def: 2}, source, null, null, false, true);
 			} else {
 				return false;
@@ -21297,7 +21322,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "Forces all active Pokemon to consume their held berries. This move bypasses Substitutes.",
+		desc: "Forces all active Pokemon to consume their held berries. This move bypasses Substitutes and Unnerve.",
 		shortDesc: "All active Pokemon consume held Berries.",
 		id: "teatime",
 		name: "Teatime",
@@ -21313,14 +21338,8 @@ let BattleMovedex = {
 				} else {
 					let item = active.getItem();
 					if (active.hp && item.isBerry) {
-						// Not using `eatItem` as we need to bypass Unnerve.
-						this.add('-enditem', target, item.name, '[from] eat', '[move] Teatime', '[of] ' + active);
-						if (this.singleEvent('Eat', item, null, active, null, null)) {
-							this.runEvent('EatItem', active, null, null, item);
-							// TODO: Test
-							if (item.id === 'leppaberry') active.staleness = 'external';
-						}
-						if (item.onEat) active.ateBerry = true;
+						// bypasses Unnerve
+						active.eatItem(true);
 						result = true;
 					}
 				}
