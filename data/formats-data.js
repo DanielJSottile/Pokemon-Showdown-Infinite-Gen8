@@ -831,7 +831,7 @@ let BattleFormatsData = {
 			{"generation": 2, "level": 5},
 			{"generation": 4, "level": 19},
 		],
-		tier: "(PU)",
+		tier: "OU",
 		doublesTier: "(DUU)",
 	},
 	dugtrioalola: {

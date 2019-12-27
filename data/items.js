@@ -6114,6 +6114,18 @@ let BattleItems = {
 		gen: 4,
 		desc: "Holder's Flying-type attacks have 1.2x power. Judgment is Flying type.",
 	},
+	"slakingiumz": {
+		id: "slakingiumz",
+		name: "Slakingium Z",
+		spritenum: 690,
+		onTakeItem: false,
+		zMove: "Beastly Awakening Punch",
+		zMoveFrom: "Giga Impact",
+		itemUser: "Slaking",
+		num: -39,
+		gen: 8,
+		desc: "If held by a Slaking with Giga Impact, it can use Beastly Awakening Punch.",
+	},
 	"slowbronite": {
 		id: "slowbronite",
 		name: "Slowbronite",

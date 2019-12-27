@@ -1414,6 +1414,38 @@ let BattleMovedex = {
 		zMovePower: 170,
 		contestType: "Tough",
 	},
+	"beastlyawakeningpunch": {
+		num: -26,
+		accuracy: true,
+		basePower: 185,
+		category: "Physical",
+		desc: "Changes the users ability to Insomnia, can be used while Asleep.",
+		shortDesc: "Changes the users ability to Insomnia, can be used while Asleep.",
+		id: "beastlyawakeningpunch",
+		name: "Beastly Awakening Punch",
+		pp: 1,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, punch: 1},
+		sleepUsable: true,
+		self: {
+			onHit(pokemon) {
+				let oldAbility = pokemon.setAbility('insomnia');
+				if (oldAbility) {
+					this.add('-ability', pokemon, 'Insomnia', '[from] move: Beastly Awakening Punch');
+					if (pokemon.status === 'slp') {
+						pokemon.cureStatus();
+					}
+					return;
+				}
+				return false;
+			},
+		},
+		isZ: "slakingiumz",
+		secondary: null,
+		target: "normal",
+		type: "Normal",
+		contestType: "Cool",
+	},
 	"beatup": {
 		num: 251,
 		accuracy: 100,

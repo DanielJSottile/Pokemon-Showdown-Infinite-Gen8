@@ -4500,6 +4500,9 @@ let BattleAbilities = {
 				}
 			},
 		},
+		onEnd(pokemon) {
+			pokemon.removeVolatile('truant');
+		},
 		id: "truant",
 		name: "Truant",
 		rating: -1,
