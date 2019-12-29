@@ -59,7 +59,7 @@ local_settings.py
 .svn
 
 # keys
-key.pub
+*.pub
 key
 
 pip-log.txt
