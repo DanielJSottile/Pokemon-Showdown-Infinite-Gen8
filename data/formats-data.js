@@ -8655,7 +8655,6 @@ let BattleFormatsData = {
 		tier: "AG",
 		doublesTier: "DUber",
 		requiredItem: "Rusted Sword",
-		requiredAbility: "Intrepid Sword",
 	},
 	zamazenta: {
 		randomBattleMoves: ["closecombat", "crunch", "ironhead", "psychicfangs"],
@@ -8667,7 +8666,6 @@ let BattleFormatsData = {
 		tier: "AG",
 		doublesTier: "DUber",
 		requiredItem: "Rusted Shield",
-		requiredAbility: "Dauntless Shield",
 	},
 	eternatus: {
 		randomBattleMoves: ["dynamaxcannon", "flamethrower", "recover", "sludgewave"],
