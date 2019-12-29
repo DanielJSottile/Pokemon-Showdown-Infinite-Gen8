@@ -4522,8 +4522,8 @@ let BattleAbilities = {
 		num: 163,
 	},
 	"unaware": {
-		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.",
-		shortDesc: "This Pokemon ignores other Pokemon's stat stages when taking or doing damage.",
+		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.  However, the foe's critical hit ratio is raised by 1.",
+		shortDesc: "This Pokemon ignores other Pokemon's stat stages; foes crit ratio +1.",
 		id: "unaware",
 		name: "Unaware",
 		onAnyModifyBoost(boosts, target) {
@@ -4540,6 +4540,9 @@ let BattleAbilities = {
 				boosts['spa'] = 0;
 				boosts['accuracy'] = 0;
 			}
+		},
+		onSourceModifyCritRatio(critRatio) {
+			return critRatio + 1;
 		},
 		rating: 3.5,
 		num: 109,
