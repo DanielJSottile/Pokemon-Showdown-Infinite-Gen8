@@ -1,7 +1,7 @@
 server/tournaments/lib/
 logs/
-.*-dist/
 dev-tools/globals.js
 node_modules/
+.*-dist/
 tools/set-import/importer.js
 tools/set-import/sets
