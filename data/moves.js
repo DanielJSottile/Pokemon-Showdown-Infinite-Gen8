@@ -4766,7 +4766,7 @@ let BattleMovedex = {
 		shortDesc: "100% chance to lower the target's Speed by 1.",
 		id: "drumbeating",
 		name: "Drum Beating",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		secondary: {
@@ -16487,7 +16487,7 @@ let BattleMovedex = {
 		shortDesc: "10% chance to burn the target.",
 		id: "pyroball",
 		name: "Pyro Ball",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, defrost: 1, bullet: 1},
 		secondary: {
@@ -19328,7 +19328,7 @@ let BattleMovedex = {
 		shortDesc: "High critical hit ratio.",
 		id: "snipeshot",
 		name: "Snipe Shot",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		critRatio: 2,
