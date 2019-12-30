@@ -4301,9 +4301,9 @@ let BattleAbilities = {
 		num: 101,
 	},
 	"telepathy": {
-		shortDesc: "This Pokemon does not take damage from attacks made by its allies.",
+		shortDesc: "This Pokemon does not take damage from attacks made by its allies or from spread moves.",
 		onTryHit(target, source, move) {
-			if (target !== source && target.side === source.side && move.category !== 'Status') {
+			if (move && move.target !== 'allAdjacent' && move.target !== 'allAdjacentFoes') {
 				this.add('-activate', target, 'ability: Telepathy');
 				return null;
 			}
