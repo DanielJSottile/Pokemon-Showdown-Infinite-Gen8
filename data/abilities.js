@@ -4303,8 +4303,9 @@ let BattleAbilities = {
 	"telepathy": {
 		shortDesc: "This Pokemon does not take damage from attacks made by its allies or from spread moves.",
 		onTryHit(target, source, move) {
-			if (move && move.target !== 'allAdjacent' && move.target !== 'allAdjacentFoes') {
+			if (move.target === 'allAdjacent' || move.target === 'allAdjacentFoes') {
 				this.add('-activate', target, 'ability: Telepathy');
+				this.add('-message', '(Hint: in Infinite, it also ignores from opponents spread moves!)')
 				return null;
 			}
 		},
