@@ -1987,7 +1987,22 @@ var _state = require('./state');
 		const defender = target;
 		let attackStat = category === 'Physical' ? 'atk' : 'spa';
 		const defenseStat = defensiveCategory === 'Physical' ? 'def' : 'spd';
-		if (move.useSourceDefensiveAsOffensive) attackStat = defenseStat;
+		if (move.useSourceDefensiveAsOffensive) {
+			attackStat = defenseStat;
+			// Body press really wants to use the def stat,
+			// so it switches stats to compensate for Wonder Room.
+			// Of course, the game thus miscalculates the boosts...
+			if ('wonderroom' in this.field.pseudoWeather) {
+				if (attackStat === 'def') {
+					attackStat = 'spd';
+				} else if (attackStat === 'spd') {
+					attackStat = 'def';
+				}
+				if (attacker.boosts['def'] || attacker.boosts['spd']) {
+					this.hint("Body Press uses Sp. Def boosts when Wonder Room is active.");
+				}
+			}
+		}
 
 		const statTable = {atk: 'Atk', def: 'Def', spa: 'SpA', spd: 'SpD', spe: 'Spe'};
 		let attack;
@@ -2352,7 +2367,7 @@ var _state = require('./state');
 		}
 		if (!midTurn) {
 			if (action.choice === 'move') {
-				if (!action.zmove && action.move.beforeTurnCallback) {
+				if (!action.maxMove && !action.zmove && action.move.beforeTurnCallback) {
 					this.addToQueue({
 						choice: 'beforeTurnMove', pokemon: action.pokemon, move: action.move, targetLoc: action.targetLoc,
 					});
@@ -2372,6 +2387,7 @@ var _state = require('./state');
 						pokemon: action.pokemon,
 					});
 				}
+				action.fractionalPriority = this.runEvent('FractionalPriority', action.pokemon, null, action.move, 0);
 			} else if (['switch', 'instaswitch'].includes(action.choice)) {
 				if (typeof action.pokemon.switchFlag === 'string') {
 					action.sourceEffect = this.dex.getMove(action.pokemon.switchFlag ) ;
@@ -2413,7 +2429,7 @@ var _state = require('./state');
 					}
 				}
 				const priority = this.runEvent('ModifyPriority', action.pokemon, target, move, move.priority);
-				action.priority = priority;
+				action.priority = priority + action.fractionalPriority;
 				// In Gen 6, Quick Guard blocks moves with artificially enhanced priority.
 				if (this.gen > 5) action.move.priority = priority;
 			}

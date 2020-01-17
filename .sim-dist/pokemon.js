@@ -20,6 +20,10 @@ var _state = require('./state');
 
 
 
+
+
+
+
  class Pokemon {
 	
 	
@@ -83,7 +87,6 @@ var _state = require('./state');
 	
 	
 	
-
 	
 	
 	
@@ -604,7 +607,7 @@ var _state = require('./state');
 	}
 
 	getMoveTargets(move, target) {
-		const targets = [];
+		let targets = [];
 		let pressureTargets;
 
 		switch (move.target) {
@@ -630,6 +633,9 @@ var _state = require('./state');
 			if (targets.length && !targets.includes(target)) {
 				this.battle.retargetLastMove(targets[targets.length - 1]);
 			}
+			break;
+		case 'allies':
+			targets = this.allies();
 			break;
 		default:
 			const selectedTarget = target;
@@ -668,7 +674,7 @@ var _state = require('./state');
 
 	ignoringAbility() {
 		const abilities = [
-			'battlebond', 'comatose', 'disguise', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange',
+			'battlebond', 'comatose', 'gulpmissile', 'disguise', 'hungerswitch', 'iceface', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'timetravel', 'unownsspell'
 		];
 		// Check if any active pokemon have the ability Neutralizing Gas
 		let neutralizinggas = false;
