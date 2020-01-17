@@ -5600,7 +5600,7 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Fairy",
 		zMoveBoost: {spd: 1},
-		contestType: "Clever",
+		contestType: "Cute",
 	},
 	"fairywind": {
 		num: 584,
@@ -13709,7 +13709,7 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Dark",
 		zMovePower: 165,
-		contestType: "Cool",
+		contestType: "Tough",
 	},
 	"milkdrink": {
 		num: 208,
@@ -17774,7 +17774,7 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Fighting",
 		zMovePower: 165,
-		contestType: "Cool",
+		contestType: "Tough",
 	},
 	"sacredfire": {
 		num: 221,
