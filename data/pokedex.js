@@ -4444,6 +4444,7 @@ let BattlePokedex = {
 		prevo: "pupitar",
 		evoLevel: 55,
 		eggGroups: ["Monster"],
+	},
 	lugia: {
 		num: 249,
 		species: "Lugia",

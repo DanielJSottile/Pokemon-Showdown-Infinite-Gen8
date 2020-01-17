@@ -7559,7 +7559,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
-		shortDesc: "Boosts attack 1 stage, does 1.5x against opposing D-Max; User must recharge. BP scales with base move.",
+		shortDesc: "Boosts attack 1 stage, does 2x against opposing D-Max; User must recharge. BP scales with base move.",
 		id: "gmaxcolossalforce",
 		isNonstandard: "Custom",
 		name: "G-Max Colossal Force",
@@ -7569,14 +7569,15 @@ let BattleMovedex = {
 		isMax: "Regigigas",
 		onBasePower(basePower, pokemon, target) {
 			if (target.volatiles['dynamax']) {
-				return this.chainModify(1.5);
+				return this.chainModify(2);
 			}
 		},
 		self: {
 			volatileStatus: 'mustrecharge',
 			onHit(source) {
-				for (let pokemon of source.side.foe.active) {
-					this.boost({atk: 1}, pokemon, source, move);
+				if (!source.volatiles['dynamax']) return;
+				for (let pokemon of source.side.active) {
+					this.boost({atk: 1}, pokemon);
 				}
 			},
 		},
@@ -7784,6 +7785,7 @@ let BattleMovedex = {
 					this.boost({spe: -1}, pokemon);
 					pokemon.addVolatile('block');
 				}
+			},
 		},
 		secondary: null,
 		target: "adjacentFoe",
