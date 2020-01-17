@@ -3239,6 +3239,11 @@ let BattleFormatsData = {
 		tier: "OU",
 		doublesTier: "DOU",
 	},
+	tyranitargmax: {
+		isGigantamax: "G-Max Landslide",
+		tier: "OU",
+		doublesTier: "DOU",
+	},
 	lugia: {
 		randomBattleMoves: ["toxic", "roost", "substitute", "whirlwind", "aeroblast", "earthquake"],
 		randomDoubleBattleMoves: ["aeroblast", "roost", "substitute", "tailwind", "icebeam", "psychic", "calmmind", "skydrop", "protect"],
@@ -5380,6 +5385,11 @@ let BattleFormatsData = {
 		tier: "OU",
 		doublesTier: "(DUU)",
 	},
+	regigigasgmax: {
+		isGigantamax: "G-Max Colossal Force",
+		tier: "OU",
+		doublesTier: "DOU",
+	},
 	giratina: {
 		randomBattleMoves: ["rest", "sleeptalk", "dragontail", "roar", "willowisp", "shadowball", "dragonpulse"],
 		randomDoubleBattleMoves: ["tailwind", "shadowsneak", "protect", "dragontail", "willowisp", "calmmind", "dragonpulse", "shadowball"],
@@ -6260,6 +6270,11 @@ let BattleFormatsData = {
 		tier: "PU",
 		doublesTier: "(DUU)",
 	},
+	jellicentgmax: {
+		isGigantamax: "G-Max Ghostly Sting",
+		tier: "PU",
+		doublesTier: "(DUU)",
+	},
 	alomomola: {
 		randomBattleMoves: ["wish", "protect", "knockoff", "toxic", "scald"],
 		randomDoubleBattleMoves: ["wish", "protect", "knockoff", "icywind", "scald", "helpinghand", "wideguard"],
@@ -6537,6 +6552,11 @@ let BattleFormatsData = {
 		],
 		tier: "UU",
 		doublesTier: "DUU",
+	},
+	hydreigongmax: {
+		isGigantamax: "G-Max Nightfall",
+		tier: "UU",
+		doublesTier: "DOU",
 	},
 	larvesta: {
 		tier: "LC",
@@ -8270,9 +8290,8 @@ let BattleFormatsData = {
 	cinderacemega: {
 		randomBattleMoves: ["courtchange", "gunkshot", "highjumpkick", "ironhead", "pyroball", "uturn", "zenheadbutt", "wildcharge", "suckerpunch"],
 		requiredItem: "Cinderacite",
-		isUnreleased: true,
-		tier: "Unreleased",
-		doublesTier: "Unreleased",
+		tier: "OU",
+		doublesTier: "DOU",
 	},
 	sobble: {
 		tier: "LC",

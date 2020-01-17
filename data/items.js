@@ -1098,7 +1098,6 @@ let BattleItems = {
 	"cinderacite": {
 		id: "cinderacite",
 		name: "Cinderacite",
-		isUnreleased: true,
 		spritenum: 576,
 		megaStone: "Cinderace-Mega",
 		megaEvolves: "Cinderace",

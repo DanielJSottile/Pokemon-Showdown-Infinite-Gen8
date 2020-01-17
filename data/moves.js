@@ -7554,6 +7554,37 @@ let BattleMovedex = {
 		type: "Fighting",
 		contestType: "Cool",
 	},
+	"gmaxcolossalforce": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		shortDesc: "Boosts attack 1 stage, does 1.5x against opposing D-Max; User must recharge. BP scales with base move.",
+		id: "gmaxcolossalforce",
+		isNonstandard: "Custom",
+		name: "G-Max Colossal Force",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Regigigas",
+		onBasePower(basePower, pokemon, target) {
+			if (target.volatiles['dynamax']) {
+				return this.chainModify(1.5);
+			}
+		},
+		self: {
+			volatileStatus: 'mustrecharge',
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					this.boost({atk: 1}, pokemon, source, move);
+				}
+			},
+		},
+		secondary: null,
+		target: "adjacentFoe",
+		type: "Normal",
+		contestType: "Cool",
+	},
 	"gmaxcuddle": {
 		num: 1000,
 		accuracy: true,
@@ -7663,6 +7694,32 @@ let BattleMovedex = {
 		type: "Water",
 		contestType: "Cool",
 	},
+	"gmaxghostlysting": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		shortDesc: "Lowers the opponents Def -1, causes the opponent to be Cursed. BP scales with base move's BP.",
+		id: "gmaxghostlysting",
+		isNonstandard: "Custom",
+		name: "G-Max Ghostly Sting",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Jellicent",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					this.boost({def: -1}, pokemon);
+					pokemon.addVolatile('curse');
+				}
+			},
+		},
+		secondary: null,
+		target: "adjacentFoe",
+		type: "Ghost",
+		contestType: "Cool",
+	},
 	"gmaxgoldrush": {
 		num: 1000,
 		accuracy: true,
@@ -7706,6 +7763,31 @@ let BattleMovedex = {
 		},
 		target: "adjacentFoe",
 		type: "Psychic",
+		contestType: "Cool",
+	},
+	"gmaxlandslide": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		shortDesc: "Lowers opponents Speed by -1, Blocks the opponent. BP scales w/ base move's BP.",
+		id: "gmaxlandslide",
+		isNonstandard: "Custom",
+		name: "G-Max Landslide",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Tyranitar",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					this.boost({spe: -1}, pokemon);
+					pokemon.addVolatile('block');
+				}
+		},
+		secondary: null,
+		target: "adjacentFoe",
+		type: "Rock",
 		contestType: "Cool",
 	},
 	"gmaxmalodor": {
@@ -7755,6 +7837,30 @@ let BattleMovedex = {
 		secondary: null,
 		target: "adjacentFoe",
 		type: "Steel",
+		contestType: "Cool",
+	},
+	"gmaxnightfall": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		shortDesc: "Lowers the opponents Sp. Def by -1, Blinds opponents. BP scales with base move.",
+		id: "gmaxnightfall",
+		isNonstandard: "Custom",
+		name: "G-Max Nightfall",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Hydreigon",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					pokemon.trySetStatus('blindness', source);
+				}
+			},
+		},
+		target: "adjacentFoe",
+		type: "Dark",
 		contestType: "Cool",
 	},
 	"gmaxreplenish": {

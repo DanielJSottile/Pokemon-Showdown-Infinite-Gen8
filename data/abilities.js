@@ -719,6 +719,25 @@ let BattleAbilities = {
 		rating: 2.5,
 		num: 128,
 	},
+	"deflagrate": {
+		desc: "This Pokemon's Normal-type moves become Fire-type moves and have their power multiplied by 1.2. This effect comes after other effects that change a move's type, but before Ion Deluge and Electrify's effects.",
+		shortDesc: "This Pokemon's Normal-type moves become Fire type and have 1.2x power.",
+		onModifyMovePriority: -1,
+		onModifyMove(move, pokemon) {
+			if (move.type === 'Normal' && !['judgment', 'multiattack', 'naturalgift', 'revelationdance', 'technoblast', 'weatherball'].includes(move.id) && !(move.isZ && move.category !== 'Status')) {
+				move.type = 'Fire';
+				move.deflagrateBoosted = true;
+			}
+		},
+		onBasePowerPriority: 8,
+		onBasePower(basePower, pokemon, target, move) {
+			if (move.deflagrateBoosted) return this.chainModify([0x1333, 0x1000]);
+		},
+		id: "deflagrate",
+		name: "Deflagrate",
+		rating: 4,
+		num: -1,
+	},
 	"deltastream": {
 		desc: "On switch-in, the weather becomes strong winds that remove the weaknesses of the Flying type from Flying-type Pokemon. This weather remains in effect until this Ability is no longer active for any Pokemon, or the weather is changed by Desolate Land or Primordial Sea.",
 		shortDesc: "On switch-in, strong winds begin until this Ability is not active in battle.",
@@ -1760,25 +1779,6 @@ let BattleAbilities = {
 		name: "Imposter",
 		rating: 5,
 		num: 150,
-	},
-	"incinerate": {
-		desc: "This Pokemon's Normal-type moves become Fire-type moves and have their power multiplied by 1.2. This effect comes after other effects that change a move's type, but before Ion Deluge and Electrify's effects.",
-		shortDesc: "This Pokemon's Normal-type moves become Fire type and have 1.2x power.",
-		onModifyMovePriority: -1,
-		onModifyMove(move, pokemon) {
-			if (move.type === 'Normal' && !['judgment', 'multiattack', 'naturalgift', 'revelationdance', 'technoblast', 'weatherball'].includes(move.id) && !(move.isZ && move.category !== 'Status')) {
-				move.type = 'Fire';
-				move.incinerateBoosted = true;
-			}
-		},
-		onBasePowerPriority: 8,
-		onBasePower(basePower, pokemon, target, move) {
-			if (move.incinerateBoosted) return this.chainModify([0x1333, 0x1000]);
-		},
-		id: "incinerate",
-		name: "Incinerate",
-		rating: 4,
-		num: -1,
 	},
 	"infiltrator": {
 		desc: "This Pokemon's moves ignore substitutes and the opposing side's Reflect, Light Screen, Safeguard, Mist and Aurora Veil.",
@@ -3244,6 +3244,34 @@ let BattleAbilities = {
 		rating: 4.5,
 		num: 144,
 	},
+	"resolutegauntlet": {
+		inherit: true,
+		desc: "On switch-in, this Pokemon lowers either the Sp. Att or Speed of adjacent opposing Pokemon by 1 stage. Pokemon behind a substitute are immune.",
+		onStart(pokemon) {
+			let activated = false;
+			for (const target of pokemon.side.foe.active) {
+				if (!target || !this.isAdjacent(target, pokemon)) continue;
+				if (!activated) {
+					this.add('-ability', pokemon, 'Intimidate', 'boost');
+					activated = true;
+				}
+				if (target.volatiles['substitute']) {
+					this.add('-immune', target);
+				} else {
+					let result = this.random(2);
+					if (result === 0) {
+						this.boost({spa: -1}, target, pokemon, null, true);
+					} else {
+						this.boost({spe: -1}, target, pokemon, null, true);
+					}
+				}
+			}
+		},
+		id: "resolutegauntlet",
+		name: "Resolute Gauntlet",
+		rating: 4.5,
+		num: -4,
+	},
 	"ripen": {
 		// TODO Needs research. Following berries aren't supported currently:
 		// Custap, Jacoba, Rowap, Lanslat, Leppa, Micle
@@ -4375,7 +4403,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -4,
+		num: -5,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",
@@ -4471,9 +4499,9 @@ let BattleAbilities = {
 		num: 36,
 	},
 	"triage": {
-		shortDesc: "This Pokemon's healing moves have their priority increased by 3.",
+		shortDesc: "This Pokemon's healing moves have their priority increased by 1.",
 		onModifyPriority(priority, pokemon, target, move) {
-			if (move && move.flags['heal']) return priority + 3;
+			if (move && move.flags['heal']) return priority + 1;
 		},
 		id: "triage",
 		name: "Triage",
@@ -4523,8 +4551,8 @@ let BattleAbilities = {
 		num: 163,
 	},
 	"unaware": {
-		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.  However, the foe's critical hit ratio is raised by 2.",
-		shortDesc: "This Pokemon ignores other Pokemon's stat stages; foes crit ratio +2.",
+		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.  However, the foe's critical hit ratio is raised by 1.",
+		shortDesc: "This Pokemon ignores other Pokemon's stat stages; foes crit ratio +1.",
 		id: "unaware",
 		name: "Unaware",
 		onAnyModifyBoost(boosts, target) {
@@ -4543,7 +4571,7 @@ let BattleAbilities = {
 			}
 		},
 		onFoeModifyCritRatio(critRatio) {
-			return critRatio + 2;
+			return critRatio + 1;
 		},
 		rating: 3.5,
 		num: 109,
