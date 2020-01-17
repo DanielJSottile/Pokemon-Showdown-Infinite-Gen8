@@ -1736,6 +1736,20 @@ let BattlePokedex = {
 		color: "Pink",
 		evos: ["slowbro", "slowking"],
 		eggGroups: ["Monster", "Water 1"],
+		otherFormes: ["slowpokegalar"],
+	},
+	slowpokegalar: {
+		num: 79,
+		species: "Slowpoke-Galar",
+		baseSpecies: "Slowpoke",
+		forme: "Galar",
+		types: ["Psychic"],
+		baseStats: {hp: 90, atk: 65, def: 65, spa: 40, spd: 40, spe: 15},
+		abilities: {0: "Gluttony", 1: "Own Tempo", H: "Regenerator"},
+		heightm: 1.2,
+		weightkg: 36,
+		color: "Pink",
+		eggGroups: ["Monster", "Water 1"],
 	},
 	slowbro: {
 		num: 80,
@@ -14573,7 +14587,7 @@ let BattlePokedex = {
 		eggGroups: ["Human-Like"],
 	},
 	toxtricitygmax: {
-		num: 844,
+		num: 849,
 		species: "Toxtricity-Gmax",
 		baseSpecies: "Toxtricity",
 		forme: "Gmax",
@@ -15246,6 +15260,7 @@ let BattlePokedex = {
 		weightkg: 355,
 		color: "Blue",
 		eggGroups: ["Undiscovered"],
+		inheritsFrom: "zacian",
 	},
 	zamazenta: {
 		num: 889,
@@ -15271,6 +15286,7 @@ let BattlePokedex = {
 		weightkg: 785,
 		color: "Red",
 		eggGroups: ["Undiscovered"],
+		inheritsFrom: "zamazenta",
 	},
 	eternatus: {
 		num: 890,

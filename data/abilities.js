@@ -1438,28 +1438,31 @@ let BattleAbilities = {
 		num: 0,
 	},
 	"gulpmissile": {
-		desc: "When the Pokémon uses Surf or Dive, it will come back with prey. When it takes damage, it will spit out the prey to deal 25% damage. If the base HP is below 50%, the prey will be a Pikachu and paralyze the opponent after being damaged. Otherwise, the prey is an Arrokuda and will lower the opponent's Def by 1 stage after being damaged.",
-		shortDesc: "Get prey with Surf/Dive. When taking damage, prey is used to attack.",
-		onDamagePriority: -1,
-		onDamage(damage, target, source, effect) {
-			// Needs to trigger even if cramorant is about to faint
-			if (effect && effect.effectType === 'Move' && ['cramorantgulping', 'cramorantgorging'].includes(target.template.speciesid) && !target.transformed) {
-				// Forme change before damaging to avoid a potential infinite loop with surf cramorant vs surf cramorant
-				const forme = target.template.speciesid;
-				target.formeChange('cramorant', effect);
-
+		desc: "If this Pokemon is a Cramorant, it changes forme when it hits a target with Surf or uses the first turn of Dive successfully. It becomes Gulping Form with an Arrokuda in its mouth if it has more than 1/2 of its maximum HP remaining, or Gorging Form with a Pikachu in its mouth if it has 1/2 or less of its maximum HP remaining. If Cramorant gets hit in Gulping or Gorging Form, it spits the Arrokuda or Pikachu at its attacker, even if it has no HP remaining. The projectile deals damage equal to 1/4 of the target's maximum HP, rounded down; this damage is blocked by the Magic Guard Ability but not by a substitute. An Arrokuda also lowers the target's Defense by 1 stage, and a Pikachu paralyzes the target. Cramorant will return to normal if it spits out a projectile, switches out, or Dynamaxes.",
+		shortDesc: "When hit after Surf/Dive, attacker takes 1/4 max HP and -1 Defense or paralysis.",
+		onAfterDamage(damage, target, source, effect) {
+			if (effect && effect.effectType === 'Move' && effect.id !== 'confused' && ['cramorantgulping', 'cramorantgorging'].includes(target.template.speciesid) && !target.transformed && !target.isSemiInvulnerable()) {
 				this.damage(source.baseMaxhp / 4, source, target);
-				if (forme === 'cramorantgulping') {
+				if (target.template.speciesid === 'cramorantgulping') {
 					this.boost({def: -1}, source, target, null, true);
 				} else {
 					source.trySetStatus('par', target, effect);
 				}
+				target.formeChange('cramorant', effect);
 			}
 		},
-		onAfterMove(pokemon, target, move) {
-			if (pokemon.template.species !== 'Cramorant' || pokemon.transformed || !['dive', 'surf'].includes(move.id) || pokemon.volatiles['dive']) return;
-			const forme = pokemon.hp <= pokemon.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
-			pokemon.formeChange(forme, move);
+		// The Dive part of this mechanic is implemented in Dive's `onTryMove` in moves.js
+		onAnyDamage(damage, target, source, effect) {
+			if (effect && effect.id === 'surf' && source.hasAbility('gulpmissile') && source.template.species === 'Cramorant' && !source.transformed) {
+				const forme = source.hp <= source.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
+				source.formeChange(forme, effect);
+			}
+		},
+		onAnyAfterSubDamage(damage, target, source, effect) {
+			if (effect && effect.id === 'surf' && source.hasAbility('gulpmissile') && source.template.species === 'Cramorant' && !source.transformed) {
+				const forme = source.hp <= source.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
+				source.formeChange(forme, effect);
+			}
 		},
 		id: "gulpmissile",
 		name: "Gulp Missile",
@@ -1692,10 +1695,11 @@ let BattleAbilities = {
 		num: 248,
 	},
 	"icescales": {
-		shortDesc: "",
-		// TODO verify this is the correct way to implement this
-		onModifySpD(spd) {
-			return this.chainModify(2);
+		shortDesc: "This Pokemon receives 1/2 damage from special moves.",
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.category === 'Special') {
+				return this.chainModify(0.5);
+			}
 		},
 		id: "icescales",
 		name: "Ice Scales",
@@ -1807,7 +1811,9 @@ let BattleAbilities = {
 	},
 	"innerfocus": {
 		shortDesc: "This Pokemon cannot be made to flinch or be Intimidated.",
-		onFlinch: false,
+		onTryAddVolatile(status, pokemon) {
+			if (status.id === 'flinch') return null;
+		},
 		id: "innerfocus",
 		name: "Inner Focus",
 		rating: 1,
@@ -2571,6 +2577,7 @@ let BattleAbilities = {
 		// TODO Will abilities that already started start again? (Intimidate seems like a good test case)
 		onPreStart(pokemon) {
 			this.add('-ability', pokemon, 'Neutralizing Gas');
+			pokemon.abilityData.ending = false;
 		},
 		onEnd(source) {
 			// FIXME this happens before the pokemon switches out, should be the opposite order.
@@ -2579,7 +2586,7 @@ let BattleAbilities = {
 			// (If your tackling this, do note extreme weathers have the same issue)
 
 			// Mark this pokemon's ability as ending so Pokemon#ignoringAbility skips it
-			source.abilityData.ending = "true";
+			source.abilityData.ending = true;
 			for (const target of pokemon.side.foe.active) {
 				if (pokemon !== source) {
 					// Will be suppressed by Pokemon#ignoringAbility if needed
@@ -2781,7 +2788,6 @@ let BattleAbilities = {
 					announced = true;
 				}
 				pokemon.addVolatile('perishsong');
-				this.add('-start', pokemon, 'perish3');
 			}
 		},
 		id: "perishbody",
@@ -2794,7 +2800,7 @@ let BattleAbilities = {
 		shortDesc: "If this Pokemon has no item, it steals the item off a Pokemon making contact with it.",
 		onAfterMoveSecondary(target, source, move) {
 			if (source && source !== target && move && move.flags['contact']) {
-				if (target.item) {
+				if (target.item || target.switchFlag) {
 					return;
 				}
 				let yourItem = source.takeItem(target);
@@ -2935,7 +2941,7 @@ let BattleAbilities = {
 			pokemon.formeChange('Zygarde-Complete', this.effect, true);
 			let newHP = Math.floor(Math.floor(2 * pokemon.template.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100) * pokemon.level / 100 + 10);
 			pokemon.hp = newHP - (pokemon.baseMaxhp - pokemon.hp);
-			pokemon.baseMaxhp = newHP;
+			pokemon.baseMaxhp = pokemon.baseMaxhp = newHP;
 			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
 		},
 		id: "powerconstruct",
@@ -3942,7 +3948,7 @@ let BattleAbilities = {
 	},
 	"stall": {
 		shortDesc: "This Pokemon moves last among Pokemon using the same or greater priority moves.",
-		onModifyPriority(priority) {
+		onFractionalPriority(priority) {
 			return Math.round(priority) - 0.1;
 		},
 		id: "stall",
@@ -4626,7 +4632,7 @@ let BattleAbilities = {
 			pokemon.formeChange('Unown-Alphabet', this.effect, true);
 			let newHP = Math.floor(Math.floor(2 * pokemon.template.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100) * pokemon.level / 100 + 10);
 			pokemon.hp = newHP - (pokemon.baseMaxhp - pokemon.hp);
-			pokemon.baseMaxhp = newHP;
+			pokemon.baseMaxhp = pokemon.baseMaxhp = newHP;
 			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
 		},
 		id: "unownspell",
@@ -4683,28 +4689,18 @@ let BattleAbilities = {
 	},
 	"wanderingspirit": {
 		desc: "The Pokémon exchanges Abilities with a Pokémon that hits it with a move that makes direct contact.",
-		shortDesc: "Exchanges abilities when hitting a Pokémon with a contact move.",
-		onAfterDamage(damage, target, source, move) {
-			// Are these actually banned? Makes sense for them to be banned to me
-			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'illusion', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'wonderguard', 'zenmode'];
-			if (source && source !== target && move && move.flags['contact'] && !bannedAbilities.includes(source.ability)) {
-				let targetAbility = this.dex.getAbility(target.ability);
-				let sourceAbility = this.dex.getAbility(source.ability);
+		shortDesc: "Exchanges abilities when hit with a contact move.",
+		onAfterDamage(damage, target, source, effect) {
+			if (!source || source.ability === 'wanderingspirit' || target.volatiles['dynamax']) return;
+			if (effect && effect.effectType === 'Move' && effect.flags['contact']) {
+				let sourceAbility = source.setAbility('wanderingspirit', target);
+				if (!sourceAbility) return;
 				if (target.side === source.side) {
-					this.add('-activate', source, 'ability: Wandering Spirit', '', '', '[of] ' + target);
+					this.add('-activate', target, 'Skill Swap', '', '', '[of] ' + source);
 				} else {
-					this.add('-activate', source, 'ability: Wandering Spirit', targetAbility, sourceAbility, '[of] ' + target);
+					this.add('-activate', target, 'ability: Wandering Spirit', this.dex.getAbility(sourceAbility).name, 'Wandering Spirit', '[of] ' + source);
 				}
-				this.singleEvent('End', sourceAbility, source.abilityData, source);
-				this.singleEvent('End', targetAbility, target.abilityData, target);
-				if (targetAbility.id !== sourceAbility.id) {
-					source.ability = targetAbility.id;
-					target.ability = sourceAbility.id;
-					source.abilityData = {id: toID(source.ability), target: source};
-					target.abilityData = {id: toID(target.ability), target: target};
-				}
-				this.singleEvent('Start', targetAbility, source.abilityData, source);
-				this.singleEvent('Start', sourceAbility, target.abilityData, target);
+				target.setAbility(sourceAbility);
 			}
 		},
 		id: "wanderingspirit",
@@ -4916,7 +4912,9 @@ let BattleAbilities = {
 			if (!pokemon.volatiles['zenmode'] || !pokemon.hp) return;
 			pokemon.transformed = false;
 			delete pokemon.volatiles['zenmode'];
-			pokemon.formeChange(/** @type {string} */ (pokemon.template.inheritsFrom), this.effect, false, '[silent]');
+			if (pokemon.template.baseSpecies === 'Darmanitan' && pokemon.template.inheritsFrom) {
+				pokemon.formeChange(/** @type {string} */ (pokemon.template.inheritsFrom), this.effect, false, '[silent]');
+			}
 		},
 		effect: {
 			onStart(pokemon) {

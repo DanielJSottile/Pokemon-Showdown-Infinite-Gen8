@@ -1191,6 +1191,21 @@ let BattleFormatsData = {
 		],
 		tier: "LC",
 	},
+	slowbrogalar: {
+		unreleasedHidden: true,
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	slowkinggalar: {
+		unreleasedHidden: true,
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	slowpokegalar: {
+		unreleasedHidden: true,
+		tier: "OU",
+		doublesTier: "DOU",
+	},
 	slowbro: {
 		randomBattleMoves: ["scald", "toxic", "thunderwave", "psyshock", "fireblast", "icebeam", "slackoff"],
 		randomDoubleBattleMoves: ["scald", "fireblast", "icebeam", "psychic", "grassknot", "thunderwave", "slackoff", "trickroom", "protect", "psyshock"],
