@@ -531,8 +531,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Special",
-		desc: "This move becomes a physical attack if the target's Defense is lower than its Special Defense, including stat stage changes.",
-		shortDesc: "Physical if targets's Def < Sp. Def.",
+		desc: "This move uses Physical damage if the target's Defense is lower than its Special Defense, including stat stage changes.",
+		shortDesc: "Physical damage if targets's Def < Sp. Def.",
 		id: "alphastrike",
 		isViable: true,
 		name: "Alpha Strike",
@@ -551,8 +551,12 @@ let BattleMovedex = {
 			this.add('-fail', pokemon, 'move: Alpha Strike');
 			return null;
 		},
-		onModifyMove(move, target) {
-			if (target.getStat('def', false, true) < target.getStat('spd', false, true)) move.category = 'Physical';
+		onModifyMove(move, pokemon, target) {
+			if (target.getStat('def', false, true) < target.getStat('spd', false, true)) {
+				move.defensiveCategory = 'Physical';
+			} else {
+				move.defensiveCategory = 'Special';
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -9449,7 +9453,7 @@ let BattleMovedex = {
 			return move.basePower;
 		},
 		category: "Special",
-		desc: "This move's type depends on the user's individual values (IVs), and can be any type but Fairy and Normal.",
+		desc: "This move's type depends on the user's individual values (IVs), and can be any type except Normal.",
 		shortDesc: "Varies in type based on the user's IVs.",
 		id: "hiddenpower",
 		name: "Hidden Power",
@@ -10745,7 +10749,7 @@ let BattleMovedex = {
 			return move.basePower;
 		},
 		category: "Physical",
-		desc: "This move's type depends on the user's individual values (IVs), and can be any type but Normal.",
+		desc: "This move's type depends on the user's individual values (IVs), and can be any type except Normal.",
 		shortDesc: "Varies in type based on the user's IVs.",
 		id: "innerpower",
 		name: "Inner Power",
