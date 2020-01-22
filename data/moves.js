@@ -1101,8 +1101,8 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {snatch: 1},
 		sideCondition: 'auroraveil',
-		onTryHitSide(pokemon) {
-			if (pokemon.hasItem('utilityumbrella')) return false;
+		onTryHitSide(side, source) {
+			if (source && source.hasItem('utilityumbrella')) return false;
 			if (!this.field.isWeather('hail')) return false;
 		},
 		effect: {
