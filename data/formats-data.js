@@ -5,9 +5,6 @@ let BattleFormatsData = {
 	mebiusanpast: {
 		randomBattleMoves: ["morningsun", "pastsassurance", "partingshot", "timesarrow", "originpulse", "toxic"],
 		randomDoubleBattleMoves: ["morningsun", "pastsassurance", "partingshot", "timesarrow", "originpulse", "toxic", "protect"],
-		eventPokemon: [
-			{"generation": 8, "level": 49, "moves": ["pastsassurance"]},
-		],
 		tier: "AG",
 		doublesTier: "DUber",
 	},
@@ -7339,10 +7336,6 @@ let BattleFormatsData = {
 		doublesTier: "DUber",
 	},
 	poipole: {
-		eventPokemon: [
-			{"generation": 7, "level": 40, "shiny": 1, "perfectIVs": 3, "moves": ["charm", "venomdrench", "nastyplot", "poisonjab"], "pokeball": "pokeball"},
-			{"generation": 7, "level": 40, "shiny": true, "nature": "Modest", "perfectIVs": 3, "moves": ["venomdrench", "nastyplot", "poisonjab", "dragonpulse"], "pokeball": "cherishball"},
-		],
 		tier: "NFE",
 	},
 	naganadel: {
