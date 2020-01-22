@@ -2660,6 +2660,29 @@ let BattleAbilities = {
 		rating: 1.5,
 		num: 12,
 	},
+	"omniforge": {
+		shortDesc: "A random stat of this Pokemon is raised by 2 stages after it is damaged by a Super Effective move.",
+		onAfterDamage(damage, target, source, move) {
+			if (target.getMoveHitData(move).typeMod > 0) {
+				let stats = [];
+				let boost = {};
+				for (let statPlus in pokemon.boosts) {
+					if (statPlus === 'accuracy' || statPlus === 'evasion') continue;
+					// @ts-ignore
+					if (pokemon.boosts[statPlus] < 6) {
+					stats.push(statPlus);
+					}
+				}
+				let randomStat = stats.length ? this.sample(stats) : "";
+				// @ts-ignore
+				if (randomStat) boost[randomStat] = 2;
+			}
+		},
+		id: "omniforge",
+		name: "Omniforge",
+		rating: 3.5,
+		num: -5,
+	},
 	"overcoat": {
 		shortDesc: "This Pokemon is immune to powder moves and damage from Sandstorm or Hail.",
 		onImmunity(type, pokemon) {
@@ -4411,7 +4434,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -5,
+		num: -6,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",

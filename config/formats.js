@@ -27,6 +27,16 @@ let Formats = [
 		],
 	},
 	{
+		name: "[Gen 8] UU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3658529/">UU Metagame Discussion</a>`,
+		],
+
+		mod: 'gen8',
+		ruleset: ['[Gen 8] OU'],
+		banlist: ['OU', 'UUBL'],
+	},
+	{
 		name: "[Gen 8] Doubles OU",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/np-swsh-dou-stage-0-begin-again.3656244/">Doubles OU Metagame Discussion</a>`,
