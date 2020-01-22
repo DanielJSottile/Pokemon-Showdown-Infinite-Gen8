@@ -54383,10 +54383,10 @@ let BattleLearnsets = {
 		iciclespear: ["8M"],
 		freezedry: ["8M"],
 		ancientpower: ["8L15"],
-		barricade: ["8L100"]
+		barricade: ["8L100"],
 		blizzard: ["8M", "8L78"],
-		boltstrike: ["8L100"]
-		blueflare: ["8L100"]
+		boltstrike: ["8L100"],
+		blueflare: ["8L100"],
 		brutalswing: ["8M"],
 		confide: ["8M"],
 		cut: ["8M"],
@@ -54424,8 +54424,8 @@ let BattleLearnsets = {
 		lightscreen: ["8M"],
 		nobleroar: ["8L64"],
 		outrage: ["8T", "8L85"],
-		originstrike: ["8L100"]
-		originflare: ["8L100"]
+		originstrike: ["8L100"],
+		originflare: ["8L100"],
 		payback: ["8M"],
 		protect: ["8M"],
 		psychic: ["8M"],

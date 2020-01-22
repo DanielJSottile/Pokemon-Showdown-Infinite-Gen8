@@ -87,9 +87,9 @@ let BattleFormats = {
 			let necrozmaDMCount = 0;
 			let necrozmaDWCount = 0;
 			for (const set of team) {
-				if (set.species === 'Kyurem-White' || set.species === 'Kyurem-Black') {
+				if (set.species === 'Kyurem-White' || set.species === 'Kyurem-Black' || set.species === 'Kyurem-Omnipotent') {
 					if (kyuremCount > 0) {
-						return ['You cannot have more than one Kyurem-Black/Kyurem-White.'];
+						return ['You cannot have more than one Kyurem-Omnipotent/Kyurem-Black/Kyurem-White.'];
 					}
 					kyuremCount++;
 				}
