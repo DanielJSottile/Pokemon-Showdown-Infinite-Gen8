@@ -2664,18 +2664,18 @@ let BattleAbilities = {
 		shortDesc: "A random stat of this Pokemon is raised by 2 stages after it is damaged by a Super Effective move.",
 		onAfterDamage(damage, target, source, move) {
 			if (target.getMoveHitData(move).typeMod > 0) {
-				let stats = [];
-				let boost = {};
-				for (let statPlus in pokemon.boosts) {
-					if (statPlus === 'accuracy' || statPlus === 'evasion') continue;
-					// @ts-ignore
-					if (pokemon.boosts[statPlus] < 6) {
-					stats.push(statPlus);
+				let result = this.random(5);
+					if (result === 0) {
+						this.boost({atk: 2});
+					} else if (result === 1) {
+						this.boost({def: 2});
+					} else if (result === 2) {
+						this.boost({spa: 2});
+					} else if (result === 3) {
+						this.boost({spd: 2});
+					} else {
+						this.boost({spe: 2});
 					}
-				}
-				let randomStat = stats.length ? this.sample(stats) : "";
-				// @ts-ignore
-				if (randomStat) boost[randomStat] = 2;
 			}
 		},
 		id: "omniforge",

@@ -15012,8 +15012,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Special",
-		desc: "Has a 30% chance to lower the target's Special Attack by 2 stages.",
-		shortDesc: "30% chance to lower the target's Sp. Atk by 2.",
+		desc: "Has a 40% chance to lower the target's Special Attack by 2 stages.",
+		shortDesc: "40% chance to lower the target's Sp. Atk by 2.",
 		id: "originflare",
 		isViable: true,
 		name: "Origin Flare",
@@ -15021,7 +15021,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		secondary: {
-			chance: 30,
+			chance: 40,
 			boosts: {
 				spa: -2,
 			},
@@ -15036,8 +15036,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Physical",
-		desc: "Has a 30% chance to lower the target's Attack by 2 stages.",
-		shortDesc: "30% chance to lower the target's Atk by 2.",
+		desc: "Has a 40% chance to lower the target's Attack by 2 stages.",
+		shortDesc: "40% chance to lower the target's Atk by 2.",
 		id: "originstrike",
 		isViable: true,
 		name: "Origin Strike",
@@ -15045,7 +15045,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		secondary: {
-			chance: 30,
+			chance: 40,
 			boosts: {
 				atk: -2,
 			},
