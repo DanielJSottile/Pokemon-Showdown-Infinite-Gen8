@@ -4721,7 +4721,7 @@ let BattleFormatsData = {
 		randomBattleMoves: ["outrage", "dracometeor", "earthquake", "stoneedge", "fireblast", "swordsdance"],
 		randomDoubleBattleMoves: ["substitute", "dragonclaw", "earthquake", "stoneedge", "rockslide", "swordsdance", "protect", "fireblast"],
 		requiredItem: "Garchompite",
-		tier: "(OU)",
+		tier: "OU",
 		doublesTier: "(DOU)",
 	},
 	riolu: {
