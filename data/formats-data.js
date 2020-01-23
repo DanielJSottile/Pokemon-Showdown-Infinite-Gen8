@@ -1113,7 +1113,7 @@ let BattleFormatsData = {
 	rapidashgalar: {
 		randomBattleMoves: ["highhorsepower", "morningsun", "playrough", "swordsdance", "zenheadbutt"],
 		tier: "(PU)",
-		doublesTier: "DOU",
+		doublesTier: "(DUU)",
 	},
 	rapidashmega: {
 		randomBattleMoves: ["flareblitz", "wildcharge", "morningsun", "highhorsepower", "drillpeck"],
