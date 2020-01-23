@@ -7872,6 +7872,7 @@ let BattleMovedex = {
 		self: {
 			onHit(source) {
 				for (let pokemon of source.side.foe.active) {
+					this.boost({spd: -1}, pokemon);
 					pokemon.trySetStatus('blindness', source);
 				}
 			},
