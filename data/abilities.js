@@ -2664,7 +2664,7 @@ let BattleAbilities = {
 	"omniforge": {
 		shortDesc: "A random stat of this Pokemon is raised by 2 stages after it is damaged by a Not-Very-Effective move.",
 		onAfterDamage(damage, target, source, move) {
-			if (3 > target.getMoveHitData(move).typeMod > 1) {
+			if (target.getMoveHitData(move).typeMod < 0)) {
 				let result = this.random(5);
 					if (result === 0) {
 						this.boost({atk: 2});
