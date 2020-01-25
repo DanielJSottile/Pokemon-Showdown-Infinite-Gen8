@@ -89,9 +89,10 @@ let BattleAbilities = {
 		num: 106,
 	},
 	"airlock": {
-		shortDesc: "While this Pokemon is active, the effects of weather conditions are disabled.",
-		onStart(pokemon) {
+		shortDesc: "Upon switch-in, weather is cleared.  The effects of future weather is disabled while active.",
+		onStart(pokemon, source) {
 			this.add('-ability', pokemon, 'Air Lock');
+			this.field.clearWeather();
 		},
 		suppressWeather: true,
 		id: "airlock",
@@ -2661,9 +2662,9 @@ let BattleAbilities = {
 		num: 12,
 	},
 	"omniforge": {
-		shortDesc: "A random stat of this Pokemon is raised by 2 stages after it is damaged by a Super Effective move.",
+		shortDesc: "A random stat of this Pokemon is raised by 2 stages after it is damaged by a Not-Very-Effective move.",
 		onAfterDamage(damage, target, source, move) {
-			if (target.getMoveHitData(move).typeMod > 0) {
+			if (3 > target.getMoveHitData(move).typeMod > 1) {
 				let result = this.random(5);
 					if (result === 0) {
 						this.boost({atk: 2});

@@ -7372,7 +7372,7 @@ let BattleFormatsData = {
 	},
 	melmetalgmax: {
 		isGigantamax: "G-Max Meltdown",
-		tier: "UUBL",
+		tier: "UU",
 		doublesTier: "DUU",
 	},
 	grookey: {

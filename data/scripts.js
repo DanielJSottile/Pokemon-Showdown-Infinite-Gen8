@@ -1181,9 +1181,7 @@ let BattleScripts = {
 		let item = pokemon.getItem();
 		if (!skipChecks) {
 			if (!pokemon.canDynamax) return;
-			if (pokemon.template.isMega || pokemon.template.isPrimal || pokemon.template.forme === "Ultra" || pokemon.getItem().zMove || this.canMegaEvo(pokemon)) {
-				return;
-			}
+			if (pokemon.template.isMega || pokemon.template.isPrimal || pokemon.template.forme === "Ultra" || pokemon.getItem().zMove || this.canMegaEvo(pokemon)) return;
 			if (this.canZMove(pokemon)) return;
 			if (item.megaStone) return;
 			if (pokemon.getItem().id === 'ultranecroziumz') return;
