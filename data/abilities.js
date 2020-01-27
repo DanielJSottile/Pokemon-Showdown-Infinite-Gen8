@@ -280,8 +280,8 @@ let BattleAbilities = {
 		num: 4,
 	},
 	"battlebond": {
-		desc: "If this Pokemon is a Greninja, it transforms into Ash-Greninja after knocking out a Pokemon. As Ash-Greninja, its Water Shuriken has 20 base power and always hits 3 times.",
-		shortDesc: "After KOing a Pokemon: becomes Ash-Greninja, Water Shuriken: 20 power, hits 3x.",
+		desc: "If this Pokemon is a Chesnaught, Delphox, or Greninja, it transforms after a KO.  Spiky Shield: 2/3 health, Mystical Fire: 120 BP, Water Shuriken: 20 power, hits 3x.",
+		shortDesc: "After KOing a Pokemon: becomes Clemont-Chesnaugt, Serena-Delphox, or Ash-Greninja; Spiky Shield, Mystical Fire, and Water Shuriken get new bonuses.",
 		onSourceFaint(target, source, effect) {
 			if (effect && effect.effectType === 'Move' && source.template.speciesid === 'greninja' && source.hp && !source.transformed && source.side.foe.pokemonLeft) {
 				this.add('-activate', source, 'ability: Battle Bond');
@@ -575,12 +575,12 @@ let BattleAbilities = {
 		num: 238,
 	},
 	"cursedbody": {
-		desc: "If this Pokemon is hit by an attack, there is a 30% chance that move gets disabled unless one of the attacker's moves is already disabled.",
-		shortDesc: "If this Pokemon is hit by an attack, there is a 30% chance that move gets disabled.",
+		desc: "If this Pokemon is hit by an attack, there is a 20% chance that move gets disabled unless one of the attacker's moves is already disabled.",
+		shortDesc: "If this Pokemon is hit by an attack, there is a 20% chance that move gets disabled.",
 		onAfterDamage(damage, target, source, move) {
 			if (!source || source.volatiles['disable']) return;
 			if (source !== target && move && move.effectType === 'Move' && !move.isFutureMove) {
-				if (this.randomChance(3, 10)) {
+				if (this.randomChance(2, 10)) {
 					source.addVolatile('disable', this.effectData.target);
 				}
 			}
@@ -591,11 +591,11 @@ let BattleAbilities = {
 		num: 130,
 	},
 	"cutecharm": {
-		desc: "There is a 30% chance a Pokemon making contact with this Pokemon will become infatuated if it is of the opposite gender.",
-		shortDesc: "30% chance of infatuating Pokemon of the opposite gender if they make contact.",
+		desc: "There is a 20% chance a Pokemon making contact with this Pokemon will become infatuated if it is of the opposite gender.",
+		shortDesc: "20% chance of infatuating Pokemon of the opposite gender if they make contact.",
 		onAfterDamage(damage, target, source, move) {
 			if (move && move.flags['contact']) {
-				if (this.randomChance(3, 10)) {
+				if (this.randomChance(2, 10)) {
 					source.addVolatile('attract', this.effectData.target);
 				}
 			}
@@ -1011,10 +1011,10 @@ let BattleAbilities = {
 		num: 111,
 	},
 	"flamebody": {
-		shortDesc: "30% chance a Pokemon making contact with this Pokemon will be burned.",
+		shortDesc: "20% chance a Pokemon making contact with this Pokemon will be burned.",
 		onAfterDamage(damage, target, source, move) {
 			if (move && move.flags['contact']) {
-				if (this.randomChance(3, 10)) {
+				if (this.randomChance(2, 10)) {
 					source.trySetStatus('brn', target);
 				}
 			}
@@ -1504,8 +1504,8 @@ let BattleAbilities = {
 		num: 139,
 	},
 	"healer": {
-		desc: "There is a 30% chance of curing an adjacent ally's major status condition at the end of each turn.",
-		shortDesc: "30% chance of curing an adjacent ally's status at the end of each turn.",
+		desc: "There is a 20% chance of curing an adjacent ally's major status condition at the end of each turn.",
+		shortDesc: "20% chance of curing an adjacent ally's status at the end of each turn.",
 		id: "healer",
 		name: "Healer",
 		onResidualOrder: 5,
@@ -1515,7 +1515,7 @@ let BattleAbilities = {
 				return;
 			}
 			for (const allyActive of pokemon.side.active) {
-				if (allyActive && allyActive.hp && this.isAdjacent(pokemon, allyActive) && allyActive.status && this.randomChance(3, 10)) {
+				if (allyActive && allyActive.hp && this.isAdjacent(pokemon, allyActive) && allyActive.status && this.randomChance(2, 10)) {
 					this.add('-activate', pokemon, 'ability: Healer');
 					allyActive.cureStatus();
 				}
@@ -1708,7 +1708,14 @@ let BattleAbilities = {
 		num: 246,
 	},
 	"illuminate": {
-		shortDesc: "No competitive use.",
+		shortDesc: "20% chance a Pokemon making contact with this Pokemon will be blinded.",
+		onAfterDamage(damage, target, source, move) {
+			if (move && move.flags['contact']) {
+				if (this.randomChance(2, 10)) {
+					source.trySetStatus('blindness', target);
+				}
+			}
+		},
 		id: "illuminate",
 		name: "Illuminate",
 		rating: 0,
@@ -2922,10 +2929,10 @@ let BattleAbilities = {
 		num: 90,
 	},
 	"poisonpoint": {
-		shortDesc: "30% chance a Pokemon making contact with this Pokemon will be poisoned.",
+		shortDesc: "20% chance a Pokemon making contact with this Pokemon will be poisoned.",
 		onAfterDamage(damage, target, source, move) {
 			if (move && move.flags['contact']) {
-				if (this.randomChance(3, 10)) {
+				if (this.randomChance(2, 10)) {
 					source.trySetStatus('psn', target);
 				}
 			}
@@ -2936,7 +2943,7 @@ let BattleAbilities = {
 		num: 38,
 	},
 	"poisontouch": {
-		shortDesc: "This Pokemon's contact moves have a 30% chance of poisoning.",
+		shortDesc: "This Pokemon's contact moves have a 20% chance of poisoning.",
 		// upokecenter says this is implemented as an added secondary effect
 		onModifyMove(move) {
 			if (!move || !move.flags['contact'] || move.target === 'self') return;
@@ -2944,7 +2951,7 @@ let BattleAbilities = {
 				move.secondaries = [];
 			}
 			move.secondaries.push({
-				chance: 30,
+				chance: 20,
 				status: 'psn',
 				ability: this.dex.getAbility('poisontouch'),
 			});
@@ -3612,40 +3619,30 @@ let BattleAbilities = {
 		num: 231,
 	},
 	"shadowtag": {
-		desc: "For the first turn after this Pokemon switches in, prevents adjacent opposing Pokemon from choosing to switch out unless they are immune to trapping or also have this Ability.",
+		desc: "For the first turn after this Pokemon switches in, prevent adjacent opposing Pokemon from choosing to switch out unless they are immune to trapping or also have this Ability.",
 		shortDesc: "Prevents adjacent foes from choosing to switch for one turn.",
 		onStart(pokemon) {
 			pokemon.addVolatile('shadowtag');
 		},
-		onEnd(pokemon) {
-			delete pokemon.volatiles['shadowtag'];
-			this.add('-end', pokemon, 'Shadow Tag', '[silent]');
-		},
 		effect: {
 			duration: 2,
 			onFoeTrapPokemon(pokemon) {
-				this.add('-start', pokemon, 'ability: Shadow Tag');
 				if (pokemon.ability !== 'shadowtag') {
 					pokemon.tryTrap(true);
 				}
-			},
-			onFoeMaybeTrapPokemon(pokemon, source) {
-				if (!source) source = this.effectData.target;
-				if (!source || !this.isAdjacent(pokemon, source)) return;
-				if (pokemon.ability !== 'shadowtag' && !source.volatiles.shadowtag) {
-					pokemon.maybeTrapped = true;
-				}
-			},
-			onEnd(pokemon) {
-				this.add('-end', pokemon, 'Shadow Tag');
 			},
 		},
 		onBeforeMovePriority: 15,
 		onBeforeMove(pokemon) {
 			pokemon.removeVolatile('shadowtag');
-			this.add('-end', pokemon, 'Shadow Tag', '[silent]');
 		},
-		onFoeTrapPokemon(pokemon) {},
+		onFoeMaybeTrapPokemon(pokemon, source) {
+			if (!source) source = this.effectData.target;
+			if (!source || !this.isAdjacent(pokemon, source)) return;
+			if (pokemon.ability !== 'shadowtag' && !source.volatiles.shadowtag) {
+				pokemon.maybeTrapped = true;
+			}
+		},
 		id: "shadowtag",
 		name: "Shadow Tag",
 		rating: 5,
@@ -4024,10 +4021,10 @@ let BattleAbilities = {
 		num: 176,
 	},
 	"static": {
-		shortDesc: "30% chance a Pokemon making contact with this Pokemon will be paralyzed.",
+		shortDesc: "20% chance a Pokemon making contact with this Pokemon will be paralyzed.",
 		onAfterDamage(damage, target, source, move) {
 			if (move && move.flags['contact']) {
-				if (this.randomChance(3, 10)) {
+				if (this.randomChance(2, 10)) {
 					source.trySetStatus('par', target);
 				}
 			}

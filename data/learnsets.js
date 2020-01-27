@@ -38455,6 +38455,7 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	piplup: {learnset: {
+		lifedew: ["8T"],
 		innerpower: ["8M"],
 		aerialace: ["8M"],
 		agility: ["8E"],
@@ -38528,6 +38529,7 @@ let BattleLearnsets = {
 		yawn: ["8E"],
 	}},
 	prinplup: {learnset: {
+		lifedew: ["8T"],
 		innerpower: ["8M"],
 		aerialace: ["8M"],
 		attract: ["8M"],
@@ -38597,6 +38599,7 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	empoleon: {learnset: {
+		lifedew: ["8T"],
 		innerpower: ["8M"],
 		metalshard: ["8M"],
 		steelbeam: ["8T"],

@@ -34,7 +34,7 @@ let Formats = [
 
 		mod: 'gen8',
 		ruleset: ['[Gen 8] OU'],
-		banlist: ['OU', 'UUBL'],
+		banlist: ['OU', 'UUBL', 'Drizzle', 'Drought', 'Mewnium Z', 'Kommonium Z'],
 	},
 	{
 		name: "[Gen 8] Doubles OU",

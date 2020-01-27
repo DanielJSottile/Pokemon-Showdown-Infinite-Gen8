@@ -7367,13 +7367,13 @@ let BattleFormatsData = {
 	},
 	melmetal: {
 		randomBattleMoves: ["doubleironbash", "earthquake", "icepunch", "thunderpunch", "thunderwave"],
-		tier: "UU",
-		doublesTier: "DUU",
+		tier: "UUBL",
+		doublesTier: "DOU",
 	},
 	melmetalgmax: {
 		isGigantamax: "G-Max Meltdown",
-		tier: "UU",
-		doublesTier: "DUU",
+		tier: "UUBL",
+		doublesTier: "DOU",
 	},
 	grookey: {
 		tier: "LC",
