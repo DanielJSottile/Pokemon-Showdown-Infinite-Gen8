@@ -272,8 +272,12 @@ let BattleAbilities = {
 		num: 217,
 	},
 	"battlearmor": {
-		shortDesc: "This Pokemon cannot be struck by a critical hit.",
-		onCriticalHit: false,
+		shortDesc: "This Pokemon only takes 0.5x damage rather than 1.5x when hit by Critical Hits.",
+		onSourceModifyDamage(damage, source, target, move) {
+			let mod = 1;
+			if (move && move.effectType === 'Move' && target.getMoveHitData(move).crit) mod *= 0.5;
+			return this.chainModify(mod);
+		},
 		id: "battlearmor",
 		name: "Battle Armor",
 		rating: 1,
@@ -4153,12 +4157,12 @@ let BattleAbilities = {
 		num: 114,
 	},
 	"strongjaw": {
-		desc: "This Pokemon's bite-based attacks have their power multiplied by 1.5.",
-		shortDesc: "This Pokemon's bite-based attacks have 1.5x power. Bug Bite is not boosted.",
+		desc: "This Pokemon's bite-based attacks have their power multiplied by 1.3.",
+		shortDesc: "This Pokemon's bite-based attacks have 1.3x power. Bug Bite is not boosted.",
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move) {
 			if (move.flags['bite']) {
-				return this.chainModify(1.5);
+				return this.chainModify(1.3);
 			}
 		},
 		id: "strongjaw",
@@ -4208,6 +4212,38 @@ let BattleAbilities = {
 		name: "Super Luck",
 		rating: 1.5,
 		num: 105,
+	},
+	"supremebeing": {
+		desc: "This Pokemon's two highest stats are raised by 1 stage if it attacks and knocks out another Pokemon.",
+		shortDesc: "This Pokemon's two highest stats are raised by 1 if it attacks and KOes another Pokemon.",
+		onSourceFaint(target, source, effect) {
+			if (source.volatiles['dynamax']) return;
+			if (effect && effect.effectType === 'Move') {
+				let statName = 'atk';
+				let statNameTwo = 'def';
+				let bestStat = 0;
+				let secondBestStat = 0;
+				/** @type {StatNameExceptHP} */
+				let s;
+				for (s in source.storedStats) {
+					if (source.storedStats[s] > bestStat) {
+						secondBestStat = bestStat;
+						statNameTwo = statName;
+						statName = s;
+						bestStat = source.storedStats[s];
+					} else if (source.storedStats[s] > secondBestStat) {
+						statNameTwo = s;
+						secondBestStat = source.storedStats[s];
+					}
+				}
+				this.boost({[statName]: 1}, source);
+				this.boost({[statNameTwo]: 1}, source);
+			}
+		},
+		id: "supremebeing",
+		name: "Supreme Being",
+		rating: 3.5,
+		num: -6,
 	},
 	"surgesurfer": {
 		shortDesc: "If Electric Terrain is active, this Pokemon's Speed is doubled.",
@@ -4432,7 +4468,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -6,
+		num: -7,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",

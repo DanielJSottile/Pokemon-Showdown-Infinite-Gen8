@@ -863,8 +863,8 @@ let BattleStatuses = {
 			if (pokemon.canGigantamax) pokemon.formeChange(pokemon.canGigantamax);
 			if (pokemon.species === 'Shedinja') return;
 
-			// Changes based on dynamax level, 2 is max (at LVL 10)
-			const ratio = 2;
+			// Changes based on dynamax level, 1.5 is max (at LVL 5)
+			const ratio = 1.5;
 
 			pokemon.maxhp = Math.floor(pokemon.maxhp * ratio);
 			pokemon.hp = Math.floor(pokemon.hp * ratio);

@@ -221,7 +221,7 @@ let BattleTypeChart = {
 			"Grass": 0,
 			"Ground": 0,
 			"Ice": 0,
-			"Infinite": 0,
+			"Infinite": 1,
 			"Normal": 3,
 			"Poison": 2,
 			"Psychic": 0,

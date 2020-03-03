@@ -2671,15 +2671,17 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 70,
 		category: "Physical",
-		desc: "The user switches out even if it is trapped and is replaced immediately by a selected party member. This move also forces the Whirlwind effect on the opponent.",
-		shortDesc: "-1 priority: User switches out after damaging the target, forces opponent to switch out.",
+		desc: "The user switches out to a random Pokemon in the party. This move also forces the same effect on the opponent.",
+		shortDesc: "-1 priority: User switches to a random party member, forces opponent to switch out.",
 		id: "chaosleap",
 		isViable: true,
 		name: "Chaos Leap",
 		pp: 20,
 		priority: -1,
 		flags: {contact: 1, protect: 1, mirror: 1},
-		selfSwitch: true,
+		self: {
+			forceSwitch: true,
+		},
 		forceSwitch: true,
 		secondary: null,
 		target: "normal",
@@ -3745,7 +3747,7 @@ let BattleMovedex = {
 	},
 	"darkvoid": {
 		num: 464,
-		accuracy: 65,
+		accuracy: 75,
 		basePower: 0,
 		category: "Status",
 		desc: "Causes the target to fall asleep. This move cannot be used successfully unless the user's current form, while considering Transform, is Darkrai or Apocalylidae.",
@@ -3758,7 +3760,7 @@ let BattleMovedex = {
 		flags: {protect: 1, reflectable: 1, mirror: 1},
 		status: 'slp',
 		onTryMove(pokemon, target, move) {
-			if (pokemon.template.species === 'Darkrai' || pokemon.template.species === 'Apocalylidae' ||move.hasBounced) {
+			if (pokemon.template.species === 'Darkrai' || pokemon.template.species === 'Darkrai-Mega' || pokemon.template.species === 'Apocalylidae' || move.hasBounced) {
 				return;
 			}
 			this.add('-fail', pokemon, 'move: Dark Void');
@@ -15310,6 +15312,28 @@ let BattleMovedex = {
 		zMovePower: 90,
 		contestType: "Cool",
 	},
+	"perditionspyre": {
+		num: -30,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		desc: "Has a 20% chance to put the target to sleep.",
+		shortDesc: "20% chance to put the target to sleep.",
+		id: "perditionspyre",
+		isViable: true,
+		name: "Perdition's Pyre",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 20,
+			status: 'slp',
+		},
+		target: "normal",
+		type: "Fire",
+		zMovePower: 165,
+		contestType: "Popular",
+	},
 	"perfecttemposymphony": {
 		num: -15,
 		accuracy: true,
@@ -20021,7 +20045,7 @@ let BattleMovedex = {
 				if (move.isZPowered && move.flags['contact']) {
 					this.damage(source.baseMaxhp / 8, source, target);
 					if (target.template.species === 'Chesnaught-Clemont' && target.hasAbility('battlebond')) {
-						this.heal(target.maxhp / 3);
+						this.heal((target.maxhp * 2) / 3);
 					}
 				}
 			},

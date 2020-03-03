@@ -1227,6 +1227,21 @@ let BattleItems = {
 		gen: 7,
 		desc: "Evolves Sinistea into Polteageist when used.",
 	},
+	"cresselite": {
+		id: "cresselite",
+		name: "Cresselite",
+		spritenum: 576,
+		megaStone: "Cresselia-Mega",
+		megaEvolves: "Cresselia",
+		itemUser: ["Cresselia"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -41,
+		gen: 8,
+		desc: "If held by a Cresselia, this item allows it to Mega Evolve in battle.",
+	},
 	"custapberry": {
 		id: "custapberry",
 		name: "Custap Berry",
@@ -1310,6 +1325,21 @@ let BattleItems = {
 		num: 791,
 		gen: 7,
 		desc: "If holder has a Dark move, this item allows it to use a Dark Z-Move.",
+	},
+	"darkraite": {
+		id: "darkraite",
+		name: "Darkraite",
+		spritenum: 576,
+		megaStone: "Darkrai-Mega",
+		megaEvolves: "Darkrai",
+		itemUser: ["Darkrai"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: 677,
+		gen: 8,
+		desc: "If held by a Darkrai, this item allows it to Mega Evolve in battle.",
 	},
 	"dawnstone": {
 		id: "dawnstone",
@@ -2390,6 +2420,31 @@ let BattleItems = {
 		num: 316,
 		gen: 4,
 		desc: "Holder moves last in its priority bracket.",
+	},
+	"fusioncore": {
+		id: "fusioncore",
+		name: "Fusion Core",
+		spritenum: 41,
+		onSwitchIn(pokemon) {
+			if ((pokemon.isActive && pokemon.baseTemplate.species === 'Nihilego') || (pokemon.isActive && pokemon.baseTemplate.species === 'Guzzlord')) {
+				this.insertQueue({pokemon: pokemon, choice: 'runPrimal'});
+			}
+		},
+		onPrimal(pokemon) {
+			if (pokemon.baseTemplate.species === 'Nihilego') {
+				pokemon.formeChange('Nihilego-Fusion', this.effect, true);
+			} else {
+				pokemon.formeChange('Guzzlord-Fusion', this.effect, true);
+			}
+		},
+		onTakeItem(item, source) {
+			if (source.baseTemplate.baseSpecies === 'Nihilego' || source.baseTemplate.baseSpecies === 'Guzzlord') return false;
+			return true;
+		},
+		itemUser: ["Nihilego", "Guzzlord"],
+		num: -40,
+		gen: 8,
+		desc: "If held by a Nihilego or Guzzlord, this item triggers its Fusion in battle.",
 	},
 	"galladite": {
 		id: "galladite",

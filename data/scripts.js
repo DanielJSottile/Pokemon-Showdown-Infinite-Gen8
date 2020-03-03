@@ -1185,6 +1185,7 @@ let BattleScripts = {
 			if (this.canZMove(pokemon)) return;
 			if (item.megaStone) return;
 			if (pokemon.getItem().id === 'ultranecroziumz') return;
+			if (pokemon.getItem().id === 'fusioncore') return;
 			if (pokemon.getItem().id === 'redorb') return;
 			if (pokemon.getItem().id === 'blueorb') return;
 			const cannotDynamax = ['zacian', 'zamazenta', 'apocalylidae', 'mebiusan-past', 'mebiusan-future', 'rayquazamega'];
