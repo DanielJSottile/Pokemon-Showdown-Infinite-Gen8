@@ -15734,6 +15734,32 @@ let BattleMovedex = {
 		zMovePower: 110,
 		contestType: "Cute",
 	},
+	"pointypoint": {
+		num: -32,
+		accuracy: 100,
+		basePower: 90,
+		category: "Physical",
+		desc: "This move summons either Spikes or Metal Shard on the foe.",
+		shortDesc: "Summons Spikes or Metal Shard.",
+		id: "pointypoint",
+		isViable: true,
+		name: "Pointy Point",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1},
+		onHit(target, source) {
+			let result = this.random(2);
+			if (result === 0) {
+				target.addVolatile('spikes', source);
+			} else {
+				target.addVolatile('metalshard', source);
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Steel",
+		contestType: "Popular",
+	},
 	"poisonfang": {
 		num: 305,
 		accuracy: 100,
@@ -20243,6 +20269,27 @@ let BattleMovedex = {
 		target: "allAdjacentFoes",
 		type: "Water",
 		contestType: "Cool",
+	},
+	"spookyspook": {
+		num: -31,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		desc: "Has a 100% chance to curse the foe.",
+		shortDesc: "100% chance to curse the foe.",
+		id: "spookyspook",
+		isViable: true,
+		name: "Spooky Spook",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, defrost: 1},
+		secondary: {
+			chance: 100,
+			volatileStatus: 'curse',
+		},
+		target: "normal",
+		type: "Ghost",
+		contestType: "Popular",
 	},
 	"spore": {
 		num: 147,
