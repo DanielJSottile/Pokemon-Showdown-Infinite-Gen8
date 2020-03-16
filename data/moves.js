@@ -1222,6 +1222,50 @@ let BattleMovedex = {
 		zMovePower: 110,
 		contestType: "Beautiful",
 	},
+	"backlash": {
+		num: -34,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		desc: "The user is protected from status moves made by other Pokemon during this turn, and Pokemon trying to use them have their Speed lowered by 2 stages. This move has a 1/X chance of being successful, where X starts at 1 and triples each time this move is successfully used. X resets to 1 if this move fails, if the user's last move used is not Baneful Bunker, Detect, Endure, King's Shield, Protect, Quick Guard, Spiky Shield, or Wide Guard, or if it was one of those moves and the user's protection was broken. Fails if the user moves last this turn.",
+		shortDesc: "Protects from status moves. Activation: lowers Spe by 2.",
+		id: "backlash",
+		isViable: true,
+		name: "Backlash",
+		pp: 10,
+		priority: 4,
+		flags: {},
+		stallingMove: true,
+		volatileStatus: 'backlash',
+		onTryHit(pokemon) {
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
+		},
+		onHit(pokemon) {
+			pokemon.addVolatile('stall');
+		},
+		effect: {
+			duration: 1,
+			onStart(target) {
+				this.add('-singleturn', target, 'Protect');
+			},
+			onTryHitPriority: 3,
+			onTryHit(target, source, move) {
+				if (!move.flags['protect'] || move.category !== 'Status') {
+					if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
+					this.boost({spe: -2}, source, target, this.dex.getActiveMove("Backlash"));
+					return;
+				}
+				this.add('-activate', target, 'move: Protect');
+				
+				return this.NOT_FAIL;
+			},
+		},
+		secondary: null,
+		target: "self",
+		type: "Dark",
+		zMoveEffect: 'clearnegativeboost',
+		contestType: "Cool",
+	},
 	"babydolleyes": {
 		num: 608,
 		accuracy: 100,
