@@ -119,7 +119,7 @@ let BattleTypeChart = {
 			"Grass": 0,
 			"Ground": 0,
 			"Ice": 0,
-			"Infinite": 1,
+			"Infinite": 0,
 			"Normal": 0,
 			"Poison": 1,
 			"Psychic": 0,
