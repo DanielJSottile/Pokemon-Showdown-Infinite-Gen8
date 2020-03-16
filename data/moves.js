@@ -16508,6 +16508,120 @@ let BattleMovedex = {
 		zMovePower: 130,
 		contestType: "Cool",
 	},
+	"psychokinesis": {
+		num: -33,
+		accuracy: 100,
+		basePower: 60,
+		category: "Special",
+		desc: "This attack takes the target into the air with the user on the first turn and executes on the second. Pokemon weighing 200 kg or more cannot be lifted. On the first turn, the user and the target avoid all attacks other than Gust, Hurricane, Sky Uppercut, Smack Down, Thousand Arrows, Thunder, and Twister. The user and the target cannot make a move between turns, but the target can select a move to use. This move cannot damage Psychic-type Pokemon. Fails on the first turn if the target is an ally, if the target has a substitute, or if the target is using Bounce, Dig, Dive, Fly, Phantom Force, Shadow Force, Sky Drop, or Psychokinesis.",
+		shortDesc: "User and foe fly up turn 1. Damages on turn 2.",
+		id: "psychokinesis",
+		name: "Psychokinesis",
+		pp: 10,
+		priority: 0,
+		flags: {contact: 1, charge: 1, protect: 1, mirror: 1, gravity: 1, distance: 1},
+		onModifyMove(move, source) {
+			if (!source.volatiles['psychokinesis']) {
+				move.accuracy = true;
+				move.flags.contact = 0;
+			}
+		},
+		onMoveFail(target, source) {
+			if (source.volatiles['twoturnmove'] && source.volatiles['twoturnmove'].duration === 1) {
+				source.removeVolatile('psychokinesis');
+				source.removeVolatile('twoturnmove');
+				this.add('-end', target, 'Psychokinesis', '[interrupt]');
+			}
+		},
+		onTryHit(target, source, move) {
+			if (target.fainted) return false;
+			if (source.removeVolatile(move.id)) {
+				if (target !== source.volatiles['twoturnmove'].source) return false;
+
+				if (target.hasType('Psychic')) {
+					this.add('-immune', target);
+					return null;
+				}
+			} else {
+				if (target.volatiles['substitute'] || target.side === source.side) {
+					return false;
+				}
+				if (target.getWeight() >= 200) {
+					this.add('-fail', target, 'move: Psychokinesis', '[heavy]');
+					return null;
+				}
+
+				this.add('-prepare', source, move.name, target);
+				source.addVolatile('twoturnmove', target);
+				return null;
+			}
+		},
+		onHit(target, source) {
+			this.add('-end', target, 'Psychokinesis');
+		},
+		effect: {
+			duration: 2,
+			onAnyDragOut(pokemon) {
+				if (pokemon === this.effectData.target || pokemon === this.effectData.source) return false;
+			},
+			onFoeTrapPokemonPriority: -15,
+			onFoeTrapPokemon(defender) {
+				if (defender !== this.effectData.source) return;
+				defender.trapped = true;
+			},
+			onFoeBeforeMovePriority: 12,
+			onFoeBeforeMove(attacker, defender, move) {
+				if (attacker === this.effectData.source) {
+					this.effectData.source.activeTurns--;
+					this.debug('Psychokinesis nullifying.');
+					return null;
+				}
+			},
+			onRedirectTargetPriority: 99,
+			onRedirectTarget(target, source, source2) {
+				if (source !== this.effectData.target) return;
+				if (this.effectData.source.fainted) return;
+				return this.effectData.source;
+			},
+			onAnyTryImmunity(target, source, move) {
+				if (target !== this.effectData.target && target !== this.effectData.source) {
+					return;
+				}
+				if (source === this.effectData.target && target === this.effectData.source) {
+					return;
+				}
+				if (['gust', 'twister', 'skyuppercut', 'thunder', 'hurricane', 'smackdown', 'thousandarrows', 'helpinghand'].includes(move.id)) {
+					return;
+				}
+				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
+					return;
+				}
+				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
+				return false;
+			},
+			onAnyBasePower(basePower, target, source, move) {
+				if (target !== this.effectData.target && target !== this.effectData.source) {
+					return;
+				}
+				if (source === this.effectData.target && target === this.effectData.source) {
+					return;
+				}
+				if (move.id === 'gust' || move.id === 'twister') {
+					return this.chainModify(2);
+				}
+			},
+			onFaint(target) {
+				if (target.volatiles['psychokinesis'] && target.volatiles['twoturnmove'].source) {
+					this.add('-end', target.volatiles['twoturnmove'].source, 'Psychokinesis', '[interrupt]');
+				}
+			},
+		},
+		secondary: null,
+		target: "any",
+		type: "Psychic",
+		zMovePower: 110,
+		contestType: "Popular",
+	},
 	"psychoshift": {
 		num: 375,
 		accuracy: 100,
