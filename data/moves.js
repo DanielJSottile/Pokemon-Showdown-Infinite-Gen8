@@ -19811,8 +19811,12 @@ let BattleMovedex = {
 		secondary: {
 			dustproof: true,
 			chance: 100,
-			onHit(target) {
-				if (target.status === 'brn') target.cureStatus();
+			onTryHit(target) {
+			for (const [i, allyActive] of target.side.active.entries()) {
+				if (allyActive && allyActive.status === 'brn') allyActive.cureStatus();
+				let foeActive = target.side.foe.active[i];
+				if (foeActive && foeActive.status === 'brn') foeActive.cureStatus();
+				}
 			},
 		},
 		target: "allAdjacent",
