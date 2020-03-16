@@ -37,6 +37,26 @@ let Formats = [
 		banlist: ['OU', 'UUBL', 'Drizzle', 'Drought', 'Mewnium Z', 'Kommonium Z'],
 	},
 	{
+		name: "[Gen 8] RU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3658529/">UU Metagame Discussion</a>`,
+		],
+
+		mod: 'gen8',
+		ruleset: ['[Gen 8] UU'],
+		banlist: ['OU', 'UUBL', 'RUBL'],
+	},
+	{
+		name: "[Gen 8] NU",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3658529/">UU Metagame Discussion</a>`,
+		],
+
+		mod: 'gen8',
+		ruleset: ['[Gen 8] RU'],
+		banlist: ['OU', 'UUBL', 'RUBL', 'NUBL'],
+	},
+	{
 		name: "[Gen 8] Doubles OU",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/np-swsh-dou-stage-0-begin-again.3656244/">Doubles OU Metagame Discussion</a>`,
