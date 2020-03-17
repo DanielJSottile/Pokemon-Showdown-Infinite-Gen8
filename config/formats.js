@@ -21,9 +21,9 @@ let Formats = [
 		ruleset: ['Obtainable', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Sleep Clause Mod', 'Infinite Timer'],
 		banlist: ['Power Construct', 'Baton Pass',
 			'Apocalylidae', 'Arceus', 'Darkrai', 'Deoxys-Attack', 'Deoxys-Base', 'Deoxys-Speed', 'Dialga', 'Eternatus', 'Gengar-Mega', 'Giratina', 'Groudon',
-			'Ho-Oh', 'Kyogre', 'Kyurem-White', 'Kyurem-Black', 'Kyurem-Omnipotent', 'Landorus-Base', 'Lucario-Mega', 'Lugia', 'Lunala',
+			'Ho-Oh', 'Kyogre', 'Kyurem-White', 'Kyurem-Black', 'Kyurem-Omnipotent', 'Lucario-Mega', 'Lugia', 'Lunala',
 			'Marshadow', 'Mebiusan-Past', 'Mebiusan-Future', 'Mewtwo', 'Naganadel', 'Necrozma-Dawn-Wings', 'Necrozma-Dusk-Mane', 'Palkia', 'Pheromosa',
-			'Rayquaza', 'Reshiram', 'Salamence-Mega', 'Solgaleo', 'Zacian', 'Zamazenta', 'Xerneas', 'Yveltal', 'Zekrom',
+			'Rayquaza', 'Reshiram', 'Salamence-Mega', 'Zacian', 'Zamazenta', 'Xerneas', 'Yveltal', 'Zekrom',
 		],
 	},
 	{

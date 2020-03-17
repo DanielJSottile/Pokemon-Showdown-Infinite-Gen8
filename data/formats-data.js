@@ -129,8 +129,8 @@ let BattleFormatsData = {
 			{"generation": 3, "level": 70, "moves": ["protect", "raindance", "skullbash", "hydropump"], "pokeball": "pokeball"},
 			{"generation": 6, "level": 100, "isHidden": true, "moves": ["hydropump", "hydrocannon", "irondefense", "waterpledge"], "pokeball": "cherishball"},
 		],
-		tier: "NU",
-		doublesTier: "(DUU)",
+		tier: "UUBL",
+		doublesTier: "DUU",
 	},
 	blastoisemega: {
 		randomBattleMoves: ["icebeam", "hydropump", "rapidspin", "scald", "dragontail", "darkpulse", "aurasphere"],
@@ -611,7 +611,7 @@ let BattleFormatsData = {
 		eventPokemon: [
 			{"generation": 5, "level": 50, "gender": "M", "nature": "Bold", "ivs": {"def": 31}, "isHidden": true, "moves": ["heatwave", "solarbeam", "psyshock", "willowisp"], "pokeball": "cherishball"},
 		],
-		tier: "RU",
+		tier: "NU",
 		doublesTier: "DUU",
 	},
 	ninetalesalola: {
@@ -1573,7 +1573,7 @@ let BattleFormatsData = {
 			{"generation": 3, "level": 32},
 			{"generation": 4, "level": 15, "pokeball": "safariball"},
 		],
-		tier: "NU",
+		tier: "PU",
 		doublesTier: "(DUU)",
 	},
 	weezinggalar: {
@@ -2104,6 +2104,18 @@ let BattleFormatsData = {
 		],
 		tier: "(PU)",
 		doublesTier: "(DUU)",
+	},
+	phantasmeon: {
+		randomBattleMoves: ["spookyspook", "mysticalfire", "willowisp", "hex", "haze", "strangesteam"],
+		randomDoubleBattleMoves: ["spookyspook", "mysticalfire", "willowisp", "hex", "haze", "strangesteam", "protect"],
+		tier: "RU",
+		doublesTier: "DUU",
+	},
+	titaneon: {
+		randomBattleMoves: ["pointypoint", "spikes", "wish", "swordsdance", "metalshard", "protect"],
+		randomDoubleBattleMoves: ["pointypoint", "spikes", "wish", "swordsdance", "metalshard", "protect"],
+		tier: "UU",
+		doublesTier: "DUU",
 	},
 	porygon: {
 		eventPokemon: [
@@ -2666,7 +2678,7 @@ let BattleFormatsData = {
 		gen: 7,
 		requiredAbility: "Unown's Spell",
 		battleOnly: true,
-		tier: "RUBL",
+		tier: "RU",
 		doublesTier: "(DUU)",
 	},
 	wynaut: {
@@ -4514,6 +4526,13 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	luxraymega: {
+		randomBattleMoves: ["wildcharge", "icefang", "voltswitch", "crunch", "superpower", "facade"],
+		randomDoubleBattleMoves: ["wildcharge", "icefang", "voltswitch", "crunch", "superpower", "facade", "protect"],
+		requiredItem: "Luxrayite"
+		tier: "(PU)",
+		doublesTier: "(DUU)",
+	},
 	cranidos: {
 		eventPokemon: [
 			{"generation": 5, "level": 15, "gender": "M", "isHidden": false, "moves": ["pursuit", "takedown", "crunch", "headbutt"], "pokeball": "cherishball"},
@@ -4594,6 +4613,13 @@ let BattleFormatsData = {
 			{"generation": 5, "level": 10, "isHidden": false},
 		],
 		tier: "(PU)",
+		doublesTier: "(DUU)",
+	},
+	floatzelmega: {
+		randomBattleMoves: ["bulkup", "liquidation", "icepunch", "irontail", "meteormash", "uturn", "brickbreak"],
+		randomDoubleBattleMoves: ["liquidation", "brickbreak", "irontail", "raindance", "protect", "icepunch", "uturn", "meteormash"],
+		requiredItem: "Floatzelite"
+		tier: "UU",
 		doublesTier: "(DUU)",
 	},
 	cherubi: {
@@ -6107,7 +6133,7 @@ let BattleFormatsData = {
 	landorus: {
 		randomBattleMoves: ["calmmind", "rockpolish", "earthpower", "focusblast", "psychic", "sludgewave", "stealthrock", "knockoff", "rockslide"],
 		randomDoubleBattleMoves: ["earthpower", "focusblast", "hiddenpowerice", "psychic", "sludgebomb", "rockslide", "protect"],
-		tier: "AG",
+		tier: "OU",
 		doublesTier: "DUU",
 	},
 	landorustherian: {
@@ -6279,7 +6305,7 @@ let BattleFormatsData = {
 	talonflame: {
 		randomBattleMoves: ["bravebird", "flareblitz", "roost", "swordsdance", "uturn", "willowisp"],
 		randomDoubleBattleMoves: ["bravebird", "flareblitz", "roost", "swordsdance", "uturn", "willowisp", "tailwind", "taunt", "protect"],
-		tier: "RUBL",
+		tier: "UUBL",
 		doublesTier: "DUU",
 	},
 	scatterbug: {
@@ -6558,7 +6584,7 @@ let BattleFormatsData = {
 	goodra: {
 		randomBattleMoves: ["dracometeor", "dragonpulse", "fireblast", "sludgebomb", "thunderbolt", "earthquake", "dragontail"],
 		randomDoubleBattleMoves: ["thunderbolt", "icebeam", "dragonpulse", "fireblast", "muddywater", "dracometeor", "focusblast", "protect"],
-		tier: "RU",
+		tier: "UU",
 		doublesTier: "(DUU)",
 	},
 	klefki: {
@@ -7264,8 +7290,8 @@ let BattleFormatsData = {
 	solgaleo: {
 		randomBattleMoves: ["sunsteelstrike", "zenheadbutt", "flareblitz", "morningsun", "stoneedge", "earthquake"],
 		randomDoubleBattleMoves: ["wideguard", "protect", "sunsteelstrike", "morningsun", "zenheadbutt", "flareblitz"],
-		tier: "AG",
-		doublesTier: "DUber",
+		tier: "OU",
+		doublesTier: "DOU",
 	},
 	lunala: {
 		randomBattleMoves: ["moongeistbeam", "psyshock", "calmmind", "focusblast", "roost"],
@@ -7446,7 +7472,7 @@ let BattleFormatsData = {
 	},
 	inteleon: {
 		randomBattleMoves: ["airslash", "darkpulse", "hydropump", "icebeam", "scald", "snipeshot", "uturn"],
-		tier: "RU",
+		tier: "UU",
 		doublesTier: "(DUU)",
 	},
 	skwovet: {
@@ -7518,12 +7544,12 @@ let BattleFormatsData = {
 	},
 	drednaw: {
 		randomBattleMoves: ["crunch", "earthquake", "jawlock", "liquidation", "stealthrock", "stoneedge"],
-		tier: "RU",
+		tier: "NU",
 		doublesTier: "(DUU)",
 	},
 	drednawgmax: {
 		isGigantamax: "G-Max Stonesurge",
-		tier: "RU",
+		tier: "NU",
 		doublesTier: "(DUU)",
 	},
 	yamper: {
@@ -7679,11 +7705,11 @@ let BattleFormatsData = {
 	grimmsnarl: {
 		randomBattleMoves: ["bulkup", "drainpunch", "falsesurrender", "playrough", "spiritbreak", "suckerpunch", "superpower", "thunderwave", "taunt"],
 		isGigantamax: "G-Max Snooze",
-		tier: "UU",
+		tier: "OU",
 		doublesTier: "DUU",
 	},
 	grimmsnarlgmax: {
-		tier: "UU",
+		tier: "OU",
 		doublesTier: "DUU",
 	},
 	milcery: {
@@ -7765,7 +7791,7 @@ let BattleFormatsData = {
 		doublesTier: "(DUU)",
 	},
 	copperajahgmax: {
-		tier: "RU",
+		tier: "NU",
 		doublesTier: "(DUU)",
 	},
 	dracozolt: {
