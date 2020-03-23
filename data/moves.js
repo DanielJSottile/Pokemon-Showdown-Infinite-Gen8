@@ -15792,12 +15792,13 @@ let BattleMovedex = {
 		flags: {protect: 1, reflectable: 1},
 		self: {
 			onHit(source) {
-			let result = this.random(2);
-			if (result === 0) {
-				source.side.foe.addSideCondition('spikes');
-			} else {
-				source.side.foe.addSideCondition('metalshard');
-			}
+				let result = this.random(2);
+				if (result === 0) {
+					source.side.foe.addSideCondition('spikes');
+				} else {
+					source.side.foe.addSideCondition('metalshard');
+				}
+			},
 		},
 		secondary: null,
 		target: "normal",

@@ -495,8 +495,6 @@ let BattleScripts = {
 				if (broke) {
 					if (move.id === 'feint') {
 						this.add('-activate', target, 'move: Feint');
-					} if (ability.id === 'propellertail') {
-						this.add('-activate', target, 'ability: Propeller Tail');
 					} else {
 						this.add('-activate', target, 'move: ' + move.name, '[broken]');
 					}

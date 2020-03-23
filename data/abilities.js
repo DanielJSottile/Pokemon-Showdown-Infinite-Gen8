@@ -3092,15 +3092,18 @@ let BattleAbilities = {
 	},
 	"propellertail": {
 		shortDesc: "This Pokemon's moves cannot be redirected or stopped by any move effect or ability.",
+		onStart(pokemon) {
+			this.add('-ability', pokemon, 'Propeller Tail');
+		},
 		onModifyMove(move) {
 			// this doesn't actually do anything because ModifyMove happens after the tracksTarget check
 			// the actual implementation is in Battle#getTarget
-			move.tracksTarget = true;
-		},
-		onModifyMove(move) {
+			move.breaksProtect = true;
+			console.log(move);
+			console.log(move.breaksProtect);
 			move.ignoreAbility = true;
 			move.infiltrates = true;
-			move.breaksProtect = true;
+			move.tracksTarget = true;
 		},
 		id: "propellertail",
 		name: "Propeller Tail",
