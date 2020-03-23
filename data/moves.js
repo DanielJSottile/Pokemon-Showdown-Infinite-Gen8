@@ -15790,12 +15790,13 @@ let BattleMovedex = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1},
-		onHit(target, source) {
+		self: {
+			onHit(source) {
 			let result = this.random(2);
 			if (result === 0) {
-				target.addVolatile('spikes', source);
+				source.side.foe.addSideCondition('spikes');
 			} else {
-				target.addVolatile('metalshard', source);
+				source.side.foe.addSideCondition('metalshard');
 			}
 		},
 		secondary: null,
@@ -18880,7 +18881,6 @@ let BattleMovedex = {
 				if (pokemon.hasType('Fairy') && type === 'Dragon') return false;
 			},
 		},
-		volatileStatus: 'smackdown',
 		ignoreImmunity: {'Dragon': true},
 		secondary: null,
 		target: "normal",

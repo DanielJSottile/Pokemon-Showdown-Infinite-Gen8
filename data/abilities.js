@@ -3952,7 +3952,7 @@ let BattleAbilities = {
 		rating: 4.5,
 		num: 3,
 	},
-	"intimidate": {
+	"spooked": {
 		desc: "On switch-in, this Pokemon lowers the Special Attack of adjacent opposing Pokemon by 1 stage. Own Tempo, Inner Focus, Keen Eye, and Pokemon behind a substitute are immune.",
 		shortDesc: "On switch-in, this Pokemon lowers the Special Attack of adjacent opponents by 1 stage.",
 		onStart(pokemon) {
@@ -3960,7 +3960,7 @@ let BattleAbilities = {
 			for (const target of pokemon.side.foe.active) {
 				if (!target || !this.isAdjacent(target, pokemon)) continue;
 				if (!activated) {
-					this.add('-ability', pokemon, 'Intimidate', 'boost');
+					this.add('-ability', pokemon, 'Spooked', 'boost');
 					activated = true;
 				}
 				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, true) < target.getStat('spe', false, true))) {

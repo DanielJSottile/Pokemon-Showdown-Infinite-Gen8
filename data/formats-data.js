@@ -4529,7 +4529,7 @@ let BattleFormatsData = {
 	luxraymega: {
 		randomBattleMoves: ["wildcharge", "icefang", "voltswitch", "crunch", "superpower", "facade"],
 		randomDoubleBattleMoves: ["wildcharge", "icefang", "voltswitch", "crunch", "superpower", "facade", "protect"],
-		requiredItem: "Luxrayite"
+		requiredItem: "Luxrayite",
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
@@ -4618,7 +4618,7 @@ let BattleFormatsData = {
 	floatzelmega: {
 		randomBattleMoves: ["bulkup", "liquidation", "icepunch", "irontail", "meteormash", "uturn", "brickbreak"],
 		randomDoubleBattleMoves: ["liquidation", "brickbreak", "irontail", "raindance", "protect", "icepunch", "uturn", "meteormash"],
-		requiredItem: "Floatzelite"
+		requiredItem: "Floatzelite",
 		tier: "UU",
 		doublesTier: "(DUU)",
 	},
