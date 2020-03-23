@@ -15372,7 +15372,7 @@ let BattleMovedex = {
 			chance: 20,
 			status: 'slp',
 		},
-		target: "normal",
+		target: "allAdjacentFoes",
 		type: "Fire",
 		zMovePower: 165,
 		contestType: "Popular",
@@ -18848,6 +18848,45 @@ let BattleMovedex = {
 		type: "Fire",
 		zMovePower: 190,
 		contestType: "Tough",
+	},
+	"shieldbreaker": {
+		num: -35,
+		accuracy: 100,
+		basePower: 50,
+		category: "Physical",
+		desc: "This move can hit Fairy-type Pokemon. The target loses its type immunity upon being hit until it switches out.",
+		shortDesc: "Can hit fairy types, target loses type immunity.",
+		id: "shieldbreaker",
+		isViable: true,
+		name: "Shield Breaker",
+		pp: 10,
+		priority: 0,
+		volatileStatus: 'shieldbreaker',
+		flags: {protect: 1, mirror: 1, nonsky: 1},
+		effect: {
+			noCopy: true,
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Shield Breaker');
+				this.add('-message', 'The Pokemon lost protection against certain types!');
+			},
+			onNegateImmunity(pokemon, type) {
+				if (pokemon.hasType('Dark') && type === 'Psychic') return false;
+				if (pokemon.hasType('Flying') && type === 'Ground') return false;
+				if (pokemon.hasType('Ground') && type === 'Electric') return false;
+				if (pokemon.hasType('Steel') && type === 'Poison') return false;
+				if (pokemon.hasType('Ghost') && type === 'Normal') return false;
+				if (pokemon.hasType('Ghost') && type === 'Fighting') return false;
+				if (pokemon.hasType('Normal') && type === 'Ghost') return false;
+				if (pokemon.hasType('Fairy') && type === 'Dragon') return false;
+			},
+		},
+		volatileStatus: 'smackdown',
+		ignoreImmunity: {'Dragon': true},
+		secondary: null,
+		target: "normal",
+		type: "Dragon",
+		zMovePower: 90,
+		contestType: "Cool",
 	},
 	"shiftgear": {
 		num: 508,

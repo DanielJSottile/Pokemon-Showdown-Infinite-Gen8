@@ -741,7 +741,7 @@ let BattleAbilities = {
 		id: "deflagrate",
 		name: "Deflagrate",
 		rating: 4,
-		num: -1,
+		num: -2,
 	},
 	"deltastream": {
 		desc: "On switch-in, the weather becomes strong winds that remove the weaknesses of the Flying type from Flying-type Pokemon. This weather remains in effect until this Ability is no longer active for any Pokemon, or the weather is changed by Desolate Land or Primordial Sea.",
@@ -856,7 +856,7 @@ let BattleAbilities = {
 		id: "dragonscales",
 		name: "Dragon Scales",
 		rating: 3,
-		num: -2,
+		num: -3,
 	},
 	"drizzle": {
 		shortDesc: "On switch-in, this Pokemon summons Rain Dance.",
@@ -2693,7 +2693,7 @@ let BattleAbilities = {
 		id: "omniforge",
 		name: "Omniforge",
 		rating: 3.5,
-		num: -5,
+		num: -6,
 	},
 	"overcoat": {
 		shortDesc: "This Pokemon is immune to powder moves and damage from Sandstorm or Hail.",
@@ -3091,16 +3091,16 @@ let BattleAbilities = {
 		num: 232,
 	},
 	"propellertail": {
-		shortDesc: "",
-		onRedirectTargetPriority: 3,
-		onRedirectTarget(target, source, source2, move) {
-			// Fires for all pokemon on the ability holder's side apparently
-			// Ensure source is the ability holder
-			this.debug(`onRedirectTarget: ${target} (${target.side.name}), ${source} (${source.side.name}), ${source2}, ${move}`);
-			if (source.hasAbility('Propeller Tail')) {
-				this.debug(`Propeller Tail prevented redirection`);
-				return target;
-			}
+		shortDesc: "This Pokemon's moves cannot be redirected or stopped by any move effect or ability.",
+		onModifyMove(move) {
+			// this doesn't actually do anything because ModifyMove happens after the tracksTarget check
+			// the actual implementation is in Battle#getTarget
+			move.tracksTarget = true;
+		},
+		onModifyMove(move) {
+			move.ignoreAbility = true;
+			move.infiltrates = true;
+			move.breaksProtect = true;
 		},
 		id: "propellertail",
 		name: "Propeller Tail",
@@ -3313,7 +3313,7 @@ let BattleAbilities = {
 		id: "resolutegauntlet",
 		name: "Resolute Gauntlet",
 		rating: 4.5,
-		num: -4,
+		num: -5,
 	},
 	"ripen": {
 		// TODO Needs research. Following berries aren't supported currently:
@@ -3420,7 +3420,9 @@ let BattleAbilities = {
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move, pokemon) {
 			if (this.field.isWeather('sandstorm')) {
-				if (pokemon.hasItem('utilityumbrella')) return;
+				if (pokemon.hasItem('utilityumbrella')) {
+					return this.chainModify(1);
+				}
 				if (move.type === 'Rock' || move.type === 'Ground' || move.type === 'Steel') {
 					this.debug('Sand Force boost');
 					return this.chainModify([0x14CD, 0x1000]);
@@ -3950,6 +3952,31 @@ let BattleAbilities = {
 		rating: 4.5,
 		num: 3,
 	},
+	"intimidate": {
+		desc: "On switch-in, this Pokemon lowers the Special Attack of adjacent opposing Pokemon by 1 stage. Own Tempo, Inner Focus, Keen Eye, and Pokemon behind a substitute are immune.",
+		shortDesc: "On switch-in, this Pokemon lowers the Special Attack of adjacent opponents by 1 stage.",
+		onStart(pokemon) {
+			let activated = false;
+			for (const target of pokemon.side.foe.active) {
+				if (!target || !this.isAdjacent(target, pokemon)) continue;
+				if (!activated) {
+					this.add('-ability', pokemon, 'Intimidate', 'boost');
+					activated = true;
+				}
+				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, true) < target.getStat('spe', false, true))) {
+					this.add('-immune', target);
+				} else if (target.hasAbility(['Own Tempo', 'Inner Focus', 'Keen Eye', 'Oblivious', 'Scrappy'])) {
+					this.add('-immune', target, `[from] ability: ${this.dex.getAbility(target.ability).name}`);
+				} else {
+					this.boost({spa: -1}, target, pokemon, null, true);
+				}
+			}
+		},
+		id: "spooked",
+		name: "Spooked",
+		rating: 3,
+		num: -1,
+	},
 	"stakeout": {
 		shortDesc: "This Pokemon's attacking stat is doubled against a target that switched in this turn.",
 		onModifyAtkPriority: 5,
@@ -4243,7 +4270,7 @@ let BattleAbilities = {
 		id: "supremebeing",
 		name: "Supreme Being",
 		rating: 3.5,
-		num: -6,
+		num: -7,
 	},
 	"surgesurfer": {
 		shortDesc: "If Electric Terrain is active, this Pokemon's Speed is doubled.",
@@ -4301,12 +4328,12 @@ let BattleAbilities = {
 		num: 175,
 	},
 	"swiftswim": {
-		desc: "If Rain Dance is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
-		shortDesc: "If Rain Dance is active, this Pokemon's Speed is doubled.",
+		desc: "If Rain Dance is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is multiplied by 1.8x.",
+		shortDesc: "If Rain Dance is active, this Pokemon's Speed is multiplied by 1.8x.",
 		onModifySpe(spe, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather(['raindance', 'primordialsea'])) {
-				return this.chainModify(2);
+				return this.chainModify(1.8);
 			}
 		},
 		id: "swiftswim",
@@ -4468,7 +4495,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -7,
+		num: -8,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",
@@ -4695,7 +4722,7 @@ let BattleAbilities = {
 		id: "unownspell",
 		name: "Unown's Spell",
 		rating: 5,
-		num: -3,
+		num: -4,
 	},
 	"victorystar": {
 		shortDesc: "This Pokemon and its allies' moves have their accuracy multiplied by 1.1.",

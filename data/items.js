@@ -2240,6 +2240,21 @@ let BattleItems = {
 		gen: 5,
 		desc: "Holder's weight is halved.",
 	},
+	"floatzelite": {
+		id: "floatzelite",
+		name: "Floatzelite",
+		spritenum: 575,
+		megaStone: "Floatzel-Mega",
+		megaEvolves: "Floatzel",
+		itemUser: ["Floatzel"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -44,
+		gen: 8,
+		desc: "If held by a Floatzel, this item allows it to Mega Evolve in battle.",
+	},
 	"flowersweet": {
 		id: "flowersweet",
 		name: "Flower Sweet",
@@ -3810,6 +3825,21 @@ let BattleItems = {
 		num: 136,
 		gen: 4,
 		desc: "If held by a Palkia, its Water- and Dragon-type attacks have 1.2x power.",
+	},
+	"luxrayite": {
+		id: "luxrayite",
+		name: "Luxrayite",
+		spritenum: 575,
+		megaStone: "Luxray-Mega",
+		megaEvolves: "Luxray",
+		itemUser: ["Luxray"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -43,
+		gen: 8,
+		desc: "If held by a Luxray, this item allows it to Mega Evolve in battle.",
 	},
 	"luxuryball": {
 		id: "luxuryball",
