@@ -2671,7 +2671,7 @@ let BattleFormatsData = {
 	},
 	unownorigin: {
 		randomBattleMoves: ["hiddenpowerfighting", "alphastrike", "alphabeticalorder", "revealingjudgement"],
-		tier: "RUBL",
+		tier: "RU",
 		doublesTier: "(DUU)",
 	},
 	unownalphabet: {
@@ -4530,7 +4530,7 @@ let BattleFormatsData = {
 		randomBattleMoves: ["wildcharge", "icefang", "voltswitch", "crunch", "superpower", "facade"],
 		randomDoubleBattleMoves: ["wildcharge", "icefang", "voltswitch", "crunch", "superpower", "facade", "protect"],
 		requiredItem: "Luxrayite",
-		tier: "(PU)",
+		tier: "RU",
 		doublesTier: "(DUU)",
 	},
 	cranidos: {
@@ -7433,7 +7433,7 @@ let BattleFormatsData = {
 	},
 	melmetalgmax: {
 		isGigantamax: "G-Max Meltdown",
-		tier: "UUBL",
+		tier: "OU",
 		doublesTier: "DOU",
 	},
 	grookey: {

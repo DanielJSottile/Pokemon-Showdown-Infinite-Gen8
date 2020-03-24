@@ -3103,7 +3103,7 @@ let BattleAbilities = {
 			console.log(move.breaksProtect);
 			move.ignoreAbility = true;
 			move.infiltrates = true;
-			move.tracksTarget = true;
+			// move.tracksTarget = true;
 		},
 		id: "propellertail",
 		name: "Propeller Tail",
