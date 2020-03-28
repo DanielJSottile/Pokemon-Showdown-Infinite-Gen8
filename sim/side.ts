@@ -461,7 +461,7 @@ export class Side {
 			this.choice.actions.push({
 				choice: 'move',
 				pokemon,
-				targetLoc: lockedMoveTarget
+				targetLoc: lockedMoveTarget,
 				moveid: toID(lockedMove),
 			});
 			return true;

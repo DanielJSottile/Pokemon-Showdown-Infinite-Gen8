@@ -457,11 +457,11 @@ var _state = require('./state');
 
 		const lockedMove = pokemon.getLockedMove();
 		if (lockedMove) {
-			const lockedMoveTarget = pokemon.lastMoveTargetLoc;
+			const lockedMoveTarget = pokemon.lastMoveTargetLoc || 0;
 			this.choice.actions.push({
 				choice: 'move',
 				pokemon,
-				targetLoc: lockedMoveTarget || 0,
+				targetLoc: lockedMoveTarget,
 				moveid: toID(lockedMove),
 			});
 			return true;

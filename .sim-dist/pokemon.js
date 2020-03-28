@@ -599,11 +599,12 @@ var _state = require('./state');
 		return this.foes().filter(foe => this.battle.isAdjacent(this, foe));
 	}
 
-	getUndynamaxedHP() {
+	getUndynamaxedHP(amount) {
+		const hp = amount || this.hp;
 		if (this.volatiles['dynamax']) {
-			return Math.ceil(this.hp * this.baseMaxhp / this.maxhp);
+			return Math.ceil(hp * this.baseMaxhp / this.maxhp);
 		}
-		return this.hp;
+		return hp;
 	}
 
 	getMoveTargets(move, target) {
@@ -641,11 +642,11 @@ var _state = require('./state');
 			const selectedTarget = target;
 			if (!target || (target.fainted && target.side !== this.side)) {
 				// If a targeted foe faints, the move is retargeted
-				const possibleTarget = this.battle.resolveTarget(this, move);
+				const possibleTarget = this.battle.getRandomTarget(this, move);
 				if (!possibleTarget) return {targets: [], pressureTargets: []};
 				target = possibleTarget;
 			}
-			if (target.side.active.length > 1) {
+			if (target.side.active.length > 1 && !move.tracksTarget) {
 				if (!move.flags['charge'] || this.volatiles['twoturnmove'] ||
 						(move.id.startsWith('solarb') && this.battle.field.isWeather(['sunnyday', 'desolateland'])) ||
 						(this.hasItem('powerherb') && move.id !== 'skydrop')) {
@@ -1418,10 +1419,15 @@ var _state = require('./state');
 				this.battle.add('-enditem', this, item, '[of] ' + source);
 				break;
 			default:
-				if (!item.isGem) {
+				if (item.isGem) {
+					this.battle.add('-enditem', this, item, '[from] gem');
+				} else {
 					this.battle.add('-enditem', this, item);
 				}
 				break;
+			}
+			if (item.boosts) {
+				this.battle.boost(item.boosts, this, source, item);
 			}
 
 			this.battle.singleEvent('Use', item, this.itemData, this, source, sourceEffect);

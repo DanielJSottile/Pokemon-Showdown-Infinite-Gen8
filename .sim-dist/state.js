@@ -38,6 +38,7 @@ const BATTLE = new Set([
 	'dex', 'gen', 'ruleTable', 'id', 'log', 'inherit', 'format',
 	'zMoveTable', 'teamGenerator', 'NOT_FAIL', 'FAIL', 'SILENT_FAIL',
 	'field', 'sides', 'prng', 'hints', 'deserialized', 'maxMoveTable',
+	'queue',
 ]);
 const FIELD = new Set(['id', 'battle']);
 const SIDE = new Set(['battle', 'team', 'pokemon', 'choice', 'activeRequest']);
@@ -69,6 +70,7 @@ const ACTIVE_MOVE = new Set(['move']);
 		// We treat log specially because we only set it back on Battle after everything
 		// else has been deserialized to avoid anything accidentally `add`-ing to it.
 		state.log = battle.log;
+		state.queue = this.serializeWithRefs([...battle.queue], battle);
 		state.formatid = battle.format.id;
 		return state;
 	}
@@ -145,6 +147,8 @@ const ACTIVE_MOVE = new Set(['move']);
 			}
 		}
 		battle.prng = new (0, _prng.PRNG)(state.prng);
+		const queue = this.deserializeWithRefs(state.queue, battle);
+		battle.queue.push(...queue);
 		// @ts-ignore - readonly
 		battle.hints = new Set(state.hints);
 		// @ts-ignore - readonly
