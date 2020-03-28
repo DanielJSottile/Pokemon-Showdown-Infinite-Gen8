@@ -40,6 +40,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
+			if (move.type === 'Water') {
 				target.useItem();
 			}
 		},
