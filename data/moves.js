@@ -2935,10 +2935,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {snatch: 1, sound: 1, dance: 1},
 		onTryHit(pokemon, target, move) {
-			if (pokemon.hp <= pokemon.maxhp / 3 || pokemon.boosts.atk >= 6 || pokemon.boosts.def >= 6 || pokemon.boosts.spa >= 6 || pokemon.boosts.spd >= 6 || pokemon.boosts.spe >= 6 || pokemon.maxhp === 1) {
-				delete move.boosts;
+			if (pokemon.hp <= pokemon.maxhp / 3 || pokemon.maxhp === 1) {
 				return false;
 			}
+			// @ts-ignore
+			if (!this.boost(move.boosts)) return null;
+			delete move.boosts;
 		},
 		onHit(pokemon) {
 			this.directDamage(pokemon.maxhp / 3);
@@ -3240,12 +3242,12 @@ let BattleMovedex = {
 		zMoveEffect: 'heal',
 		contestType: "Beautiful",
 	},
-	"copycat": {
+		"copycat": {
 		num: 383,
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "The user uses the last move used by any Pokemon, including itself. Fails if no move has been used, or if the last move used was Assist, Baneful Bunker, Beak Blast, Belch, Bestow, Celebrate, Chatter, Circle Throw, Copycat, Counter, Covet, Destiny Bond, Detect, Dragon Tail, Endure, Feint, Focus Punch, Follow Me, Helping Hand, Hold Hands, King's Shield, Mat Block, Me First, Metronome, Mimic, Mirror Coat, Mirror Move, Nature Power, Protect, Rage Powder, Roar, Shell Trap, Sketch, Sleep Talk, Snatch, Spiky Shield, Spotlight, Struggle, Switcheroo, Thief, Transform, Trick, Whirlwind, or any Z-Move.",
+		desc: "The user uses the last move used by any Pokemon, including itself. Fails if no move has been used, or if the last move used was Assist, Baneful Bunker, Beak Blast, Belch, Bestow, Celebrate, Chatter, Circle Throw, Copycat, Counter, Covet, Crafty Shield, Destiny Bond, Detect, Dragon Tail, Endure, Feint, Focus Punch, Follow Me, Helping Hand, Hold Hands, King's Shield, Mat Block, Me First, Metronome, Mimic, Mirror Coat, Mirror Move, Nature Power, Obstruct, Protect, Rage Powder, Roar, Shell Trap, Sketch, Sleep Talk, Snatch, Spiky Shield, Spotlight, Struggle, Switcheroo, Thief, Transform, Trick, Whirlwind, or any Z-Move.",
 		shortDesc: "Uses the last move used in the battle.",
 		id: "copycat",
 		name: "Copycat",
@@ -3253,11 +3255,14 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {},
 		onHit(pokemon) {
-			let noCopycat = [
-				'assist', 'banefulbunker', 'bestow', 'celebrate', 'chatter', 'circlethrow', 'copycat', 'counter', 'covet', 'craftyshield', 'destinybond', 'detect', 'dragontail', 'endure', 'feint', 'focuspunch', 'followme', 'helpinghand', 'holdhands', 'mefirst', 'kingsshield', 'matblock', 'mefirst', 'metronome', 'mimic', 'mirrorcoat', 'mirrormove', 'naturepower', 'obstruct', 'protect', 'ragepowder', 'roar', 'shelltrap', 'sketch', 'sleeptalk', 'snatch', 'spikyshield', 'spotlight', 'struggle', 'switcheroo', 'thief', 'transform', 'trick', 'whirlwind',
+			const noCopycat = [
+				'assist', 'banefulbunker', 'beakblast', 'belch', 'bestow', 'celebrate', 'chatter', 'circlethrow', 'copycat', 'counter', 'covet', 'craftyshield', 'destinybond', 'detect', 'dragontail', 'endure', 'feint', 'focuspunch', 'followme', 'helpinghand', 'holdhands', 'kingsshield', 'matblock', 'mefirst', 'metronome', 'mimic', 'mirrorcoat', 'mirrormove', 'naturepower', 'obstruct', 'protect', 'ragepowder', 'roar', 'shelltrap', 'sketch', 'sleeptalk', 'snatch', 'spikyshield', 'spotlight', 'struggle', 'switcheroo', 'thief', 'transform', 'trick', 'whirlwind',
 			];
-			const move = this.lastMove;
-			if (!move || noCopycat.includes(move.id) || move.isZ || move.isMax) {
+			let move = this.lastMove;
+			if (!move) return;
+
+			if (move.maxPowered) move = this.dex.getMove(move.baseMove);
+			if (noCopycat.includes(move.id) || move.isZ || move.isMax) {
 				return false;
 			}
 			this.useMove(move.id, pokemon);
@@ -3434,7 +3439,7 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 0,
 		category: "Status",
-		desc: "Switches the Spikes, Toxic Spikes, Stealth Rock, Sticky Web, Light Screen, Reflect, Aurora Veil, and Tailwind from the user's side to the target's side and vice versa.",
+		desc: "Switches the Mist, Light Screen, Reflect, Safeguard, Spikes, Toxic Spikes, Tailwind, Stealth Rock, Water Pledge, Fire Pledge, Grass Pledge, Sticky Web, Aurora Veil, Metal Shard, Volcanic Ash, and Forest Fire effects from the user's side to the target's side and vice versa.",
 		shortDesc: "Switches sides of field effects",
 		id: "courtchange",
 		isViable: true,
@@ -3446,7 +3451,7 @@ let BattleMovedex = {
 			const sourceSide = source.side;
 			const targetSide = source.side.foe;
 			const sideConditions = [
-				'spikes', 'toxicspikes', 'stealthrock', 'metalshard', 'stickyweb', 'lightscreen', 'reflect', 'auroraveil', 'tailwind',
+				'spikes', 'toxicspikes', 'stealthrock', 'metalshard', 'stickyweb', 'lightscreen', 'reflect', 'safeguard', 'auroraveil', 'tailwind', 'mist', 'waterpledge', 'firepledge', 'grasspledge', 'wildfire', 'volcanicash',
 			];
 			let success = false;
 			for (let id of sideConditions) {
@@ -9204,8 +9209,8 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "The user faints and the Pokemon brought out to replace it has its HP fully restored along with having any major status condition cured. The new Pokemon is sent out at the end of the turn, and the healing happens before hazards take effect. Fails if the user is the last unfainted Pokemon in its party.",
-		shortDesc: "User faints. Replacement is fully healed.",
+		desc: "The user faints and the next injured or statused Pokemon brought in has its HP fully restored along with having any major status condition cured. The healing happens before hazards take effect. Is not consumed if the Pokemon sent out is not injured or statused. Fails if the user is the last unfainted Pokemon in its party.",
+		shortDesc: "User faints. Next hurt Pokemon is fully healed.",
 		id: "healingwish",
 		isViable: true,
 		name: "Healing Wish",
@@ -9221,10 +9226,8 @@ let BattleMovedex = {
 		selfdestruct: "ifHit",
 		slotCondition: 'healingwish',
 		effect: {
-			duration: 2,
-			onSwitchInPriority: 1,
-			onSwitchIn(target) {
-				if (!target.fainted) {
+			onSwap(target) {
+				if (!target.fainted && (target.hp < target.maxhp || target.status)) {
 					target.heal(target.maxhp);
 					target.setStatus('');
 					this.add('-heal', target, target.getHealth, '[from] move: Healing Wish');
@@ -9235,6 +9238,7 @@ let BattleMovedex = {
 		secondary: null,
 		target: "self",
 		type: "Psychic",
+		zMoveEffect: 'healreplacement',
 		contestType: "Beautiful",
 	},
 	"healorder": {
@@ -11703,10 +11707,10 @@ let BattleMovedex = {
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
-		onTryHit(target, source) {
-			if (source.moveSlots.length < 2) return false; // Last Resort fails unless the user knows at least 2 moves
+		onTry(pokemon, target) {
+			if (pokemon.moveSlots.length < 2) return false; // Last Resort fails unless the user knows at least 2 moves
 			let hasLastResort = false; // User must actually have Last Resort for it to succeed
-			for (const moveSlot of source.moveSlots) {
+			for (const moveSlot of pokemon.moveSlots) {
 				if (moveSlot.id === 'lastresort') {
 					hasLastResort = true;
 					continue;
@@ -14730,25 +14734,27 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "The user raises each of its stats by one stage, but it is prevented from switching out and other Pokemon cannot force the user to switch out. The user can still switch out if it uses Baton Pass, Parting Shot, U-turn, or Volt Switch. If the user leaves the field using Baton Pass, the replacement will remain trapped. Can only be used once while on the field.",
+		desc: "The user raises each of its stats by one stage, but it is prevented from switching out. The user can still switch out if it uses Baton Pass, Parting Shot, U-turn, or Volt Switch. If the user leaves the field using Baton Pass, the replacement will remain trapped. Can only be used once while on the field.",
 		shortDesc: "Raises all stats by 1 (not acc/eva). Traps user.",
 		id: "noretreat",
+		isViable: true,
 		name: "No Retreat",
 		pp: 5,
 		priority: 0,
 		flags: {snatch: 1},
 		volatileStatus: 'noretreat',
+		onTryHit(target, source, move) {
+			if (target.volatiles['noretreat']) return false;
+			if (target.volatiles['trapped']) {
+				delete move.volatileStatus;
+			}
+		},
 		effect: {
 			onStart(pokemon) {
 				this.add('-start', pokemon, 'move: No Retreat');
 			},
 			onTrapPokemon(pokemon) {
 				pokemon.tryTrap();
-			},
-			// TODO: Check if No Retreat traps the user like Ingrain
-			onDragOut(pokemon) {
-				this.add('-activate', pokemon, 'move: No Retreat');
-				return null;
 			},
 		},
 		boosts: {
@@ -14757,12 +14763,6 @@ let BattleMovedex = {
 			spa: 1,
 			spd: 1,
 			spe: 1,
-		},
-		onTryMove(pokemon, target, move) {
-			if (!pokemon.volatiles['noretreat']) return;
-			this.add('-fail', pokemon, 'move: No Retreat');
-			this.attrLastMove('[still]');
-			return null;
 		},
 		secondary: null,
 		target: "self",

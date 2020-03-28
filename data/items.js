@@ -40,9 +40,11 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Water' && target.useItem()) {
-				this.boost({spa: 1});
+				target.useItem();
 			}
+		},
+		boosts: {
+			spa: 1,
 		},
 		num: 545,
 		gen: 5,
@@ -74,9 +76,12 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterBoost(boost, target, source, effect) {
-			if (effect.id === 'intimidate' && target.useItem()) {
-				this.boost({spe: 1});
+			if (effect.id === 'intimidate') {
+				target.useItem();
 			}
+		},
+		boosts: {
+			spe: 1,
 		},
 		num: 846,
 		gen: 7,
@@ -691,12 +696,9 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Bug') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Bug Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
-			}
+			if (move.type === 'Bug' && source.useItem()) {
+				source.addVolatile('gem');
+			}	
 		},
 		num: 558,
 		gen: 5,
@@ -811,9 +813,12 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Electric' && target.useItem()) {
-				this.boost({atk: 1});
+			if (move.type === 'Electric') {
+				target.useItem();
 			}
+		},
+		boosts: {
+			atk: 1,
 		},
 		num: 546,
 		gen: 5,
@@ -1284,11 +1289,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Dark') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Dark Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Dark' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 562,
@@ -1534,11 +1536,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Dragon') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Dragon Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Dragon' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 561,
@@ -1831,11 +1830,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Electric') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Electric Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Electric' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 550,
@@ -1867,14 +1863,17 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('electricterrain') && pokemon.useItem()) {
-				this.boost({def: 1});
+			if (!pokemon.ignoringItem() && this.field.isTerrain('electricterrain')) {
+				pokemon.useItem();
 			}
 		},
 		onAnyTerrainStart() {
-			if (this.field.isTerrain('electricterrain') && this.effectData.target.useItem()) {
-				this.boost({def: 1}, this.effectData.target);
+			if (this.field.isTerrain('electricterrain')) {
+				pokemon.useItem();
 			}
+		},
+		boosts: {
+			def: 1,
 		},
 		num: 881,
 		gen: 7,
@@ -1989,11 +1988,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Fairy') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Fairy Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Fairy' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 715,
@@ -2033,11 +2029,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Fighting') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Fighting Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Fighting' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 553,
@@ -2109,11 +2102,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Fire') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Fire Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Fire' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 548,
@@ -2273,11 +2263,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Flying') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Flying Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Flying' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 556,
@@ -2549,11 +2536,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Ghost') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Ghost Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Ghost' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 560,
@@ -2647,11 +2631,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Grass') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Grass Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Grass' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 551,
@@ -2697,14 +2678,17 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('grassyterrain') && pokemon.useItem()) {
-				this.boost({def: 1});
+			if (!pokemon.ignoringItem() && this.field.isTerrain('grassyterrain')) {
+				pokemon.useItem();
 			}
 		},
 		onAnyTerrainStart() {
-			if (this.field.isTerrain('grassyterrain') && this.effectData.target.useItem()) {
-				this.boost({def: 1}, this.effectData.target);
+			if (this.field.isTerrain('grassyterrain')) {
+				pokemon.useItem();
 			}
+		},
+		boosts: {
+			def: 1,
 		},
 		num: 884,
 		gen: 7,
@@ -2777,11 +2761,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Ground') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Ground Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Ground' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 555,
@@ -3016,11 +2997,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Ice') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Ice Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Ice' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 552,
@@ -3123,11 +3101,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Infinite') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Infinite Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Infinite' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: -16,
@@ -3779,9 +3754,12 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Water' && target.useItem()) {
-				this.boost({spd: 1});
+			if (move.type === 'Water') {
+				target.useItem();
 			}
+		},
+		boosts: {
+			spd: 1,
 		},
 		num: 648,
 		gen: 6,
@@ -4378,14 +4356,17 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('mistyterrain') && pokemon.useItem()) {
-				this.boost({spd: 1});
+			if (!pokemon.ignoringItem() && this.field.isTerrain('mistyterrain')) {
+				pokemon.useItem();
 			}
 		},
 		onAnyTerrainStart() {
-			if (this.field.isTerrain('mistyterrain') && this.effectData.target.useItem()) {
-				this.boost({spd: 1}, this.effectData.target);
+			if (this.field.isTerrain('mistyterrain')) {
+				pokemon.useItem();
 			}
+		},
+		boosts: {
+			spd: 1,
 		},
 		num: 883,
 		gen: 7,
@@ -4544,11 +4525,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Normal') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Normal Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Normal' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 564,
@@ -4952,11 +4930,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Poison') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Poison Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Poison' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 554,
@@ -5223,11 +5198,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Psychic') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Psychic Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Psychic' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 557,
@@ -5259,14 +5231,17 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('psychicterrain') && pokemon.useItem()) {
-				this.boost({spd: 1});
+			if (!pokemon.ignoringItem() && this.field.isTerrain('psychicterrain')) {
+				pokemon.useItem();
 			}
 		},
 		onAnyTerrainStart() {
-			if (this.field.isTerrain('psychicterrain') && this.effectData.target.useItem()) {
-				this.boost({spd: 1}, this.effectData.target);
+			if (this.field.isTerrain('psychicterrain')) {
+				pokemon.useItem();
 			}
+		},
+		boosts: {
+			spd: 1,
 		},
 		num: 882,
 		gen: 7,
@@ -5602,11 +5577,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Rock') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Rock Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Rock' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 559,
@@ -5686,9 +5658,12 @@ let BattleItems = {
 			basePower: 100,
 		},
 		onUpdate(pokemon) {
-			if (this.field.getPseudoWeather('trickroom') && pokemon.useItem()) {
-				this.boost({spe: -1}, pokemon, pokemon);
+			if (this.field.getPseudoWeather('trickroom')) {
+				pokemon.useItem();
 			}
+		},
+		boosts: {
+			spe: -1,
 		},
 		num: 1122,
 		gen: 7,
@@ -6242,9 +6217,12 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Ice' && target.useItem()) {
-				this.boost({atk: 1});
+			if (move.type === 'Ice') {
+				target.useItem();
 			}
+		},
+		boosts: {
+			atk: 1,
 		},
 		num: 649,
 		gen: 6,
@@ -6451,11 +6429,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Steel') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Steel Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Steel' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 563,
@@ -6739,9 +6714,12 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterMoveSecondarySelf(target, source, move) {
-			if (move.flags['sound'] && target.useItem()) {
-				this.boost({spa: 1}); // TODO: Find exact value, and whether this activates before or after use
+			if (move.flags['sound']) {
+				target.useItem();
 			}
+		},
+		boosts: {
+			spa: 1,
 		},
 		num: 1118,
 		gen: 7,
@@ -7028,11 +7006,8 @@ let BattleItems = {
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Water') {
-				if (source.useItem()) {
-					this.add('-enditem', source, 'Water Gem', '[from] gem', '[move] ' + move.name);
-					source.addVolatile('gem');
-				}
+			if (move.type === 'Water' && source.useItem()) {
+				source.addVolatile('gem');
 			}
 		},
 		num: 549,
@@ -7123,9 +7098,13 @@ let BattleItems = {
 		},
 		onHitPriority: 1,
 		onHit(target, source, move) {
-			if (target.hp && move.category !== 'Status' && !move.damage && !move.damageCallback && target.getMoveHitData(move).typeMod > 0 && target.useItem()) {
-				this.boost({atk: 2, spa: 2});
+			if (target.hp && move.category !== 'Status' && !move.damage && !move.damageCallback && target.getMoveHitData(move).typeMod > 0) {
+				target.useItem();
 			}
+		},
+		boosts: {
+			atk: 2,
+			spa: 2,
 		},
 		num: 639,
 		gen: 6,
