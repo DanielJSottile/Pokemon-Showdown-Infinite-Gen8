@@ -814,7 +814,7 @@ let BattleAbilities = {
 			if (['mimikyu', 'mimikyutotem'].includes(pokemon.template.speciesid) && this.effectData.busted) {
 				let templateid = pokemon.template.speciesid === 'mimikyutotem' ? 'Mimikyu-Busted-Totem' : 'Mimikyu-Busted';
 				pokemon.formeChange(templateid, this.effect, true);
-				this.damage(pokemon.baseMaxhp / 8, pokemon, pokemon, this.dex.getTemplate(templateid));
+				this.damage(pokemon.baseMaxhp / 8, pokemon, pokemon);
 			}
 		},
 		id: "disguise",
@@ -1864,7 +1864,7 @@ let BattleAbilities = {
 				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, true) < target.getStat('spe', false, true))) {
 					this.add('-immune', target);
 				} else if (target.hasAbility(['Own Tempo', 'Inner Focus', 'Keen Eye', 'Oblivious', 'Scrappy'])) {
-					this.add('-immune', target, `[from] ability: ${target.getAbility().name}`);
+					this.add('-immune', target, `[from] ability: ${this.dex.getAbility(target.ability).name}`);
 				} else {
 					this.boost({atk: -1}, target, pokemon, null, true);
 				}
@@ -2602,7 +2602,7 @@ let BattleAbilities = {
 			for (const target of pokemon.side.foe.active) {
 				if (pokemon !== source) {
 					// Will be suppressed by Pokemon#ignoringAbility if needed
-					this.singleEvent('Start', pokemon.getAbility(), pokemon.abilityData, pokemon);
+					this.singleEvent('Start', this.dex.getAbility(pokemon.ability), pokemon.abilityData, pokemon);
 				}
 			}
 		},
@@ -2990,7 +2990,7 @@ let BattleAbilities = {
 		shortDesc: "This Pokemon copies the Ability of a target or ally that faints.",
 		onSourceFaint(target, source) {
 			if (!this.effectData.target.hp) return;
-			let ability = target.getAbility();
+			let ability = this.dex.getAbility(target.ability);
 			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
 			if (bannedAbilities.includes(target.ability)) return;
 			this.add('-ability', this.effectData.target, ability, '[from] ability: Power of Alchemy', '[of] ' + target);
@@ -2998,7 +2998,7 @@ let BattleAbilities = {
 		},
 		onAllyFaint(target) {
 			if (!this.effectData.target.hp) return;
-			let ability = target.getAbility();
+			let ability = this.dex.getAbility(target.ability);
 			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
 			if (bannedAbilities.includes(target.ability)) return;
 			this.add('-ability', this.effectData.target, ability, '[from] ability: Power of Alchemy', '[of] ' + target);
@@ -3102,12 +3102,9 @@ let BattleAbilities = {
 			move.breaksProtect = true;
 			console.log(move);
 			console.log(move.breaksProtect);
-			// the problem may be deeper, like the tracksTarget.  we may need to include it like this line:
-			// in sim/battle.ts:
-			// if (pokemon.hasAbility(['propellertail'])) breaksProtect = true; 
 			move.ignoreAbility = true;
 			move.infiltrates = true;
-			move.tracksTarget = true;
+			// move.tracksTarget = true;
 		},
 		id: "propellertail",
 		name: "Propeller Tail",
@@ -3237,7 +3234,7 @@ let BattleAbilities = {
 		shortDesc: "This Pokemon copies the Ability of an ally that faints.",
 		onAllyFaint(target) {
 			if (!this.effectData.target.hp) return;
-			let ability = target.getAbility();
+			let ability = this.dex.getAbility(target.ability);
 			let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'wonderguard', 'zenmode'];
 			if (bannedAbilities.includes(target.ability)) return;
 			this.add('-ability', this.effectData.target, ability, '[from] ability: Receiver', '[of] ' + target);
@@ -3427,6 +3424,9 @@ let BattleAbilities = {
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move, pokemon) {
 			if (this.field.isWeather('sandstorm')) {
+				if (pokemon.hasItem('utilityumbrella')) {
+					return this.chainModify(1);
+				}
 				if (move.type === 'Rock' || move.type === 'Ground' || move.type === 'Steel') {
 					this.debug('Sand Force boost');
 					return this.chainModify([0x14CD, 0x1000]);
@@ -3445,12 +3445,9 @@ let BattleAbilities = {
 		desc: "If Sandstorm is active and not holding Utility Umbrella, this Pokemon's Speed is multiplied by 1.8x. This Pokemon takes no damage from Sandstorm.",
 		shortDesc: "If Sandstorm is active, this Pokemon's Speed is multiplied by 1.8; immunity to Sandstorm.",
 		onModifySpe(spe, pokemon) {
+			if (pokemon.hasItem('utilityumbrella')) return;
 			if (this.field.isWeather('sandstorm')) {
-				if (pokemon.hasItem('utilityumbrella')) {
-				return this.chainModify(1);
-				} else {
-					return this.chainModify(1.8);
-				}
+				return this.chainModify(1.8);
 			}
 		},
 		onImmunity(type, pokemon) {
@@ -4016,9 +4013,15 @@ let BattleAbilities = {
 		num: 100,
 	},
 	"stalwart": {
-		shortDesc: "Ignores the effects of opposing Pokemon's abilities and move that draw in moves",
-		onModifyMove(move) {
-			move.tracksTarget = true;
+		shortDesc: "",
+		onRedirectTargetPriority: 3,
+		onRedirectTarget(target, source, source2, move) {
+			// Fires for all pokemon on the ability holder's side apparently
+			// Ensure source is the ability holder
+			if (source.hasAbility('Stalwart')) {
+				this.debug(`Stalwart prevented redirection`);
+				return target;
+			}
 		},
 		id: "stalwart",
 		name: "Stalwart",
@@ -4575,7 +4578,7 @@ let BattleAbilities = {
 				let rand = 0;
 				if (possibleTargets.length > 1) rand = this.random(possibleTargets.length);
 				let target = possibleTargets[rand];
-				let ability = target.getAbility();
+				let ability = this.dex.getAbility(target.ability);
 				let bannedAbilities = ['gulpmissile', 'hungerswitch', 'iceface', 'unownsspell', 'timetravel', 'noability', 'battlebond', 'comatose', 'disguise', 'flowergift', 'forecast', 'illusion', 'imposter', 'multitype', 'powerconstruct', 'powerofalchemy', 'receiver', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'trace', 'zenmode'];
 				if (bannedAbilities.includes(target.ability)) {
 					possibleTargets.splice(rand, 1);
@@ -4777,8 +4780,7 @@ let BattleAbilities = {
 		desc: "The Pokémon exchanges Abilities with a Pokémon that hits it with a move that makes direct contact.",
 		shortDesc: "Exchanges abilities when hit with a contact move.",
 		onAfterDamage(damage, target, source, effect) {
-			if (!source || source.ability === 'wanderingspirit') return;
-			if (target.volatiles['dynamax'] || target.ability === 'illusion' || target.ability === 'wonderguard') return;
+			if (!source || source.ability === 'wanderingspirit' || target.volatiles['dynamax']) return;
 			if (effect && effect.effectType === 'Move' && effect.flags['contact']) {
 				let sourceAbility = source.setAbility('wanderingspirit', target);
 				if (!sourceAbility) return;

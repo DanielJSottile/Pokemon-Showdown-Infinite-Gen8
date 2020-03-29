@@ -457,11 +457,11 @@ export class Side {
 
 		const lockedMove = pokemon.getLockedMove();
 		if (lockedMove) {
-			const lockedMoveTarget = pokemon.lastMoveTargetLoc || 0;
+			const lockedMoveTarget = pokemon.lastMoveTargetLoc;
 			this.choice.actions.push({
 				choice: 'move',
 				pokemon,
-				targetLoc: lockedMoveTarget
+				targetLoc: lockedMoveTarget || 0,
 				moveid: toID(lockedMove),
 			});
 			return true;
