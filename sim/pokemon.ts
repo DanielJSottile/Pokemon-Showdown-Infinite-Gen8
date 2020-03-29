@@ -648,7 +648,8 @@ export class Pokemon {
 			if (target.side.active.length > 1) {
 				if (!move.flags['charge'] || this.volatiles['twoturnmove'] ||
 						(move.id.startsWith('solarb') && this.battle.field.isWeather(['sunnyday', 'desolateland'])) ||
-						(this.hasItem('powerherb') && move.id !== 'skydrop') {
+						(this.hasItem('powerherb') && move.id !== 'skydrop')) {
+
 					target = this.battle.priorityEvent('RedirectTarget', this, this, this.battle.dex.getActiveMove(move), target);
 				}
 			}
@@ -1706,9 +1707,9 @@ export class Pokemon {
 	}
 
 	isSkyDropped() {
-		if (this.volatiles['skydrop'] || this.volatiles['psychokinesis']) return true;
+		if (this.volatiles['skydrop']) return true;
 		for (const foeActive of this.side.foe.active) {
-			if ((foeActive.volatiles['skydrop'] && foeActive.volatiles['skydrop'].source === this) || (foeActive.volatiles['psychokinesis'] && foeActive.volatiles['psychokinesis'].source === this)) {
+			if (foeActive.volatiles['skydrop'] && foeActive.volatiles['skydrop'].source === this) {
 				return true;
 			}
 		}
