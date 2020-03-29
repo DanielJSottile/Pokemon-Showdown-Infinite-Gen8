@@ -648,7 +648,8 @@ var _state = require('./state');
 			if (target.side.active.length > 1) {
 				if (!move.flags['charge'] || this.volatiles['twoturnmove'] ||
 						(move.id.startsWith('solarb') && this.battle.field.isWeather(['sunnyday', 'desolateland'])) ||
-						(this.hasItem('powerherb') && move.id !== 'skydrop')) {
+						(this.hasItem('powerherb') && (move.id !== 'skydrop' || move.id !== 'psychokinesis'))) {
+
 					target = this.battle.priorityEvent('RedirectTarget', this, this, this.battle.dex.getActiveMove(move), target);
 				}
 			}
@@ -1706,9 +1707,9 @@ var _state = require('./state');
 	}
 
 	isSkyDropped() {
-		if (this.volatiles['skydrop']) return true;
+		if (this.volatiles['skydrop', 'psychokinesis']) return true;
 		for (const foeActive of this.side.foe.active) {
-			if (foeActive.volatiles['skydrop'] && foeActive.volatiles['skydrop'].source === this) {
+			if (foeActive.volatiles['skydrop', 'psychokinesis'] && foeActive.volatiles['skydrop', 'psychokinesis'].source === this) {
 				return true;
 			}
 		}

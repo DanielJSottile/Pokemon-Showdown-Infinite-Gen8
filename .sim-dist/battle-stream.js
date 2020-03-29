@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-var _streams = require('./../lib/streams'); var Streams = _streams;
+var _streams = require('./../.lib-dist/streams'); var Streams = _streams;
 var _battle = require('./battle');
 
 /**
