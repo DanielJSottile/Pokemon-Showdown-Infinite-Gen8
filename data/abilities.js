@@ -404,6 +404,28 @@ let BattleAbilities = {
 		rating: 3,
 		num: 171,
 	},
+	"cacophony": {
+		shortDesc: "Moves that are sound based get a 1.2x boost; All other moves become sound based and are 1x.",
+		onBasePowerPriority: 8,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['sound']) {
+				this.debug('Cacophony Boost');
+				return this.chainModify(1.2);
+			} else {
+				return this.chainModify(1);
+			}
+		},
+		onModifyMovePriority: -1,
+		onModifyMove(move) {
+			if (!move.flags['sound']) {
+				move.flags['sound'] = 1;
+			}
+		},
+		id: "cacophony",
+		name: "Cacophony",
+		rating: 1.5,
+		num: -4,
+	},
 	"cheekpouch": {
 		desc: "If this Pokemon eats a Berry, it restores 1/3 of its maximum HP, rounded down, in addition to the Berry's effect.",
 		shortDesc: "If this Pokemon eats a Berry, it restores 1/3 of its max HP after the Berry's effect.",
@@ -2693,7 +2715,7 @@ let BattleAbilities = {
 		id: "omniforge",
 		name: "Omniforge",
 		rating: 3.5,
-		num: -6,
+		num: -7,
 	},
 	"overcoat": {
 		shortDesc: "This Pokemon is immune to powder moves and damage from Sandstorm or Hail.",
@@ -3317,7 +3339,7 @@ let BattleAbilities = {
 		id: "resolutegauntlet",
 		name: "Resolute Gauntlet",
 		rating: 4.5,
-		num: -5,
+		num: -6,
 	},
 	"ripen": {
 		// TODO Needs research. Following berries aren't supported currently:
@@ -4274,7 +4296,7 @@ let BattleAbilities = {
 		id: "supremebeing",
 		name: "Supreme Being",
 		rating: 3.5,
-		num: -7,
+		num: -8,
 	},
 	"surgesurfer": {
 		shortDesc: "If Electric Terrain is active, this Pokemon's Speed is doubled.",
@@ -4499,7 +4521,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -8,
+		num: -9,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",
@@ -4727,7 +4749,7 @@ let BattleAbilities = {
 		id: "unownspell",
 		name: "Unown's Spell",
 		rating: 5,
-		num: -4,
+		num: -5,
 	},
 	"victorystar": {
 		shortDesc: "This Pokemon and its allies' moves have their accuracy multiplied by 1.1.",

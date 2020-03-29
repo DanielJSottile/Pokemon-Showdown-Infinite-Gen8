@@ -394,6 +394,21 @@ let BattleItems = {
 		gen: 6,
 		desc: "If held by a Banette, this item allows it to Mega Evolve in battle.",
 	},
+	"bearticite": {
+		id: "bearticite",
+		name: "Bearticite",
+		spritenum: 575,
+		megaStone: "Beartic-Mega",
+		megaEvolves: "Beartic",
+		itemUser: ["Beartic"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -45,
+		gen: 8,
+		desc: "If held by a Beartic, this item allows it to Mega Evolve in battle.",
+	},
 	"beastball": {
 		id: "beastball",
 		name: "Beast Ball",
@@ -4503,6 +4518,21 @@ let BattleItems = {
 		num: -36,
 		gen: 8,
 		desc: "Restores 50% max HP at 1/4 max HP or less, but Poisons itself; if this fails, it puts itself to Sleep instead. Single use.",
+	},
+	"noivernite": {
+		id: "noivernite",
+		name: "Noivernite",
+		spritenum: 575,
+		megaStone: "Noivern-Mega",
+		megaEvolves: "Noivern",
+		itemUser: ["Noivern"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -46,
+		gen: 8,
+		desc: "If held by a Noivern, this item allows it to Mega Evolve in battle.",
 	},
 	"nomelberry": {
 		id: "nomelberry",

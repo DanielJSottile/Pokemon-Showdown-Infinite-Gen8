@@ -5911,6 +5911,13 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	megabeartic: {
+		randomBattleMoves: ["iciclecrash", "superpower", "earthquake", "stoneedge", "swordsdance", "aquajet"],
+		randomDoubleBattleMoves: ["iciclecrash", "superpower", "earthquake", "stoneedge", "swordsdance", "aquajet", "protect"],
+		requiredItem: "Bearticite",
+		tier: "RU",
+		doublesTier: "DUU",
+	},
 	cryogonal: {
 		randomBattleMoves: ["icebeam", "recover", "toxic", "rapidspin", "haze", "freezedry", "hiddenpowerground"],
 		randomDoubleBattleMoves: ["icebeam", "recover", "icywind", "protect", "reflect", "freezedry", "hiddenpowerground"],
@@ -6657,6 +6664,13 @@ let BattleFormatsData = {
 		randomBattleMoves: ["dracometeor", "hurricane", "flamethrower", "boomburst", "switcheroo", "uturn", "roost", "taunt"],
 		randomDoubleBattleMoves: ["airslash", "hurricane", "dragonpulse", "dracometeor", "focusblast", "flamethrower", "uturn", "roost", "boomburst", "switcheroo", "tailwind", "taunt", "protect"],
 		tier: "RU",
+		doublesTier: "(DUU)",
+	},
+	meganoivern: {
+		randomBattleMoves: ["clangingscales", "hurricane", "flamethrower", "boomburst", "switcheroo", "uturn", "roost", "taunt"],
+		randomDoubleBattleMoves: ["airslash", "hurricane", "clangingscales", "dracometeor", "focusblast", "flamethrower", "uturn", "roost", "boomburst", "switcheroo", "tailwind", "taunt", "protect"],
+		requiredItem: "Noivernite",
+		tier: "UU",
 		doublesTier: "(DUU)",
 	},
 	xerneas: {
