@@ -56015,6 +56015,9 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	chespin: {learnset: {
+		swift: ["8M"],
+		endure: ["8M"],
+		shieldbreaker: ["8M"],
 		innerpower: ["8M"],
 		aerialace: ["8M"],
 		attract: ["8M"],
@@ -56102,6 +56105,9 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	quilladin: {learnset: {
+		swift: ["8M"],
+		endure: ["8M"],
+		shieldbreaker: ["8M"],
 		innerpower: ["8M"],
 		aerialace: ["8M"],
 		attract: ["8M"],
@@ -56186,6 +56192,9 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	chesnaught: {learnset: {
+		swift: ["8M"],
+		endure: ["8M"],
+		shieldbreaker: ["8M"],
 		roundhousekick: ["8M"],
 		innerpower: ["8M"],
 		aerialace: ["8M"],
@@ -56282,6 +56291,9 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	chesnaughtclemont: {learnset: {
+		swift: ["8M"],
+		endure: ["8M"],
+		shieldbreaker: ["8M"],
 		roundhousekick: ["8M"],
 		innerpower: ["8M"],
 		aerialace: ["8M"],
@@ -56378,6 +56390,8 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	fennekin: {learnset: {
+		firepunch: ["8M"],
+		psychokinesis: ["8M"],
 		innerpower: ["8M"],
 		forestfire: ["8M"],
 		healingwish: ["8T"],
@@ -56438,6 +56452,8 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	braixen: {learnset: {
+		firepunch: ["8M"],
+		psychokinesis: ["8M"],
 		innerpower: ["8M"],
 		forestfire: ["8M"],
 		healingwish: ["8T"],
@@ -56508,6 +56524,8 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	delphox: {learnset: {
+		firepunch: ["8M"],
+		psychokinesis: ["8M"],
 		innerpower: ["8M"],
 		forestfire: ["8M"],
 		healingwish: ["8T"],
@@ -56590,6 +56608,8 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	delphoxserena: {learnset: {
+		firepunch: ["8M"],
+		psychokinesis: ["8M"],
 		innerpower: ["8M"],
 		forestfire: ["8M"],
 		healingwish: ["8T"],
@@ -56672,6 +56692,8 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	froakie: {learnset: {
+		endure: ["8M"],
+		backlash: ["8M"],
 		innerpower: ["8M"],
 		acrobatics: ["8M"],
 		aerialace: ["8M"],
@@ -56736,6 +56758,8 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	frogadier: {learnset: {
+		endure: ["8M"],
+		backlash: ["8M"],
 		innerpower: ["8M"],
 		acrobatics: ["8M"],
 		aerialace: ["8M"],
@@ -56798,6 +56822,8 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	greninja: {learnset: {
+		endure: ["8M"],
+		backlash: ["8M"],
 		innerpower: ["8M"],
 		midnightstrike: ["8M"],
 		acrobatics: ["8M"],
@@ -56873,6 +56899,8 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	greninjaash: {learnset: {
+		endure: ["8M"],
+		backlash: ["8M"],
 		innerpower: ["8M"],
 		midnightstrike: ["8M"],
 		acrobatics: ["8M"],
@@ -57089,6 +57117,7 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	fletchling: {learnset: {
+		willowisp: ["8M"],
 		innerpower: ["8M"],
 		acrobatics: ["8M", "8L39"],
 		aerialace: ["8M"],
@@ -57135,6 +57164,7 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	fletchinder: {learnset: {
+		firespin: ["8M"],
 		innerpower: ["8M"],
 		acrobatics: ["8M", "8L42"],
 		aerialace: ["8M"],
@@ -57185,6 +57215,8 @@ let BattleLearnsets = {
 		workup: ["8M"],
 	}},
 	talonflame: {learnset: {
+		firespin: ["8M"],
+		hurricane: ["8M"],
 		innerpower: ["8M"],
 		acrobatics: ["8M", "8L44"],
 		aerialace: ["8M"],
@@ -57257,6 +57289,7 @@ let BattleLearnsets = {
 		protect: ["8M", "8L1"],
 	}},
 	vivillon: {learnset: {
+		endure: ["8M"],
 		acrobatics: ["8M"],
 		aerialace: ["8M"],
 		aromatherapy: ["8L31"],
@@ -57316,6 +57349,7 @@ let BattleLearnsets = {
 		uturn: ["8M"],
 	}},
 	vivillonfancy: {learnset: {
+		endure: ["8M"],
 		acrobatics: ["8M"],
 		aerialace: ["8M"],
 		aromatherapy: ["8L31"],
@@ -57373,6 +57407,7 @@ let BattleLearnsets = {
 		uturn: ["8M"],
 	}},
 	vivillonpokeball: {learnset: {
+		endure: ["8M"],
 		acrobatics: ["8M"],
 		aerialace: ["8M"],
 		aromatherapy: ["8L31"],
@@ -57430,6 +57465,8 @@ let BattleLearnsets = {
 		uturn: ["8M"],
 	}},
 	litleo: {learnset: {
+		acrobatics: ["8M"],
+		endure: ["8M"],
 		innerpower: ["8M"],
 		attract: ["8M"],
 		bulldoze: ["8M"],
@@ -57490,6 +57527,8 @@ let BattleLearnsets = {
 		yawn: ["8E"],
 	}},
 	pyroar: {learnset: {
+		acrobatics: ["8M"],
+		endure: ["8M"],
 		innerpower: ["8M"],
 		bodypress: ["8M"],
 		attract: ["8M"],
@@ -57784,6 +57823,7 @@ let BattleLearnsets = {
 		worryseed: ["8T"],
 	}},
 	skiddo: {learnset: {
+		endure: ["8M"],
 		innerpower: ["8M"],
 		attract: ["8M"],
 		brickbreak: ["8M"],
@@ -57842,6 +57882,7 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	gogoat: {learnset: {
+		endure: ["8M"],
 		innerpower: ["8M"],
 		roundhousekick: ["8M"],
 		aerialace: ["8M", "8L1"],
@@ -57993,6 +58034,7 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	pangoro: {learnset: {
+		shieldbreaker: ["8M"],
 		innerpower: ["8M"],
 		midnightstrike: ["8M"],
 		roundhousekick: ["8M"],
@@ -58163,6 +58205,7 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	espurr: {learnset: {
+		psychokinesis: ["8M"],
 		allyswitch: ["8T"],
 		assist: ["8E"],
 		attract: ["8M"],
@@ -58230,6 +58273,7 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	meowstic: {learnset: {
+		psychokinesis: ["8M"],
 		gravitybeam: ["8M"],
 		tailslap: ["8M"],
 		nastyplot: ["8M"],
@@ -58309,6 +58353,7 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	meowsticf: {learnset: {
+		psychokinesis: ["8M"],
 		gravitybeam: ["8M"],
 		tailslap: ["8M"],
 		nastyplot: ["8M"],
@@ -58813,6 +58858,8 @@ let BattleLearnsets = {
 		wish: ["8L45"],
 	}},
 	inkay: {learnset: {
+		psychokinesis: ["8M"],
+		backlash: ["8M"],
 		innerpower: ["8M"],
 		chaosleap: ["8M"],
 		liquidation: ["8M"],
@@ -58894,6 +58941,8 @@ let BattleLearnsets = {
 		trickroom: ["8M"],
 	}},
 	malamar: {learnset: {
+		psychokinesis: ["8M"],
+		backlash: ["8M"],
 		innerpower: ["8M"],
 		chaosleap: ["8M"],
 		maelstrom: ["8M"],
@@ -59161,6 +59210,7 @@ let BattleLearnsets = {
 		xscissor: ["8M"],
 	}},
 	skrelp: {learnset: {
+		endure: ["8M"],
 		acid: ["8L15"],
 		acidarmor: ["8E"],
 		aquatail: ["8T", "8L35"],
@@ -59214,6 +59264,8 @@ let BattleLearnsets = {
 		waterpulse: ["8T", "8L25"],
 	}},
 	dragalge: {learnset: {
+		endure: ["8M"],
+		shieldbreaker: ["8M"],
 		breakingswipe: ["8M"],
 		acid: ["8L15"],
 		aquatail: ["8T", "8L35"],
@@ -59512,8 +59564,13 @@ let BattleLearnsets = {
 		wildcharge: ["8M"],
 	}},
 	tyrunt: {learnset: {
+		scaryface: ["8M"],
+		rockblast: ["8M"],
+		assurance: ["8M"],
+		bodyslam: ["8M"],
+		endure: ["8M"],
+		closecombat: ["8M"],
 		innerpower: ["8M"],
-		breakingswipe: ["8M"],
 		aerialace: ["8M"],
 		ancientpower: ["8L26"],
 		attract: ["8M"],
@@ -59579,6 +59636,14 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	tyrantrum: {learnset: {
+		scaryface: ["8M"],
+		rockblast: ["8M"],
+		assurance: ["8M"],
+		bodyslam: ["8M"],
+		endure: ["8M"],
+		closecombat: ["8M"],
+		highhorsepower: ["8M"],
+		shieldbreaker: ["8M"],
 		innerpower: ["8M"],
 		breakingswipe: ["8M"],
 		bodypress: ["8M"],
@@ -59645,6 +59710,11 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	amaura: {learnset: {
+		weatherball: ["8M"],
+		mudshot: ["8M"],
+		rockblast: ["8M"],
+		bodyslam: ["8M"],
+		endure: ["8M"],
 		innerpower: ["8M"],
 		ancientpower: ["8L26"],
 		aquatail: ["8T"],
@@ -59718,6 +59788,12 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	aurorus: {learnset: {
+		weatherball: ["8M"],
+		mudshot: ["8M"],
+		rockblast: ["8M"],
+		bodyslam: ["8M"],
+		endure: ["8M"],
+		iciclespear: ["8M"],
 		innerpower: ["8M"],
 		bodypress: ["8M"],
 		ancientpower: ["8L26"],
@@ -59887,6 +59963,9 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	dedenne: {learnset: {
+		electricterrain: ["8M"],
+		endure: ["8M"],
+		electroball: ["8M"],
 		innerpower: ["8M"],
 		fairyspell: ["8M"],
 		stuffcheeks: ["8L1"],
@@ -59951,6 +60030,9 @@ let BattleLearnsets = {
 		wildcharge: ["8M"],
 	}},
 	carbink: {learnset: {
+		charm: ["8M"],
+		sandtomb: ["8M"],
+		guardswap: ["8M"],
 		inverseroom: ["8M"],
 		fairyspell: ["8M"],
 		afteryou: ["8T"],
@@ -60099,6 +60181,7 @@ let BattleLearnsets = {
 		waterpulse: ["8T"],
 	}},
 	goodra: {learnset: {
+		shieldbreaker: ["8M"],
 		strengthsap: ["8M"],
 		lifedew: ["8T"],
 		hydropump: ["8M"],
@@ -60167,6 +60250,9 @@ let BattleLearnsets = {
 		waterpulse: ["8T"],
 	}},
 	klefki: {learnset: {
+		mistyterrain: ["8M"],
+		endure: ["8M"],
+		storedpower: ["8M"],
 		metalshard: ["8M"],
 		fairyspell: ["8M"],
 		astonish: ["8L8"],
@@ -60728,6 +60814,8 @@ let BattleLearnsets = {
 		xscissor: ["8M"],
 	}},
 	noivern: {learnset: {
+		shieldbreaker: ["8M"],
+		clangingscales: ["8L1"],
 		innerpower: ["8M"],
 		dragonrush: ["8M"],
 		swift: ["8M"],
@@ -60807,6 +60895,12 @@ let BattleLearnsets = {
 		xscissor: ["8M"],
 	}},
 	xerneas: {learnset: {
+		swift: ["8M"],
+		drainingkiss: ["8M"],
+		smartstrike: ["8M"],
+		bodyslam: ["8M"],
+		endure: ["8M"],
+		playrough: ["8M"],
 		gravitybeam: ["8M"],
 		chaosleap: ["8M"],
 		innerpower: ["8M"],
@@ -60875,6 +60969,10 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	yveltal: {learnset: {
+		swift: ["8M"],
+		payback: ["8M"],
+		bodyslam: ["8M"],
+		endure: ["8M"],
 		maelstrom: ["8M"],
 		gravitybeam: ["8M"],
 		chaosleap: ["8M"],
@@ -60941,6 +61039,13 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	zygarde: {learnset: {
+		swift: ["8M"],
+		payback: ["8M"],
+		bodyslam: ["8M"],
+		reversal: ["8M"],
+		endure: ["8M"],
+		highhorsepower: ["8M"],
+		shieldbreaker: ["8M"],
 		innerpower: ["8M"],
 		bodypress: ["8M"],
 		breakingswipe: ["8M"],
@@ -61005,6 +61110,21 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T"],
 	}},
 	diancie: {learnset: {
+		charm: ["8M"],
+		faketears: ["8M"],
+		sandtomb: ["8M"],
+		guardswap: ["8M"],
+		drainingkiss: ["8M"],
+		mysticalfire: ["8M"],
+		metronome: ["8M"],
+		amnesia: ["8M"],
+		endure: ["8M"],
+		batonpass: ["8M"],
+		encore: ["8M"],
+		storedpower: ["8M"],
+		allyswitch: ["8M"],
+		playrough: ["8M"],
+		bodypress: ["8M"],
 		gravitybeam: ["8M"],
 		inverseroom: ["8M"],
 		innerpower: ["8M"],
@@ -61074,6 +61194,10 @@ let BattleLearnsets = {
 		wonderroom: ["8T"],
 	}},
 	hoopa: {learnset: {
+		swift: ["8M"],
+		endure: ["8M"],
+		backlash: ["8M"],
+		psychokinesis: ["8M"],
 		maelstrom: ["8M"],
 		chaosleap: ["8M"],
 		inverseroom: ["8M"],
@@ -61165,6 +61289,17 @@ let BattleLearnsets = {
 		zenheadbutt: ["8T", "8L46"],
 	}},
 	volcanion: {learnset: {
+		firespin: ["8M"],
+		scaryface: ["8M"],
+		raindance: ["8M"],
+		mudshot: ["8M"],
+		thunderfang: ["8M"],
+		mistyterrain: ["8M"],
+		focusenergy: ["8M"],
+		endure: ["8M"],
+		heavyslam: ["8M"],
+		heatcrash: ["8M"],
+		bodypress: ["8M"],
 		forestfire: ["8M"],
 		volcanicash: ["8M"],
 		innerpower: ["8M"],
