@@ -1234,29 +1234,37 @@ let BattleMovedex = {
 		name: "Backlash",
 		pp: 10,
 		priority: 4,
-		flags: {},
-		stallingMove: true,
-		volatileStatus: 'backlash',
-		onTryHit(pokemon) {
-			return !!this.willAct() && this.runEvent('StallMove', pokemon);
+		flags: {snatch: 1},
+		sideCondition: 'backlash',
+		onTryHitSide(side, source) {
+			return !!this.willAct();
 		},
-		onHit(pokemon) {
-			pokemon.addVolatile('stall');
+		onHitSide(side, source) {
+			source.addVolatile('stall');
 		},
 		effect: {
 			duration: 1,
-			onStart(target) {
-				this.add('-singleturn', target, 'Protect');
+			onStart(target, source) {
+				this.add('-singleturn', source, 'backlash');
 			},
-			onTryHitPriority: 3,
+			onTryHitPriority: 4,
 			onTryHit(target, source, move) {
-				if (!move.flags['protect'] || move.category !== 'Status') {
+				if (move.category === 'Status') return;
+				if (!move.flags['protect']) {
 					if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
-					this.boost({spe: -2}, source, target, this.dex.getActiveMove("Backlash"));
 					return;
 				}
-				this.add('-activate', target, 'move: Protect');
-				
+				this.add('-activate', target, 'move: Backlash');
+				let lockedmove = source.getVolatile('lockedmove');
+				if (lockedmove) {
+					// Outrage counter is reset
+					if (source.volatiles['lockedmove'].duration === 2) {
+						delete source.volatiles['lockedmove'];
+					}
+				}
+				if (move.category === 'Status') {
+					this.boost({spd: -2}, source, target, this.dex.getActiveMove("Backlash"));
+				}
 				return this.NOT_FAIL;
 			},
 		},
