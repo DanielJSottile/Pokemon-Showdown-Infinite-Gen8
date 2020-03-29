@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * Simulator Battle
  * Pokemon Showdown - http://pokemonshowdown.com/
  *
@@ -1618,8 +1618,6 @@ export class Battle {
 					if (!effect) break;
 					if (effect.effectType === 'Move') {
 						this.add(msg, target, boostName, boostBy);
-					} else if (effect.effectType === 'Item') {
-						this.add(msg, target, boostName, boostBy, '[from] item: ' + effect.name);
 					} else {
 						if (effect.effectType === 'Ability' && !boosted) {
 							this.add('-ability', target, effect.name, 'boost');
@@ -2435,8 +2433,7 @@ export class Battle {
 				// In Gen 6, Quick Guard blocks moves with artificially enhanced priority.
 				if (this.gen > 5) action.move.priority = priority;
 			}
-		
-
+		}
 		if (!action.speed) {
 			if (!action.pokemon) {
 				action.speed = 1;

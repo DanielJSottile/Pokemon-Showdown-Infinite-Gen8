@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true});﻿/**
+"use strict";Object.defineProperty(exports, "__esModule", {value: true});﻿﻿/**
  * Simulator Battle
  * Pokemon Showdown - http://pokemonshowdown.com/
  *
@@ -1281,7 +1281,7 @@ var _state = require('./state');
 			}
 			this.runEvent('SwitchOut', oldActive);
 			oldActive.illusion = null;
-			this.singleEvent('End', oldActive.getAbility(), oldActive.abilityData, oldActive);
+			this.singleEvent('End', this.dex.getAbility(oldActive.ability), oldActive.abilityData, oldActive);
 			oldActive.isActive = false;
 			oldActive.isStarted = false;
 			oldActive.usedItemThisTurn = false;
@@ -1618,8 +1618,6 @@ var _state = require('./state');
 					if (!effect) break;
 					if (effect.effectType === 'Move') {
 						this.add(msg, target, boostName, boostBy);
-					} else if (effect.effectType === 'Item') {
-						this.add(msg, target, boostName, boostBy, '[from] item: ' + effect.name);
 					} else {
 						if (effect.effectType === 'Ability' && !boosted) {
 							this.add('-ability', target, effect.name, 'boost');
@@ -2188,47 +2186,33 @@ var _state = require('./state');
 		return this.validTargetLoc(this.getTargetLoc(target, source), source, targetType);
 	}
 
-	getAtLoc(pokemon, targetLoc) {
-		if (targetLoc > 0) {
-			return pokemon.side.foe.active[targetLoc - 1];
-		} else {
-			return pokemon.side.active[-targetLoc - 1];
-		}
-	}
-
-	getTarget(pokemon, move, targetLoc, originalTarget) {
+	getTarget(pokemon, move, targetLoc) {
 		move = this.dex.getMove(move);
-		let tracksTarget = move.tracksTarget;
-		// Stalwart sets trackTarget in ModifyMove, but ModifyMove happens after getTarget, so
-		// we need to manually check for Stalwart here
-		if (pokemon.hasAbility(['stalwart', 'propellertail'])) tracksTarget = true;
-		if (tracksTarget && originalTarget && originalTarget.isActive) {
-			// smart-tracking move's original target is on the field: target it
-			return originalTarget;
-		}
+		let target;
 		// Fails if the target is the user and the move can't target its own position
 		if (['adjacentAlly', 'any', 'normal'].includes(move.target) && targetLoc === -(pokemon.position + 1) &&
 				!pokemon.volatiles['twoturnmove'] && !pokemon.volatiles['iceball'] && !pokemon.volatiles['rollout']) {
 			return move.isFutureMove ? pokemon : null;
 		}
 		if (move.target !== 'randomNormal' && this.validTargetLoc(targetLoc, pokemon, move.target)) {
-			const target = this.getAtLoc(pokemon, targetLoc);
-			if (target && target.fainted && target.side === pokemon.side) {
-				// Target is a fainted ally: attack shouldn't retarget
-				return target;
+			if (targetLoc > 0) {
+				target = pokemon.side.foe.active[targetLoc - 1];
+			} else {
+				target = pokemon.side.active[-targetLoc - 1];
 			}
-			if (target && !target.fainted) {
-				// Target is unfainted: use selected target location
+			if (target && !(target.fainted && target.side !== pokemon.side)) {
+				// Target is unfainted: no need to retarget
+				// Or target is a fainted ally: attack shouldn't retarget
 				return target;
 			}
 
 			// Chosen target not valid,
-			// retarget randomly with getRandomTarget
+			// retarget randomly with resolveTarget
 		}
-		return this.getRandomTarget(pokemon, move);
+		return this.resolveTarget(pokemon, move);
 	}
 
-	getRandomTarget(pokemon, move) {
+	resolveTarget(pokemon, move) {
 		// A move was used without a chosen target
 
 		// For instance: Metronome chooses Ice Beam. Since the user didn't
@@ -2293,7 +2277,7 @@ var _state = require('./state');
 				this.add('faint', pokemon);
 				pokemon.side.pokemonLeft--;
 				this.runEvent('Faint', pokemon, faintData.source, faintData.effect);
-				this.singleEvent('End', pokemon.getAbility(), pokemon.abilityData, pokemon);
+				this.singleEvent('End', this.dex.getAbility(pokemon.ability), pokemon.abilityData, pokemon);
 				pokemon.clearVolatile(false);
 				pokemon.fainted = true;
 				pokemon.illusion = null;
@@ -2419,12 +2403,11 @@ var _state = require('./state');
 			action.move = this.dex.getActiveMove(action.move);
 
 			if (!action.targetLoc) {
-				target = this.getRandomTarget(action.pokemon, action.move);
+				target = this.resolveTarget(action.pokemon, action.move);
 				// TODO: what actually happens here?
 				if (target) action.targetLoc = this.getTargetLoc(target, action.pokemon);
 			}
-				action.originalTarget = this.getAtLoc(action.pokemon, action.targetLoc);
-			}
+
 			if (!action.priority && !deferPriority) {
 				let move = action.move;
 				if (action.zmove) {
@@ -2450,8 +2433,7 @@ var _state = require('./state');
 				// In Gen 6, Quick Guard blocks moves with artificially enhanced priority.
 				if (this.gen > 5) action.move.priority = priority;
 			}
-		
-
+		}
 		if (!action.speed) {
 			if (!action.pokemon) {
 				action.speed = 1;
@@ -2606,7 +2588,7 @@ var _state = require('./state');
 			if (!action.pokemon.isActive) return false;
 			if (action.pokemon.fainted) return false;
 			this.runMove(action.move, action.pokemon, action.targetLoc, action.sourceEffect,
-				action.zmove, undefined, action.maxMove, action.originalTarget);
+				action.zmove, undefined, action.maxMove);
 			break;
 		case 'megaEvo':
 			this.runMegaEvo(action.pokemon);
@@ -2669,7 +2651,7 @@ var _state = require('./state');
 			}
 			if (action.pokemon.hp) {
 				action.pokemon.illusion = null;
-				this.singleEvent('End', action.pokemon.getAbility(), action.pokemon.abilityData, action.pokemon);
+				this.singleEvent('End', this.dex.getAbility(action.pokemon.ability), action.pokemon.abilityData, action.pokemon);
 			} else if (!action.pokemon.fainted) {
 				// a pokemon fainted from Pursuit before it could switch
 				if (this.gen <= 4) {
@@ -3257,7 +3239,7 @@ var _state = require('./state');
 	runMove(
 		moveOrMoveName, pokemon, targetLoc,
 		sourceEffect, zMove, externalMove,
-		maxMove, originalTarget
+		maxMove
 	) {
 		throw new UnimplementedError('runMove');
 	}
