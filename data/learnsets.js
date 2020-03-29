@@ -23753,7 +23753,7 @@ let BattleLearnsets = {
 	}},
 	pineco: {learnset: {
 		reversal: ["8M"],
-		bugbuzz
+		bugbuzz: ["8M"],
 		attract: ["8M", "8V"],
 		bide: ["8L20", "8V"],
 		bodyslam: ["8M"],

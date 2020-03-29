@@ -1227,51 +1227,36 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "The user is protected from status moves made by other Pokemon during this turn, and Pokemon trying to use them have their Speed lowered by 2 stages. This move has a 1/X chance of being successful, where X starts at 1 and triples each time this move is successfully used. X resets to 1 if this move fails, if the user's last move used is not Baneful Bunker, Detect, Endure, King's Shield, Protect, Quick Guard, Spiky Shield, or Wide Guard, or if it was one of those moves and the user's protection was broken. Fails if the user moves last this turn.",
-		shortDesc: "Protects from status moves. Activation: lowers Spe by 2.",
+		desc: "The user is protected from non-damaging attacks made by other Pokemon during this turn and lowers the opponents speed by 2 stages. Fails if the user moves last this turn.",
+		shortDesc: "Protects allies from Status moves this turn and lowers opp speed -2.",
 		id: "backlash",
-		isViable: true,
 		name: "Backlash",
 		pp: 10,
-		priority: 4,
-		flags: {snatch: 1},
+		priority: 3,
+		flags: {},
 		sideCondition: 'backlash',
 		onTryHitSide(side, source) {
 			return !!this.willAct();
 		},
-		onHitSide(side, source) {
-			source.addVolatile('stall');
-		},
 		effect: {
 			duration: 1,
 			onStart(target, source) {
-				this.add('-singleturn', source, 'backlash');
+				this.add('-singleturn', source, 'Backlash');
 			},
-			onTryHitPriority: 4,
+			onTryHitPriority: 3,
 			onTryHit(target, source, move) {
-				if (move.category === 'Status') return;
-				if (!move.flags['protect']) {
-					if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
+				if (move && (move.target === 'self' || move.category !== 'Status')) {
+					this.boost({spe: -2}, source, target, this.dex.getActiveMove("Backlash"));
 					return;
 				}
 				this.add('-activate', target, 'move: Backlash');
-				let lockedmove = source.getVolatile('lockedmove');
-				if (lockedmove) {
-					// Outrage counter is reset
-					if (source.volatiles['lockedmove'].duration === 2) {
-						delete source.volatiles['lockedmove'];
-					}
-				}
-				if (move.category === 'Status') {
-					this.boost({spd: -2}, source, target, this.dex.getActiveMove("Backlash"));
-				}
 				return this.NOT_FAIL;
 			},
 		},
 		secondary: null,
 		target: "self",
 		type: "Dark",
-		zMoveEffect: 'clearnegativeboost',
+		zMoveBoost: {def: 2},
 		contestType: "Cool",
 	},
 	"babydolleyes": {
@@ -8627,10 +8612,12 @@ let BattleMovedex = {
 						applies = true;
 						this.cancelMove(pokemon);
 
-						if (pokemon.volatiles['skydrop'].source) {
+						if (pokemon.volatiles['skydrop'].source || pokemon.volatiles['psychokinesis'].source) {
 							this.add('-end', pokemon.volatiles['twoturnmove'].source, 'Sky Drop', '[interrupt]');
+							this.add('-end', pokemon.volatiles['twoturnmove'].source, 'Psychokinesis', '[interrupt]');
 						}
 						pokemon.removeVolatile('skydrop');
+						pokemon.removeVolatile('psychokinesis');
 						pokemon.removeVolatile('twoturnmove');
 					}
 					if (pokemon.volatiles['magnetrise']) {
