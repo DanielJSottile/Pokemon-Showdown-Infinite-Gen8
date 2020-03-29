@@ -3424,9 +3424,9 @@ let BattleAbilities = {
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move, pokemon) {
 			if (this.field.isWeather('sandstorm')) {
-				if (pokemon.hasItem('utilityumbrella')) {
-					return this.chainModify(1);
-				}
+				// if (pokemon.hasItem('utilityumbrella')) {
+					// return this.chainModify(1);
+				// }
 				if (move.type === 'Rock' || move.type === 'Ground' || move.type === 'Steel') {
 					this.debug('Sand Force boost');
 					return this.chainModify([0x14CD, 0x1000]);
