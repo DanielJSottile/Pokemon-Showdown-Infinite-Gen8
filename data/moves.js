@@ -1246,9 +1246,9 @@ let BattleMovedex = {
 			onTryHitPriority: 3,
 			onTryHit(target, source, move) {
 				if (move && (move.target === 'self' || move.category !== 'Status')) {
-					this.boost({spe: -2}, source, target, this.dex.getActiveMove("Backlash"));
 					return;
 				}
+				this.boost({spe: -2}, source, target, this.dex.getActiveMove("Backlash"));
 				this.add('-activate', target, 'move: Backlash');
 				return this.NOT_FAIL;
 			},
