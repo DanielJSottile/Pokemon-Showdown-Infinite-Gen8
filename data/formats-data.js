@@ -5911,7 +5911,7 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
-	megabeartic: {
+	bearticmega: {
 		randomBattleMoves: ["iciclecrash", "superpower", "earthquake", "stoneedge", "swordsdance", "aquajet"],
 		randomDoubleBattleMoves: ["iciclecrash", "superpower", "earthquake", "stoneedge", "swordsdance", "aquajet", "protect"],
 		requiredItem: "Bearticite",
@@ -6666,7 +6666,7 @@ let BattleFormatsData = {
 		tier: "RU",
 		doublesTier: "(DUU)",
 	},
-	meganoivern: {
+	noivernmega: {
 		randomBattleMoves: ["clangingscales", "hurricane", "flamethrower", "boomburst", "switcheroo", "uturn", "roost", "taunt"],
 		randomDoubleBattleMoves: ["airslash", "hurricane", "clangingscales", "dracometeor", "focusblast", "flamethrower", "uturn", "roost", "boomburst", "switcheroo", "tailwind", "taunt", "protect"],
 		requiredItem: "Noivernite",
