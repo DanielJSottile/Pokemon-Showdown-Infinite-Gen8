@@ -8615,7 +8615,7 @@ let BattleMovedex = {
 						this.cancelMove(pokemon);
 						pokemon.removeVolatile('twoturnmove');
 					}
-					if (pokemon.volatiles['skydrop']) {
+					if (pokemon.volatiles['skydrop'] || pokemon.volatiles['psychokinesis']) {
 						applies = true;
 						this.cancelMove(pokemon);
 
