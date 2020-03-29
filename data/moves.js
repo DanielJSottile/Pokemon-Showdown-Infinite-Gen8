@@ -336,9 +336,10 @@ let BattleMovedex = {
 		flags: {authentic: 1, mystery: 1},
 		onHit(target) {
 			if (target.side.active.length < 2) return false; // fails in singles
-			let action = this.queue.willMove(target);
+			let action = this.willMove(target);
 			if (action) {
-				this.queue.prioritizeAction(action);
+				this.cancelMove(target);
+				this.queue.unshift(action);
 				this.add('-activate', target, 'move: After You');
 			} else {
 				return false;
@@ -483,7 +484,7 @@ let BattleMovedex = {
 			return null;
 		},
 		onTryHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -1237,7 +1238,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'backlash',
 		onTryHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -1323,7 +1324,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'banefulbunker',
 		onTryHit(target, source, move) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', target);
+			return !!this.willAct() && this.runEvent('StallMove', target);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -1987,7 +1988,7 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 85,
 		basePowerCallback(pokemon, target, move) {
-			if (target.newlySwitched || this.queue.willMove(target)) {
+			if (target.newlySwitched || this.willMove(target)) {
 				this.debug('Bolt Beak damage boost');
 				return move.basePower * 1.8;
 			}
@@ -3287,12 +3288,12 @@ let BattleMovedex = {
 		flags: {protect: 1, mirror: 1},
 		onHit(target) {
 			if (['battlebond', 'comatose', 'disguise', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'zenmode'].includes(target.ability)) return;
-			if (target.newlySwitched || this.queue.willMove(target)) return;
+			if (target.newlySwitched || this.willMove(target)) return;
 			target.addVolatile('gastroacid');
 		},
 		onAfterSubDamage(damage, target) {
 			if (['battlebond', 'comatose', 'disguise', 'multitype', 'powerconstruct', 'rkssystem', 'schooling', 'shieldsdown', 'stancechange', 'zenmode'].includes(target.ability)) return;
-			if (target.newlySwitched || this.queue.willMove(target)) return;
+			if (target.newlySwitched || this.willMove(target)) return;
 			target.addVolatile('gastroacid');
 		},
 		secondary: null,
@@ -3419,8 +3420,8 @@ let BattleMovedex = {
 				if (source !== this.effectData.target) return;
 				return source.side.foe.active[this.effectData.position];
 			},
-			onDamagingHit(damage, target, source, move) {
-				if (source.side !== target.side && this.getCategory(move) === 'Physical') {
+			onAfterDamage(damage, target, source, effect) {
+				if (effect && effect.effectType === 'Move' && source.side !== target.side && this.getCategory(effect) === 'Physical') {
 					this.effectData.position = source.position;
 					this.effectData.damage = 2 * damage;
 				}
@@ -3555,7 +3556,7 @@ let BattleMovedex = {
 		flags: {},
 		sideCondition: 'craftyshield',
 		onTryHitSide(side, source) {
-			return !!this.queue.willAct();
+			return !!this.willAct();
 		},
 		effect: {
 			duration: 1,
@@ -4021,7 +4022,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'protect',
 		onPrepareHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -4149,7 +4150,7 @@ let BattleMovedex = {
 			noCopy: true, // doesn't get copied by Baton Pass
 			onStart(pokemon, source, effect) {
 				// The target hasn't taken its turn, or Cursed Body activated and the move was not used through Dancer or Instruct
-				if (this.queue.willMove(pokemon) || (pokemon === this.activePokemon && this.activeMove && !this.activeMove.isExternal)) {
+				if (this.willMove(pokemon) || (pokemon === this.activePokemon && this.activeMove && !this.activeMove.isExternal)) {
 					this.effectData.duration--;
 				}
 				if (!pokemon.lastMove) {
@@ -5099,7 +5100,7 @@ let BattleMovedex = {
 		flags: {protect: 1, mirror: 1, mystery: 1},
 		volatileStatus: 'electrify',
 		onTryHit(target) {
-			if (!this.queue.willMove(target) && target.activeTurns) return false;
+			if (!this.willMove(target) && target.activeTurns) return false;
 		},
 		effect: {
 			duration: 1,
@@ -5301,7 +5302,7 @@ let BattleMovedex = {
 				}
 				this.effectData.move = move.id;
 				this.add('-start', target, 'Encore');
-				if (!this.queue.willMove(target)) {
+				if (!this.willMove(target)) {
 					this.effectData.duration++;
 				}
 			},
@@ -5379,7 +5380,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'endure',
 		onTryHit(pokemon) {
-			return this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -6036,7 +6037,7 @@ let BattleMovedex = {
 				// @ts-ignore
 				if (action.pokemon.side === source.side && ['grasspledge', 'waterpledge'].includes(action.move.id)) {
 					// @ts-ignore
-					this.queue.prioritizeAction(action);
+					this.prioritizeAction(action);
 					this.add('-waiting', source, action.pokemon);
 					return null;
 				}
@@ -6155,7 +6156,7 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 85,
 		basePowerCallback(pokemon, target, move) {
-			if (target.newlySwitched || this.queue.willMove(target)) {
+			if (target.newlySwitched || this.willMove(target)) {
 				this.debug('Fishious Rend damage boost');
 				return move.basePower * 1.8;
 			}
@@ -7688,7 +7689,7 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Duraludon",
 		self: {
-			onHit(source) {
+			onAfterHit(source) {
 				for (let pokemon of source.side.foe.active) {
 					const move = pokemon.lastMove;
 					if (move && !move.isZ && !move.isMax) {
@@ -7721,7 +7722,7 @@ let BattleMovedex = {
 		flags: {},
 		isMax: "Alcremie",
 		self: {
-			onHit(target, source, move) {
+			onAfterHit(target, source, move) {
 				for (let pokemon of source.side.active) {
 					this.heal(pokemon.maxhp / 2, pokemon, source, move);
 				}
@@ -8432,7 +8433,7 @@ let BattleMovedex = {
 				// @ts-ignore
 				if (action.pokemon.side === source.side && ['waterpledge', 'firepledge'].includes(action.move.id)) {
 					// @ts-ignore
-					this.queue.prioritizeAction(action);
+					this.prioritizeAction(action);
 					this.add('-waiting', source, action.pokemon);
 					return null;
 				}
@@ -8609,12 +8610,12 @@ let BattleMovedex = {
 					let applies = false;
 					if (pokemon.removeVolatile('bounce') || pokemon.removeVolatile('fly')) {
 						applies = true;
-						this.queue.cancelMove(pokemon);
+						this.cancelMove(pokemon);
 						pokemon.removeVolatile('twoturnmove');
 					}
-					if (pokemon.volatiles['skydrop'] || pokemon.volatiles['psychokinesis']) {
+					if (pokemon.volatiles['skydrop']) {
 						applies = true;
-						this.queue.cancelMove(pokemon);
+						this.cancelMove(pokemon);
 
 						if (pokemon.volatiles['skydrop'].source) {
 							this.add('-end', pokemon.volatiles['twoturnmove'].source, 'Sky Drop', '[interrupt]');
@@ -9468,7 +9469,7 @@ let BattleMovedex = {
 		flags: {authentic: 1},
 		volatileStatus: 'helpinghand',
 		onTryHit(target) {
-			if (!target.newlySwitched && !this.queue.willMove(target)) return false;
+			if (!target.newlySwitched && !this.willMove(target)) return false;
 		},
 		effect: {
 			duration: 1,
@@ -11562,7 +11563,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'kingsshield',
 		onTryHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -12930,7 +12931,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'maxguard',
 		onPrepareHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -13394,7 +13395,7 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {protect: 1, authentic: 1},
 		onTryHit(target, pokemon) {
-			const action = this.queue.willMove(target);
+			const action = this.willMove(target);
 			if (!action) return false;
 
 			const noMeFirst = [
@@ -13570,8 +13571,8 @@ let BattleMovedex = {
 				if (source !== this.effectData.target) return;
 				return source.side.foe.active[this.effectData.position];
 			},
-			onDamagingHit(damage, target, source, effect) {
-				if (source.side !== target.side) {
+			onAfterDamage(damage, target, source, effect) {
+				if (effect && effect.effectType === 'Move' && source.side !== target.side) {
 					this.effectData.position = source.position;
 					this.effectData.damage = 1.5 * damage;
 				}
@@ -13986,8 +13987,8 @@ let BattleMovedex = {
 				if (source !== this.effectData.target) return;
 				return source.side.foe.active[this.effectData.position];
 			},
-			onDamagingHit(damage, target, source, move) {
-				if (source.side !== target.side && this.getCategory(move) === 'Special') {
+			onAfterDamage(damage, target, source, effect) {
+				if (effect && effect.effectType === 'Move' && source.side !== target.side && this.getCategory(effect) === 'Special') {
 					this.effectData.position = source.position;
 					this.effectData.damage = 2 * damage;
 				}
@@ -14827,7 +14828,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'obstruct',
 		onTryHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -15289,7 +15290,7 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 50,
 		basePowerCallback(pokemon, target, move) {
-			if (target.newlySwitched || this.queue.willMove(target)) {
+			if (target.newlySwitched || this.willMove(target)) {
 				this.debug('Payback NOT boosted');
 				return move.basePower;
 			}
@@ -16308,7 +16309,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'protect',
 		onPrepareHit(pokemon) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			return !!this.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -16861,7 +16862,7 @@ let BattleMovedex = {
 				this.debug('Pursuit start');
 				let alreadyAdded = false;
 				for (const source of this.effectData.sources) {
-					if (!this.queue.cancelMove(source) || !source.hp) continue;
+					if (!this.cancelMove(source) || !source.hp) continue;
 					if (!alreadyAdded) {
 						this.add('-activate', pokemon, 'move: Pursuit');
 						alreadyAdded = true;
@@ -16922,7 +16923,7 @@ let BattleMovedex = {
 		flags: {protect: 1, mirror: 1},
 		onHit(target) {
 			if (target.side.active.length < 2) return false; // fails in singles
-			let action = this.queue.willMove(target);
+			let action = this.willMove(target);
 			if (action) {
 				action.priority = -7.1;
 				this.cancelMove(target);
@@ -16976,7 +16977,7 @@ let BattleMovedex = {
 		flags: {snatch: 1},
 		sideCondition: 'quickguard',
 		onTryHitSide(side, source) {
-			return !!this.queue.willAct();
+			return !!this.willAct();
 		},
 		onHitSide(side, source) {
 			source.addVolatile('stall');
@@ -18044,7 +18045,7 @@ let BattleMovedex = {
 				// @ts-ignore
 				if (action.move.id === 'round') {
 					// @ts-ignore
-					this.queue.prioritizeAction(action);
+					this.prioritizeAction(action);
 					return;
 				}
 			}
@@ -18838,9 +18839,9 @@ let BattleMovedex = {
 			onHit(pokemon, source, move) {
 				if (pokemon.side !== source.side && move.category === 'Physical') {
 					pokemon.volatiles['shelltrap'].gotHit = true;
-					let action = this.queue.willMove(pokemon);
+					let action = this.willMove(pokemon);
 					if (action) {
-						this.queue.prioritizeAction(action);
+						this.prioritizeAction(action);
 					}
 				}
 			},
@@ -19578,7 +19579,7 @@ let BattleMovedex = {
 				if (pokemon.hasItem('ironball') || pokemon.volatiles['ingrain'] || this.field.getPseudoWeather('gravity')) applies = false;
 				if (pokemon.removeVolatile('fly') || pokemon.removeVolatile('bounce')) {
 					applies = true;
-					this.queue.cancelMove(pokemon);
+					this.cancelMove(pokemon);
 					pokemon.removeVolatile('twoturnmove');
 				}
 				if (pokemon.volatiles['magnetrise']) {
@@ -19594,7 +19595,7 @@ let BattleMovedex = {
 			},
 			onRestart(pokemon) {
 				if (pokemon.removeVolatile('fly') || pokemon.removeVolatile('bounce')) {
-					this.queue.cancelMove(pokemon);
+					this.cancelMove(pokemon);
 					this.add('-start', pokemon, 'Smack Down');
 				}
 			},
@@ -20237,7 +20238,7 @@ let BattleMovedex = {
 		stallingMove: true,
 		volatileStatus: 'spikyshield',
 		onTryHit(target, source, move) {
-			return !!this.queue.willAct() && this.runEvent('StallMove', target);
+			return !!this.willAct() && this.runEvent('StallMove', target);
 		},
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
@@ -21191,7 +21192,7 @@ let BattleMovedex = {
 		priority: 1,
 		flags: {contact: 1, protect: 1, mirror: 1},
 		onTry(source, target) {
-			let action = this.queue.willMove(target);
+			let action = this.willMove(target);
 			if (!action || action.choice !== 'move' || (action.move.category === 'Status' && action.move.id !== 'mefirst') || target.volatiles.mustrecharge) {
 				this.add('-fail', source);
 				this.attrLastMove('[still]');
@@ -21770,7 +21771,7 @@ let BattleMovedex = {
 		effect: {
 			duration: 3,
 			onStart(target) {
-				if (target.activeTurns && !this.queue.willMove(target)) {
+				if (target.activeTurns && !this.willMove(target)) {
 					this.effectData.duration++;
 				}
 				this.add('-start', target, 'move: Taunt');
@@ -22661,7 +22662,7 @@ let BattleMovedex = {
 
 			if (target.side.active.length === 2 && target.position === 1) {
 				// Curse Glitch
-				const action = this.queue.willMove(target);
+				const action = this.willMove(target);
 				if (action && action.move.id === 'curse') {
 					action.targetLoc = -1;
 				}
@@ -23269,7 +23270,7 @@ let BattleMovedex = {
 				// @ts-ignore
 				if (action.pokemon.side === source.side && ['firepledge', 'grasspledge'].includes(action.move.id)) {
 					// @ts-ignore
-					this.queue.prioritizeAction(action);
+					this.prioritizeAction(action);
 					this.add('-waiting', source, action.pokemon);
 					return null;
 				}
@@ -23529,7 +23530,7 @@ let BattleMovedex = {
 		flags: {snatch: 1},
 		sideCondition: 'wideguard',
 		onTryHitSide(side, source) {
-			return !!this.queue.willAct();
+			return !!this.willAct();
 		},
 		onHitSide(side, source) {
 			source.addVolatile('stall');

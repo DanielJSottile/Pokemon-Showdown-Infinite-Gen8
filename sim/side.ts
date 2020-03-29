@@ -9,7 +9,7 @@ import {Pokemon} from './pokemon';
 import {State} from './state';
 
 /** A single action that can be chosen. */
-export interface ChosenAction {
+interface ChosenAction {
 	choice: 'move' | 'switch' | 'instaswitch' | 'team' | 'shift' | 'pass'; 	// action type
 	pokemon?: Pokemon; // the pokemon doing the action
 	targetLoc?: number; // relative location of the target to pokemon (move action only)

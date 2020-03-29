@@ -1,5 +1,4 @@
 type Battle = import('./battle').Battle
-type Action = import('./battle-queue').Action
 type Field = import('./field').Field
 type ModdedDex = import('./dex').ModdedDex
 type Pokemon = import('./pokemon').Pokemon
@@ -110,6 +109,7 @@ interface SelfEffect {
 	terrain?: string
 	volatileStatus?: string
 	weather?: string
+	onAfterHit?: MoveEventMethods['onAfterHit']
 	onHit?: MoveEventMethods['onHit']
 }
 
@@ -122,6 +122,7 @@ interface SecondaryEffect {
 	self?: SelfEffect
 	status?: string
 	volatileStatus?: string
+	onAfterHit?: MoveEventMethods['onAfterHit']
 	onHit?: MoveEventMethods['onHit']
 }
 
@@ -194,8 +195,7 @@ interface PureEffectEventMethods {
 }
 
 interface EventMethods {
-	onDamagingHit?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
-	onEmergencyExit?: (this: Battle, pokemon: Pokemon) => void
+	onAfterDamage?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
 	onAfterEachBoost?: (this: Battle, boost: SparseBoostsTable, target: Pokemon, source: Pokemon) => void
 	onAfterHit?: MoveEventMethods['onAfterHit']
 	onAfterSetStatus?: (this: Battle, status: PureEffect, target: Pokemon, source: Pokemon, effect: Effect) => void
@@ -279,7 +279,7 @@ interface EventMethods {
 	onWeatherModifyDamage?: CommonHandlers['ModifierSourceMove']
 	onModifyDamagePhase1?: CommonHandlers['ModifierSourceMove']
 	onModifyDamagePhase2?: CommonHandlers['ModifierSourceMove']
-	onAllyDamagingHit?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
+	onAllyAfterDamage?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
 	onAllyAfterEachBoost?: (this: Battle, boost: SparseBoostsTable, target: Pokemon, source: Pokemon) => void
 	onAllyAfterHit?: MoveEventMethods['onAfterHit']
 	onAllyAfterSetStatus?: (this: Battle, status: PureEffect, target: Pokemon, source: Pokemon, effect: Effect) => void
@@ -362,7 +362,7 @@ interface EventMethods {
 	onAllyWeatherModifyDamage?: CommonHandlers['ModifierSourceMove']
 	onAllyModifyDamagePhase1?: CommonHandlers['ModifierSourceMove']
 	onAllyModifyDamagePhase2?: CommonHandlers['ModifierSourceMove']
-	onFoeDamagingHit?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
+	onFoeAfterDamage?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
 	onFoeAfterEachBoost?: (this: Battle, boost: SparseBoostsTable, target: Pokemon, source: Pokemon) => void
 	onFoeAfterHit?: MoveEventMethods['onAfterHit']
 	onFoeAfterSetStatus?: (this: Battle, status: PureEffect, target: Pokemon, source: Pokemon, effect: Effect) => void
@@ -445,7 +445,7 @@ interface EventMethods {
 	onFoeWeatherModifyDamage?: CommonHandlers['ModifierSourceMove']
 	onFoeModifyDamagePhase1?: CommonHandlers['ModifierSourceMove']
 	onFoeModifyDamagePhase2?: CommonHandlers['ModifierSourceMove']
-	onSourceDamagingHit?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
+	onSourceAfterDamage?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
 	onSourceAfterEachBoost?: (this: Battle, boost: SparseBoostsTable, target: Pokemon, source: Pokemon) => void
 	onSourceAfterHit?: MoveEventMethods['onAfterHit']
 	onSourceAfterSetStatus?: (this: Battle, status: PureEffect, target: Pokemon, source: Pokemon, effect: Effect) => void
@@ -528,7 +528,7 @@ interface EventMethods {
 	onSourceWeatherModifyDamage?: CommonHandlers['ModifierSourceMove']
 	onSourceModifyDamagePhase1?: CommonHandlers['ModifierSourceMove']
 	onSourceModifyDamagePhase2?: CommonHandlers['ModifierSourceMove']
-	onAnyDamagingHit?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
+	onAnyAfterDamage?: (this: Battle, damage: number, target: Pokemon, source: Pokemon, move: ActiveMove) => void
 	onAnyAfterEachBoost?: (this: Battle, boost: SparseBoostsTable, target: Pokemon, source: Pokemon) => void
 	onAnyAfterHit?: MoveEventMethods['onAfterHit']
 	onAnyAfterSetStatus?: (this: Battle, status: PureEffect, target: Pokemon, source: Pokemon, effect: Effect) => void
@@ -614,7 +614,7 @@ interface EventMethods {
 
 	// Priorities (incomplete list)
 	onAccuracyPriority?: number
-	onDamagingHitOrder?: number
+	onAfterDamageOrder?: number
 	onAfterMoveSecondaryPriority?: number
 	onAfterMoveSecondarySelfPriority?: number
 	onAfterMoveSelfPriority?: number
@@ -1105,7 +1105,8 @@ interface BattleScriptsData {
 	hitStepTypeImmunity?: (this: Battle, targets: Pokemon[], pokemon: Pokemon, move: ActiveMove) => boolean[]
 	isAdjacent?: (this: Battle, pokemon1: Pokemon, pokemon2: Pokemon) => boolean
 	moveHit?: (this: Battle, target: Pokemon | null, pokemon: Pokemon, move: ActiveMove, moveData?: ActiveMove, isSecondary?: boolean, isSelf?: boolean) => number | undefined | false
-	runAction?: (this: Battle, action: Action) => void
+	resolveAction?: (this: Battle, action: AnyObject, midTurn?: boolean) => Actions.Action
+	runAction?: (this: Battle, action: Actions.Action) => void
 	runMegaEvo?: (this: Battle, pokemon: Pokemon) => boolean
 	runMove?: (this: Battle, moveOrMoveName: Move | string, pokemon: Pokemon, targetLoc: number, sourceEffect?: Effect | null, zMove?: string, externalMove?: boolean, maxMove?: string, originalTarget?: Pokemon) => void
 	runMoveEffects?: (this: Battle, damage: SpreadMoveDamage, targets: SpreadMoveTargets, source: Pokemon, move: ActiveMove, moveData: ActiveMove, isSecondary?: boolean, isSelf?: boolean) => SpreadMoveDamage
@@ -1196,6 +1197,94 @@ interface PlayerOptions {
 	rating?: number;
 	team?: PokemonSet[] | string | null;
 	seed?: PRNGSeed;
+}
+
+namespace Actions {
+	/** A move action */
+	export interface MoveAction {
+		/** action type */
+		choice: 'move' | 'beforeTurnMove';
+		/** priority of the action (lower first) */
+		priority: number;
+		/** fractional priority of the action (lower first) */
+		fractionalPriority: number;
+		/** speed of pokemon using move (higher first if priority tie) */
+		speed: number;
+		/** the pokemon doing the move */
+		pokemon: Pokemon;
+		/** location of the target, relative to pokemon's side */
+		targetLoc: number;
+		/** original target pokemon, for target-tracking moves */
+		originalTarget: Pokemon;
+		/** a move to use (move action only) */
+		moveid: ID
+		/** a move to use (move action only) */
+		move: Move;
+		/** true if megaing or ultra bursting */
+		mega: boolean | 'done';
+		/** if zmoving, the name of the zmove */
+		zmove?: string;
+		/** if dynamaxed, the name of the max move */
+		maxMove?: string;
+		/** effect that called the move (eg Instruct) if any */
+		sourceEffect?: Effect | null;
+	}
+
+	/** A switch action */
+	export interface SwitchAction {
+		/** action type */
+		choice: 'switch' | 'instaswitch';
+		/** priority of the action (lower first) */
+		priority: number;
+		/** speed of pokemon switching (higher first if priority tie) */
+		speed: number;
+		/** the pokemon doing the switch */
+		pokemon: Pokemon;
+		/** pokemon to switch to */
+		target: Pokemon;
+		/** effect that called the switch (eg U */
+		sourceEffect: Effect | null;
+	}
+
+	/** A Team Preview choice action */
+	export interface TeamAction {
+		/** action type */
+		choice: 'team';
+		/** priority of the action (lower first) */
+		priority: number;
+		/** unused for this action type */
+		speed: 1;
+		/** the pokemon switching */
+		pokemon: Pokemon;
+		/** new index */
+		index: number;
+	}
+
+	/** A generic action not done by a pokemon */
+	export interface FieldAction {
+		/** action type */
+		choice: 'start' | 'residual' | 'pass' | 'beforeTurn';
+		/** priority of the action (lower first) */
+		priority: number;
+		/** unused for this action type */
+		speed: 1;
+		/** unused for this action type */
+		pokemon: null;
+	}
+
+	/** A generic action done by a single pokemon */
+	export interface PokemonAction {
+		/** action type */
+		choice: 'megaEvo' | 'shift' | 'runPrimal' | 'runSwitch' | 'event' | 'runUnnerve' | 'runDynamax';
+		/** priority of the action (lower first) */
+		priority: number;
+		/** speed of pokemon doing action (higher first if priority tie) */
+		speed: number;
+		/** the pokemon doing action */
+		pokemon: Pokemon;
+	}
+
+	export type Action = MoveAction | SwitchAction | TeamAction | FieldAction | PokemonAction;
 }
 
 namespace RandomTeamsTypes {
