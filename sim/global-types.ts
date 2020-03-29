@@ -770,7 +770,6 @@ interface ItemData extends EffectData, ItemEventMethods, EventMethods {
 	zMoveFrom?: string
 	zMoveType?: string
 	itemUser?: string[]
-	boosts?: SparseBoostsTable | false
 }
 
 interface ModdedItemData extends Partial<ItemData>, ModdedEffectData {

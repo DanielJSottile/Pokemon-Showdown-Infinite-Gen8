@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * Simulator Pokemon
  * Pokemon Showdown - http://pokemonshowdown.com/
  *
@@ -599,12 +599,11 @@ export class Pokemon {
 		return this.foes().filter(foe => this.battle.isAdjacent(this, foe));
 	}
 
-	getUndynamaxedHP(amount?: number) {
-		const hp = amount || this.hp;
+	getUndynamaxedHP() {
 		if (this.volatiles['dynamax']) {
-			return Math.ceil(hp * this.baseMaxhp / this.maxhp);
+			return Math.ceil(this.hp * this.baseMaxhp / this.maxhp);
 		}
-		return hp;
+		return this.hp;
 	}
 
 	getMoveTargets(move: Move, target: Pokemon): {targets: Pokemon[], pressureTargets: Pokemon[]} {
@@ -642,11 +641,11 @@ export class Pokemon {
 			const selectedTarget = target;
 			if (!target || (target.fainted && target.side !== this.side)) {
 				// If a targeted foe faints, the move is retargeted
-				const possibleTarget = this.battle.getRandomTarget(this, move);
+				const possibleTarget = this.battle.resolveTarget(this, move);
 				if (!possibleTarget) return {targets: [], pressureTargets: []};
 				target = possibleTarget;
 			}
-			if (target.side.active.length > 1 && !move.tracksTarget) {
+			if (target.side.active.length > 1) {
 				if (!move.flags['charge'] || this.volatiles['twoturnmove'] ||
 						(move.id.startsWith('solarb') && this.battle.field.isWeather(['sunnyday', 'desolateland'])) ||
 						(this.hasItem('powerherb') && move.id !== 'skydrop')) {
@@ -1419,15 +1418,10 @@ export class Pokemon {
 				this.battle.add('-enditem', this, item, '[of] ' + source);
 				break;
 			default:
-				if (item.isGem) {
-					this.battle.add('-enditem', this, item, '[from] gem');
-				} else {
+				if (!item.isGem) {
 					this.battle.add('-enditem', this, item);
 				}
 				break;
-			}
-			if (item.boosts) {
-				this.battle.boost(item.boosts, this, source, item);
 			}
 
 			this.battle.singleEvent('Use', item, this.itemData, this, source, sourceEffect);
