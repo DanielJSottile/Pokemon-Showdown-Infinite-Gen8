@@ -37,25 +37,6 @@ interface BattleOptions {
 	strictChoices?: boolean; // whether invalid choices should throw
 }
 
-interface EventListenerWithoutPriority {
-	status: Effect;
-	target?: Pokemon;
-	index?: number;
-	// tslint:disable-next-line: ban-types
-	callback: Function;
-	statusData: AnyObject | null;
-	// tslint:disable-next-line: ban-types
-	end: Function | null;
-	endCallArgs?: any[];
-	thing: Pokemon | Side | Field | Battle;
-}
-interface EventListener extends EventListenerWithoutPriority {
-	order: number | false;
-	priority: number;
-	subOrder: number;
-	speed?: number;
-}
-
 type Part = string | number | boolean | AnyObject | null | undefined;
 
 // The current request state of the Battle:
@@ -360,9 +341,6 @@ export class Battle {
 		}
 	}
 
-	/**
-	 * Runs an event with no source on each Pokémon on the field, in Speed order.
-	 */
 	eachEvent(eventid: string, effect?: Effect, relayVar?: boolean) {
 		const actives = this.getAllActive();
 		if (!effect && this.effect) effect = this.effect;
@@ -376,11 +354,6 @@ export class Battle {
 		}
 	}
 
-	/**
-	 * Runs an event with no source on each effect on the field, in Speed order.
-	 *
-	 * Unlike `eachEvent`
-	 */
 	residualEvent(eventid: string, relayVar?: any) {
 		const callbackName = `on${eventid}`;
 		let handlers = this.findBattleEventHandlers(callbackName, 'duration');
@@ -397,12 +370,12 @@ export class Battle {
 			const handler = handlers[0];
 			handlers.shift();
 			const status = handler.status;
-			if ((handler.thing as Pokemon).fainted) continue;
+			if (handler.thing.fainted) continue;
 			if (handler.statusData && handler.statusData.duration) {
 				handler.statusData.duration--;
 				if (!handler.statusData.duration) {
 					const endCallArgs = handler.endCallArgs || [handler.thing, status.id];
-					handler.end!.call(...endCallArgs as [any, ...any[]]);
+					handler.end.call(...endCallArgs);
 					continue;
 				}
 			}
@@ -631,10 +604,7 @@ export class Battle {
 			// @ts-ignore - dynamic lookup
 			const callback = effect[`on${eventid}`];
 			if (callback !== undefined) {
-				if (Array.isArray(target)) throw new Error("");
-				handlers.unshift(this.resolvePriority({
-					status: effect, callback, statusData: {}, end: null, thing: target,
-				}, `on${eventid}`));
+				handlers.unshift({status: effect, callback, statusData: {}, end: null, thing: target});
 			}
 		}
 
@@ -660,7 +630,7 @@ export class Battle {
 			const status = handler.status;
 			const thing = handler.thing;
 			// this.debug('match ' + eventid + ': ' + status.id + ' ' + status.effectType);
-			if (status.effectType === 'Status' && (thing as Pokemon).status !== status.id) {
+			if (status.effectType === 'Status' && thing.status !== status.id) {
 				// it's changed; call it off
 				continue;
 			}
@@ -767,20 +737,16 @@ export class Battle {
 		return this.runEvent(eventid, target, source, effect, relayVar, onEffect, true);
 	}
 
-	resolvePriority(handler: EventListenerWithoutPriority, callbackName: string) {
-		// @ts-ignore
+	resolveLastPriority(handlers: AnyObject[], callbackName: string) {
+		const handler = handlers[handlers.length - 1];
 		handler.order = handler.status[`${callbackName}Order`] || false;
-		// @ts-ignore
 		handler.priority = handler.status[`${callbackName}Priority`] || 0;
-		// @ts-ignore
 		handler.subOrder = handler.status[`${callbackName}SubOrder`] || 0;
-		// @ts-ignore
 		if (handler.thing && handler.thing.getStat) handler.speed = handler.thing.speed;
-		return handler as EventListener;
 	}
 
 	findEventHandlers(thing: Pokemon | Pokemon[] | Side | Battle, eventName: string, sourceThing?: Pokemon | null) {
-		let handlers: EventListener[] = [];
+		let handlers: AnyObject[] = [];
 		if (Array.isArray(thing)) {
 			for (const [i, pokemon] of thing.entries()) {
 				// console.log(`Event: ${eventName}, Target: ${'' + pokemon}, ${i}`);
@@ -825,66 +791,72 @@ export class Battle {
 	}
 
 	findPokemonEventHandlers(pokemon: Pokemon, callbackName: string, getKey?: 'duration') {
-		const handlers: EventListener[] = [];
+		const handlers: AnyObject[] = [];
 
 		const status = pokemon.getStatus();
 		// @ts-ignore - dynamic lookup
 		let callback = status[callbackName];
 		if (callback !== undefined || (getKey && pokemon.statusData[getKey])) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status, callback, statusData: pokemon.statusData, end: pokemon.clearStatus, thing: pokemon,
-			}, callbackName));
+			});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 		for (const i in pokemon.volatiles) {
 			const volatileData = pokemon.volatiles[i];
-			const volatile = pokemon.getVolatile(i)!;
+			const volatile = pokemon.getVolatile(i);
 			// @ts-ignore - dynamic lookup
 			callback = volatile[callbackName];
 			if (callback !== undefined || (getKey && volatileData[getKey])) {
-				handlers.push(this.resolvePriority({
+				handlers.push({
 					status: volatile, callback, statusData: volatileData, end: pokemon.removeVolatile, thing: pokemon,
-				}, callbackName));
+				});
+				this.resolveLastPriority(handlers, callbackName);
 			}
 		}
 		const ability = pokemon.getAbility();
 		// @ts-ignore - dynamic lookup
 		callback = ability[callbackName];
 		if (callback !== undefined || (getKey && pokemon.abilityData[getKey])) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status: ability, callback, statusData: pokemon.abilityData, end: pokemon.clearAbility, thing: pokemon,
-			}, callbackName));
+			});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 		const item = pokemon.getItem();
 		// @ts-ignore - dynamic lookup
 		callback = item[callbackName];
 		if (callback !== undefined || (getKey && pokemon.itemData[getKey])) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status: item, callback, statusData: pokemon.itemData, end: pokemon.clearItem, thing: pokemon,
-			}, callbackName));
+			});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 		const species = pokemon.baseTemplate;
 		// @ts-ignore - dynamic lookup
 		callback = species[callbackName];
 		if (callback !== undefined) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status: species, callback, statusData: pokemon.speciesData, end() {}, thing: pokemon,
-			}, callbackName));
+			});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 		const side = pokemon.side;
 		for (const conditionid in side.slotConditions[pokemon.position]) {
 			const slotConditionData = side.slotConditions[pokemon.position][conditionid];
-			const slotCondition = side.getSlotCondition(pokemon, conditionid)!;
+			const slotCondition = side.getSlotCondition(pokemon, conditionid);
 			// @ts-ignore - dynamic lookup
 			callback = slotCondition[callbackName];
 			if (callback !== undefined || (getKey && slotConditionData[getKey])) {
-				handlers.push(this.resolvePriority({
+				handlers.push({
 					status: slotCondition,
 					callback,
 					statusData: slotConditionData,
 					end: side.removeSlotCondition,
 					endCallArgs: [side, pokemon, slotCondition!.id],
 					thing: side,
-				}, callbackName));
+				});
+				this.resolveLastPriority(handlers, callbackName);
 			}
 		}
 
@@ -892,7 +864,8 @@ export class Battle {
 	}
 
 	findBattleEventHandlers(callbackName: string, getKey?: 'duration') {
-		const handlers: EventListener[] = [];
+		const callbackNamePriority = `${callbackName}Priority`;
+		const handlers: AnyObject[] = [];
 
 		let callback;
 		const format = this.format;
@@ -900,70 +873,78 @@ export class Battle {
 		callback = format[callbackName];
 		// @ts-ignore - dynamic lookup
 		if (callback !== undefined || (getKey && this.formatData[getKey])) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status: format, callback, statusData: this.formatData, end() {}, thing: this,
-			}, callbackName));
+				// @ts-ignore - dynamic lookup
+				priority: format[callbackNamePriority] || 0});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 		// tslint:disable-next-line:no-conditional-assignment
 		if (this.events && (callback = this.events[callbackName]) !== undefined) {
 			for (const handler of callback) {
-				const statusData = (handler.target.effectType === 'Format') ? this.formatData : null;
+				const statusData = (handler.target.effectType === 'Format') ? this.formatData : undefined;
 				handlers.push({
 					status: handler.target, callback: handler.callback, statusData, end() {},
-					thing: this, priority: handler.priority, order: handler.order, subOrder: handler.subOrder,
-				});
+					thing: this, priority: handler.priority, order: handler.order, subOrder: handler.subOrder});
 			}
 		}
 		return handlers;
 	}
 
 	findFieldEventHandlers(field: Field, callbackName: string, getKey?: 'duration') {
-		const handlers: EventListener[] = [];
+		const callbackNamePriority = `${callbackName}Priority`;
+		const handlers: AnyObject[] = [];
 
 		let callback;
 		for (const i in field.pseudoWeather) {
 			const pseudoWeatherData = field.pseudoWeather[i];
-			const pseudoWeather = field.getPseudoWeather(i)!;
+			const pseudoWeather = field.getPseudoWeather(i);
 			// @ts-ignore - dynamic lookup
 			callback = pseudoWeather[callbackName];
 			if (callback !== undefined || (getKey && pseudoWeatherData[getKey])) {
-				handlers.push(this.resolvePriority({
+				handlers.push({
 					status: pseudoWeather, callback, statusData: pseudoWeatherData, end: field.removePseudoWeather, thing: field,
-				}, callbackName));
+				});
+				this.resolveLastPriority(handlers, callbackName);
 			}
 		}
 		const weather = field.getWeather();
 		// @ts-ignore - dynamic lookup
 		callback = weather[callbackName];
 		if (callback !== undefined || (getKey && this.field.weatherData[getKey])) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status: weather, callback, statusData: this.field.weatherData, end: field.clearWeather, thing: field,
-			}, callbackName));
+				// @ts-ignore - dynamic lookup
+				priority: weather[callbackNamePriority] || 0});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 		const terrain = field.getTerrain();
 		// @ts-ignore - dynamic lookup
 		callback = terrain[callbackName];
 		if (callback !== undefined || (getKey && field.terrainData[getKey])) {
-			handlers.push(this.resolvePriority({
+			handlers.push({
 				status: terrain, callback, statusData: field.terrainData, end: field.clearTerrain, thing: field,
-			}, callbackName));
+				// @ts-ignore - dynamic lookup
+				priority: terrain[callbackNamePriority] || 0});
+			this.resolveLastPriority(handlers, callbackName);
 		}
 
 		return handlers;
 	}
 
 	findSideEventHandlers(side: Side, callbackName: string, getKey?: 'duration') {
-		const handlers: EventListener[] = [];
+		const handlers: AnyObject[] = [];
 
 		for (const i in side.sideConditions) {
 			const sideConditionData = side.sideConditions[i];
-			const sideCondition = side.getSideCondition(i)!;
+			const sideCondition = side.getSideCondition(i);
 			// @ts-ignore - dynamic lookup
 			const callback = sideCondition[callbackName];
 			if (callback !== undefined || (getKey && sideConditionData[getKey])) {
-				handlers.push(this.resolvePriority({
+				handlers.push({
 					status: sideCondition, callback, statusData: sideConditionData, end: side.removeSideCondition, thing: side,
-				}, callbackName));
+				});
+				this.resolveLastPriority(handlers, callbackName);
 			}
 		}
 		return handlers;
@@ -1085,17 +1066,6 @@ export class Battle {
 		}
 	}
 
-<<<<<<< HEAD
-	clearRequest() {
-		this.requestState = '';
-		for (const side of this.sides) {
-			side.activeRequest = null;
-			side.clearChoice();
-		}
-	}
-
-=======
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 	getMaxTeamSize() {
 		const teamLengthData = this.format.teamLength;
 		return (teamLengthData && teamLengthData.battle) || 6;
@@ -1331,7 +1301,6 @@ export class Battle {
 		this.add('drag', pokemon, pokemon.getDetails);
 		if (this.gen >= 5) {
 			this.singleEvent('PreStart', pokemon.getAbility(), pokemon.abilityData, pokemon);
-			this.runEvent('Swap', pokemon);
 			this.runEvent('SwitchIn', pokemon);
 			if (!pokemon.hp) return true;
 			pokemon.isStarted = true;
@@ -1361,8 +1330,6 @@ export class Battle {
 		side.active[slot] = side.pokemon[slot];
 		if (target) target.position = pokemon.position;
 		pokemon.position = slot;
-		this.runEvent('Swap', target, pokemon);
-		this.runEvent('Swap', pokemon, target);
 		return true;
 	}
 
@@ -1373,7 +1340,6 @@ export class Battle {
 	nextTurn() {
 		this.turn++;
 		this.lastMoveThisTurn = null;
-
 		const trappedBySide: boolean[] = [];
 		const stalenessBySide: ('internal' | 'external' | undefined)[] = [];
 		for (const side of this.sides) {
@@ -1555,20 +1521,12 @@ export class Battle {
 	}
 
 	start() {
-<<<<<<< HEAD
-		// Deserialized games should use restart()
-=======
 		// deserialized should use restart instead
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 		if (this.deserialized) return;
 		// need all players to start
 		if (!this.sides.every(side => !!side)) return;
 
-<<<<<<< HEAD
-		if (this.started) throw new Error(`Battle already started`);
-=======
 		if (this.started) return;
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 
 		this.started = true;
 		this.sides[1].foe = this.sides[0];
@@ -2155,7 +2113,13 @@ export class Battle {
 
 		if (pokemon.status === 'brn' && move.category === 'Physical' && !pokemon.hasAbility('guts')) {
 			if (this.gen < 6 || move.id !== 'facade') {
-				baseDamage = this.modify(baseDamage, 0.5);
+				baseDamage = this.modify(baseDamage, 0.66);
+			}
+		}
+
+		if (pokemon.status === 'psn' && move.category === 'Special' && !pokemon.hasAbility('guts') && !pokemon.hasAbility('poisonheal') && !pokemon.hasAbility('toxicboost')) {
+			if (this.gen < 6 || move.id !== 'facade') {
+				baseDamage = this.modify(baseDamage, 0.66);
 			}
 		}
 
@@ -2234,7 +2198,6 @@ export class Battle {
 
 	getTarget(pokemon: Pokemon, move: string | Move, targetLoc: number, originalTarget?: Pokemon) {
 		move = this.dex.getMove(move);
-
 		let tracksTarget = move.tracksTarget;
 		// Stalwart sets trackTarget in ModifyMove, but ModifyMove happens after getTarget, so
 		// we need to manually check for Stalwart here
@@ -2243,7 +2206,6 @@ export class Battle {
 			// smart-tracking move's original target is on the field: target it
 			return originalTarget;
 		}
-
 		// Fails if the target is the user and the move can't target its own position
 		if (['adjacentAlly', 'any', 'normal'].includes(move.target) && targetLoc === -(pokemon.position + 1) &&
 				!pokemon.volatiles['twoturnmove'] && !pokemon.volatiles['iceball'] && !pokemon.volatiles['rollout']) {
@@ -2488,29 +2450,18 @@ export class Battle {
 				// In Gen 6, Quick Guard blocks moves with artificially enhanced priority.
 				if (this.gen > 5) action.move.priority = priority;
 			}
-		}
-<<<<<<< HEAD
+		
 
-		if (!action.pokemon) {
-			action.speed = 1;
-		} else {
-			action.speed = action.pokemon.getActionSpeed();
-=======
 		if (!action.speed) {
 			if (!action.pokemon) {
 				action.speed = 1;
 			} else if (!deferPriority) {
 				action.speed = action.pokemon.getActionSpeed();
 			}
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 		}
 		return action as any;
 	}
 
-<<<<<<< HEAD
-	runAction(action: Action) {
-		const pokemonOriginalHP = action.pokemon?.hp;
-=======
 	/**
 	 * Adds the action last in the queue. Mostly used before sortQueue.
 	 */
@@ -2619,7 +2570,6 @@ export class Battle {
 	}
 
 	runAction(action: Actions.Action) {
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 		// returns whether or not we ended in a callback
 		switch (action.choice) {
 		case 'start': {
@@ -2664,7 +2614,7 @@ export class Battle {
 		case 'runDynamax':
 			action.pokemon.addVolatile('dynamax');
 			for (const pokemon of action.pokemon.side.pokemon) {
-				pokemon.canDynamax = false;
+				pokemon.canDynamax = null;
 			}
 			break;
 		case 'beforeTurnMove': {
@@ -2725,9 +2675,6 @@ export class Battle {
 				if (this.gen <= 4) {
 					// in gen 2-4, the switch still happens
 					this.hint("Previously chosen switches continue in Gen 2-4 after a Pursuit target faints.");
-					action.priority = -101;
-					this.queue.unshift(action);
-					break;
 				} else {
 					// in gen 5+, the switch is cancelled
 					this.hint("A Pokemon can't switch between when it runs out of HP and when it faints");
@@ -2740,7 +2687,6 @@ export class Battle {
 			this.singleEvent('PreStart', action.pokemon.getAbility(), action.pokemon.abilityData, action.pokemon);
 			break;
 		case 'runSwitch':
-			this.runEvent('Swap', action.pokemon);
 			this.runEvent('SwitchIn', action.pokemon);
 			if (this.gen <= 2 && !action.pokemon.side.faintedThisTurn && action.pokemon.draggedIn !== this.turn) {
 				this.runEvent('AfterSwitchInSelf', action.pokemon);
@@ -2807,7 +2753,7 @@ export class Battle {
 			// in gen 3 or earlier, switching in fainted pokemon is done after
 			// every move, rather than only at the end of the turn.
 			this.checkFainted();
-		} else if (action.choice === 'megaEvo' && this.gen === 7) {
+		} else if (['megaEvo', 'runDynamax'].includes(action.choice) && this.gen >= 7) {
 			this.eachEvent('Update');
 			// In Gen 7, the action order is recalculated for a Pokémon that mega evolves.
 			const moveIndex = this.queue.findIndex(queuedAction =>
@@ -2848,24 +2794,6 @@ export class Battle {
 
 		this.eachEvent('Update');
 
-<<<<<<< HEAD
-		if (action.choice === 'runSwitch') {
-			if (action.pokemon.hp <= action.pokemon.maxhp / 2 && pokemonOriginalHP! > action.pokemon.maxhp / 2) {
-				this.runEvent('EmergencyExit', action.pokemon);
-			}
-		}
-
-		if (this.gen >= 8 && this.queue.length && this.queue[0].choice === 'move') {
-			// In gen 8, speed is updated dynamically so update the queue's speed properties and sort it.
-			this.updateSpeed();
-			for (const queueAction of this.queue) {
-				if (queueAction.pokemon) this.getActionSpeed(queueAction);
-			}
-			this.queue.sort();
-		}
-
-=======
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 		return false;
 	}
 
@@ -2951,14 +2879,8 @@ export class Battle {
 		for (const side of this.sides) {
 			this.addToQueue(side.choice.actions);
 		}
-<<<<<<< HEAD
-		this.clearRequest();
-
-		this.queue.sort();
-=======
 
 		this.sortQueue();
->>>>>>> parent of 7e47640... MAJOR CHANGES battle-queue.ts
 		this.queue.push(...oldQueue);
 
 		this.requestState = '';
