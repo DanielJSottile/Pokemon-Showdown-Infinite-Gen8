@@ -7447,6 +7447,11 @@ let BattleFormatsData = {
 		tier: "UU",
 		doublesTier: "DUU",
 	},
+	rillaboomgmax: {
+		isGigantamax: "G-Max Drum Solo",
+		tier: "UU",
+		doublesTier: "DUU",
+	},
 	scorbunny: {
 		tier: "LC",
 	},
@@ -7464,6 +7469,11 @@ let BattleFormatsData = {
 		tier: "OU",
 		doublesTier: "DOU",
 	},
+	cinderacegmax: {
+		isGigantamax: "G-Max Fireball",
+		tier: "OU",
+		doublesTier: "DOU",
+	},
 	sobble: {
 		tier: "LC",
 	},
@@ -7475,6 +7485,11 @@ let BattleFormatsData = {
 		tier: "UU",
 		doublesTier: "(DUU)",
 	},
+	inteleongmax: {
+		isGigantamax: "G-Max Hydrosnipe",
+		tier: "UU",
+		doublesTier: "(DUU)",
+	},	
 	skwovet: {
 		tier: "LC",
 	},
