@@ -648,7 +648,7 @@ export class Pokemon {
 			if (target.side.active.length > 1) {
 				if (!move.flags['charge'] || this.volatiles['twoturnmove'] ||
 						(move.id.startsWith('solarb') && this.battle.field.isWeather(['sunnyday', 'desolateland'])) ||
-						(this.hasItem('powerherb') && ((move.id !== 'skydrop') || (move.id !== 'psychokinesis'))) {
+						(this.hasItem('powerherb') && move.id !== 'skydrop') {
 					target = this.battle.priorityEvent('RedirectTarget', this, this, this.battle.dex.getActiveMove(move), target);
 				}
 			}
