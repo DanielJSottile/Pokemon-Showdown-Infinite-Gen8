@@ -419,6 +419,7 @@ let BattleAbilities = {
 		onModifyMove(move) {
 			if (!move.flags['sound']) {
 				move.flags['sound'] = 1;
+				console.log(move.flags);
 			}
 		},
 		id: "cacophony",

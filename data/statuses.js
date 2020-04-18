@@ -881,6 +881,7 @@ let BattleStatuses = {
 				return this.chainModify(2);
 			}
 		},
+		// onAnyModifyBoost
 		onDragOutPriority: 2,
 		onDragOut(pokemon) {
 			this.add('-block', pokemon, 'Dynamax');
