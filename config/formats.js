@@ -44,7 +44,7 @@ let Formats = [
 
 		mod: 'gen8',
 		ruleset: ['[Gen 8] UU'],
-		banlist: ['OU', 'UUBL', 'RUBL', 'Cresselite', 'Darmanitan-Zen'],
+		banlist: ['UU', 'UUBL', 'RUBL'],
 	},
 	{
 		name: "[Gen 8] NU",
@@ -54,7 +54,7 @@ let Formats = [
 
 		mod: 'gen8',
 		ruleset: ['[Gen 8] RU'],
-		banlist: ['OU', 'UUBL', 'RUBL', 'NUBL'],
+		banlist: ['RU', 'UUBL', 'RUBL', 'NUBL'],
 	},
 	{
 		name: "[Gen 8] Doubles OU",

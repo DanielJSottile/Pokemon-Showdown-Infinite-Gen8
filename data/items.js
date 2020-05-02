@@ -202,7 +202,7 @@ let BattleItems = {
 		onTakeItem: false,
 		zMove: "Fallacious Pastry",
 		zMoveFrom: "Celebrate",
-		itemUser: "Alcremie-Black-Forest",
+		itemUser: ["Alcremie-Black-Forest"],
 		num: -38,
 		gen: 8,
 		desc: "If held by an Alcremie with Celebrate, it can use Fallacious Pastry.",
@@ -626,7 +626,7 @@ let BattleItems = {
 		onTakeItem: false,
 		zMove: "Bountiful Forgiveness",
 		zMoveFrom: "Soft-Boiled",
-		itemUser: "Blissey",
+		itemUser: ["Blissey"],
 		num: -22,
 		gen: 8,
 		desc: "If held by a Blissey with Softboiled, it can use Bountiful Forgiveness.",
@@ -731,7 +731,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Bug",
+		forcedForme: ["Silvally-Bug"],
 		itemUser: ["Silvally-Bug"],
 		num: 909,
 		gen: 7,
@@ -762,7 +762,7 @@ let BattleItems = {
 			return true;
 		},
 		onDrive: 'Fire',
-		forcedForme: "Genesect-Burn",
+		forcedForme: ["Genesect-Burn"],
 		itemUser: ["Genesect-Burn"],
 		num: 118,
 		gen: 5,
@@ -809,6 +809,18 @@ let BattleItems = {
 		gen: 8,
 		desc: "If held by a Castform, this item allows it to Mega Evolve in battle.",
 	},
+	"celebaltiumz": {
+		id: "celebaltiumz",
+		name: "Celebaltium Z",
+		spritenum: 690,
+		onTakeItem: false,
+		zMove: "Temporal Desolation",
+		zMoveFrom: "Earth Power",
+		itemUser: ["Celebi-Alternate"],
+		num: -49,
+		gen: 8,
+		desc: "If held by a Celebi-Alternate with Earth Power or Earthquake, it can use Temporal Desolation.",
+	},
 	"celebiumz": {
 		id: "celebiumz",
 		name: "Celebium Z",
@@ -816,7 +828,7 @@ let BattleItems = {
 		onTakeItem: false,
 		zMove: "Temporal Reforestation",
 		zMoveFrom: "Giga Drain",
-		itemUser: "Celebi",
+		itemUser: ["Celebi"],
 		num: -25,
 		gen: 8,
 		desc: "If held by a Celebi with Giga Drain, it can use Temporal Reforestation.",
@@ -999,7 +1011,7 @@ let BattleItems = {
 			return true;
 		},
 		onDrive: 'Ice',
-		forcedForme: "Genesect-Chill",
+		forcedForme: ["Genesect-Chill"],
 		itemUser: ["Genesect-Chill"],
 		num: 119,
 		gen: 5,
@@ -1221,7 +1233,7 @@ let BattleItems = {
 		onTakeItem: false,
 		zMove: "Infinite Potential Geyser",
 		zMoveFrom: "Photon Geyser",
-		itemUser: "Cosmoem",
+		itemUser: ["Cosmoem"],
 		num: -24,
 		gen: 8,
 		desc: "If held by a Cosmoem with Photon Geyser, it can use Infinite Potential Geyser.",
@@ -1324,7 +1336,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Dark",
+		forcedForme: ["Silvally-Dark"],
 		itemUser: ["Silvally-Dark"],
 		num: 919,
 		gen: 7,
@@ -1499,7 +1511,7 @@ let BattleItems = {
 			return true;
 		},
 		onDrive: 'Water',
-		forcedForme: "Genesect-Douse",
+		forcedForme: ["Genesect-Douse"],
 		itemUser: ["Genesect-Douse"],
 		num: 116,
 		gen: 5,
@@ -1522,7 +1534,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Dragon",
+		forcedForme: ["Arceus-Dragon"],
 		itemUser: ["Arceus-Dragon"],
 		num: 311,
 		gen: 4,
@@ -1571,7 +1583,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Dragon",
+		forcedForme: ["Silvally-Dragon"],
 		itemUser: ["Silvally-Dragon"],
 		num: 918,
 		gen: 7,
@@ -1642,7 +1654,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Dark",
+		forcedForme: ["Arceus-Dark"],
 		itemUser: ["Arceus-Dark"],
 		num: 312,
 		gen: 4,
@@ -1736,7 +1748,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Ground",
+		forcedForme: ["Arceus-Ground"],
 		itemUser: ["Arceus-Ground"],
 		num: 305,
 		gen: 4,
@@ -1865,7 +1877,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Electric",
+		forcedForme: ["Silvally-Electric"],
 		itemUser: ["Silvally-Electric"],
 		num: 915,
 		gen: 7,
@@ -1883,7 +1895,7 @@ let BattleItems = {
 				pokemon.useItem();
 			}
 		},
-		onAnyTerrainStart() {
+		onAnyTerrainStart(pokemon) {
 			if (this.field.isTerrain('electricterrain')) {
 				pokemon.useItem();
 			}
@@ -2023,7 +2035,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Fairy",
+		forcedForme: ["Silvally-Fairy"],
 		itemUser: ["Silvally-Fairy"],
 		num: 920,
 		gen: 7,
@@ -2064,7 +2076,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Fighting",
+		forcedForme: ["Silvally-Fighting"],
 		itemUser: ["Silvally-Fighting"],
 		num: 904,
 		gen: 7,
@@ -2137,7 +2149,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Fire",
+		forcedForme: ["Silvally-Fire"],
 		itemUser: ["Silvally-Fire"],
 		num: 912,
 		gen: 7,
@@ -2186,7 +2198,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Fighting",
+		forcedForme: ["Arceus-Fighting"],
 		itemUser: ["Arceus-Fighting"],
 		num: 303,
 		gen: 4,
@@ -2226,7 +2238,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Fire",
+		forcedForme: ["Arceus-Fire"],
 		itemUser: ["Arceus-Fire"],
 		num: 298,
 		gen: 4,
@@ -2298,7 +2310,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Flying",
+		forcedForme: ["Silvally-Flying"],
 		itemUser: ["Silvally-Flying"],
 		num: 905,
 		gen: 7,
@@ -2571,7 +2583,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Ghost",
+		forcedForme: ["Silvally-Ghost"],
 		itemUser: ["Silvally-Ghost"],
 		num: 910,
 		gen: 7,
@@ -2640,6 +2652,21 @@ let BattleItems = {
 		gen: 7,
 		desc: "Used for Hyper Training. All of a Pokemon's stats are calculated with an IV of 31.",
 	},
+	"golisopodite": {
+		id: "golisopodite",
+		name: "Golisopodite",
+		spritenum: 575,
+		megaStone: "Golisopod-Mega",
+		megaEvolves: "Golisopod",
+		itemUser: ["Golisopod"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -47,
+		gen: 8,
+		desc: "If held by a Golisopod, this item allows it to Mega Evolve in battle.",
+	},
 	"grassgem": {
 		id: "grassgem",
 		name: "Grass Gem",
@@ -2666,7 +2693,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Grass",
+		forcedForme: ["Silvally-Grass"],
 		itemUser: ["Silvally-Grass"],
 		num: 914,
 		gen: 7,
@@ -2764,7 +2791,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Giratina-Origin",
+		forcedForme: ["Giratina-Origin"],
 		itemUser: ["Giratina-Origin"],
 		num: 112,
 		gen: 4,
@@ -2796,7 +2823,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Ground",
+		forcedForme: ["Silvally-Ground"],
 		itemUser: ["Silvally-Ground"],
 		num: 907,
 		gen: 7,
@@ -2887,7 +2914,7 @@ let BattleItems = {
 		onTakeItem: false,
 		zMove: "1,000 Burning Whips",
 		zMoveFrom: "Fire Lash",
-		itemUser: "Heatmor",
+		itemUser: ["Heatmor"],
 		num: -20,
 		gen: 8,
 		desc: "If held by a Heatmor with Fire Lash, it can use 1,000 Burning Whips.",
@@ -3032,7 +3059,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Ice",
+		forcedForme: ["Silvally-Ice"],
 		itemUser: ["Silvally-Ice"],
 		num: 917,
 		gen: 7,
@@ -3067,7 +3094,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Ice",
+		forcedForme: ["Arceus-Ice"],
 		itemUser: ["Arceus-Ice"],
 		num: 302,
 		gen: 4,
@@ -3136,7 +3163,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Infinite",
+		forcedForme: ["Silvally-Infinite"],
 		itemUser: ["Silvally-Infinite"],
 		num: -17,
 		gen: 7,
@@ -3173,7 +3200,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Bug",
+		forcedForme: ["Arceus-Bug"],
 		itemUser: ["Arceus-Bug"],
 		num: 308,
 		gen: 4,
@@ -3216,7 +3243,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Steel",
+		forcedForme: ["Arceus-Steel"],
 		itemUser: ["Arceus-Steel"],
 		num: 313,
 		gen: 4,
@@ -4044,7 +4071,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Grass",
+		forcedForme: ["Arceus-Grass"],
 		itemUser: ["Arceus-Grass"],
 		num: 301,
 		gen: 4,
@@ -4341,7 +4368,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Psychic",
+		forcedForme: ["Arceus-Psychic"],
 		itemUser: ["Arceus-Psychic"],
 		num: 307,
 		gen: 4,
@@ -4919,7 +4946,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Fairy",
+		forcedForme: ["Arceus-Fairy"],
 		itemUser: ["Arceus-Fairy"],
 		num: 644,
 		gen: 6,
@@ -4980,7 +5007,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Poison",
+		forcedForme: ["Silvally-Poison"],
 		itemUser: ["Silvally-Poison"],
 		num: 906,
 		gen: 7,
@@ -5248,7 +5275,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Psychic",
+		forcedForme: ["Silvally-Psychic"],
 		itemUser: ["Silvally-Psychic"],
 		num: 916,
 		gen: 7,
@@ -5644,7 +5671,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Rock",
+		forcedForme: ["Silvally-Rock"],
 		itemUser: ["Silvally-Rock"],
 		num: 908,
 		gen: 7,
@@ -5782,7 +5809,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Zamazenta-Crowned",
+		forcedForme: ["Zamazenta-Crowned"],
 		itemUser: ["Zamazenta-Crowned"],
 		num: 1104,
 		gen: 8,
@@ -5798,7 +5825,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Zacian-Crowned",
+		forcedForme: ["Zacian-Crowned"],
 		itemUser: ["Zacian-Crowned"],
 		num: 1103,
 		gen: 8,
@@ -6069,7 +6096,7 @@ let BattleItems = {
 			return true;
 		},
 		onDrive: 'Electric',
-		forcedForme: "Genesect-Shock",
+		forcedForme: ["Genesect-Shock"],
 		itemUser: ["Genesect-Shock"],
 		num: 117,
 		gen: 5,
@@ -6132,6 +6159,21 @@ let BattleItems = {
 		gen: 2,
 		desc: "Holder's Bug-type attacks have 1.2x power.",
 	},
+	"sirfetchdite": {
+		id: "sirfetchdite",
+		name: "Sirfetch'dite",
+		spritenum: 575,
+		megaStone: "Sirfetch'd-Mega",
+		megaEvolves: "Sirfetch'd",
+		itemUser: ["Sirfetch'd"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -48,
+		gen: 8,
+		desc: "If held by a Sirfetch'd, this item allows it to Mega Evolve in battle.",
+	},
 	"sitrusberry": {
 		id: "sitrusberry",
 		name: "Sitrus Berry",
@@ -6184,7 +6226,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Flying",
+		forcedForme: ["Arceus-Flying"],
 		itemUser: ["Arceus-Flying"],
 		num: 306,
 		gen: 4,
@@ -6197,7 +6239,7 @@ let BattleItems = {
 		onTakeItem: false,
 		zMove: "Beastly Awakening Punch",
 		zMoveFrom: "Giga Impact",
-		itemUser: "Slaking",
+		itemUser: ["Slaking"],
 		num: -39,
 		gen: 8,
 		desc: "If held by a Slaking with Giga Impact, it can use Beastly Awakening Punch.",
@@ -6355,7 +6397,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Water",
+		forcedForme: ["Arceus-Water"],
 		itemUser: ["Arceus-Water"],
 		num: 299,
 		gen: 4,
@@ -6378,7 +6420,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Ghost",
+		forcedForme: ["Arceus-Ghost"],
 		itemUser: ["Arceus-Ghost"],
 		num: 310,
 		gen: 4,
@@ -6479,7 +6521,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Steel",
+		forcedForme: ["Silvally-Steel"],
 		itemUser: ["Silvally-Steel"],
 		num: 911,
 		gen: 7,
@@ -6557,7 +6599,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Rock",
+		forcedForme: ["Arceus-Rock"],
 		itemUser: ["Arceus-Rock"],
 		num: 309,
 		gen: 4,
@@ -6785,7 +6827,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Infinite",
+		forcedForme: ["Arceus-Infinite"],
 		itemUser: ["Arceus-Infinite"],
 		num: -15,
 		gen: 7,
@@ -6898,7 +6940,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Poison",
+		forcedForme: ["Arceus-Poison"],
 		itemUser: ["Arceus-Poison"],
 		num: 304,
 		gen: 4,
@@ -7056,7 +7098,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Silvally-Water",
+		forcedForme: ["Silvally-Water"],
 		itemUser: ["Silvally-Water"],
 		num: 913,
 		gen: 7,
@@ -7351,7 +7393,7 @@ let BattleItems = {
 			}
 			return true;
 		},
-		forcedForme: "Arceus-Electric",
+		forcedForme: ["Arceus-Electric"],
 		itemUser: ["Arceus-Electric"],
 		num: 300,
 		gen: 4,

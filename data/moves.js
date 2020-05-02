@@ -3972,7 +3972,7 @@ let BattleMovedex = {
 				if (!source || !effect || target.side === source.side) return;
 				if (effect.effectType === 'Move' && !effect.isFutureMove) {
 					if (source.volatiles['dynamax']) {
-						this.add('-hint', "Dynamaxed Pokémon are immune to Destiny Bond.");
+						this.add('-hint', "Dynamaxed Pokï¿½mon are immune to Destiny Bond.");
 						return;
 					}
 					this.add('-activate', target, 'move: Destiny Bond');
@@ -7092,7 +7092,7 @@ let BattleMovedex = {
 			if (!pokemon.volatiles.furycutter || move.hit === 1) {
 				pokemon.addVolatile('furycutter');
 			}
-			return this.clampIntRange(move.basePower * pokemon.volatiles.furycutter.multiplier, 1, 160);
+			return this.dex.clampIntRange(move.basePower * pokemon.volatiles.furycutter.multiplier, 1, 160);
 		},
 		category: "Physical",
 		desc: "Power doubles with each successful hit, up to a maximum of 160 power. The power is reset if this move misses or another move is used.",
@@ -14617,7 +14617,7 @@ let BattleMovedex = {
 		accuracy: 90,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-			return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 2), 1);
+			return this.dex.clampIntRange(Math.floor(target.getUndynamaxedHP() / 2), 1);
 		},
 		category: "Special",
 		desc: "Deals damage to the target equal to half of its current HP, rounded down, but not less than 1 HP.",
@@ -15083,7 +15083,7 @@ let BattleMovedex = {
 		contestType: "Beautiful",
 	},
 	"originflare": {
-		num: -28,
+		num: -27,
 		accuracy: 100,
 		basePower: 100,
 		category: "Special",
@@ -15097,30 +15097,6 @@ let BattleMovedex = {
 		flags: {protect: 1, mirror: 1},
 		secondary: {
 			chance: 30,
-			boosts: {
-				spa: -2,
-			},
-		},
-		target: "normal",
-		type: "Steel",
-		zMovePower: 180,
-		contestType: "Popular",
-	},
-	"originflare": {
-		num: -27,
-		accuracy: 100,
-		basePower: 100,
-		category: "Special",
-		desc: "Has a 40% chance to lower the target's Special Attack by 2 stages.",
-		shortDesc: "40% chance to lower the target's Sp. Atk by 2.",
-		id: "originflare",
-		isViable: true,
-		name: "Origin Flare",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		secondary: {
-			chance: 40,
 			boosts: {
 				spa: -2,
 			},
@@ -16049,7 +16025,7 @@ let BattleMovedex = {
 			onTryMove(pokemon, target, move) {
 				if (move.type === 'Fire') {
 					this.add('-activate', pokemon, 'move: Powder');
-					this.damage(this.clampIntRange(Math.round(pokemon.maxhp / 4), 1));
+					this.damage(this.dex.clampIntRange(Math.round(pokemon.maxhp / 4), 1));
 					return false;
 				}
 			},
@@ -16537,7 +16513,7 @@ let BattleMovedex = {
 				if (!target.isGrounded()) {
 					const baseMove = this.dex.getMove(effect.id);
 					if (baseMove.priority > 0) {
-						this.hint("Psychic Terrain doesn't affect Pokémon immune to Ground.");
+						this.hint("Psychic Terrain doesn't affect Pokï¿½mon immune to Ground.");
 					}
 					return;
 				}
@@ -21957,6 +21933,31 @@ let BattleMovedex = {
 		type: "Psychic",
 		zMoveEffect: 'heal',
 		contestType: "Cool",
+	},
+	"temporaldesolation": {
+		num: -36,
+		accuracy: true,
+		basePower: 185,
+		category: "Special",
+		desc: "If this move is successful, the weather becomes Sandstorm.",
+		shortDesc: "Summons Sandstorm.",
+		id: "temporalredesolation",
+		name: "Temporal Desolation",
+		pp: 1,
+		priority: 0,
+		flags: {},
+		isZ: "celebaltiumz",
+		secondary: {
+			chance: 100,
+			self: {
+				onHit() {
+					this.field.setWeather('sandstorm');
+				},
+			},
+		},
+		target: "normal",
+		type: "Ground",
+		contestType: "Clever",
 	},
 	"temporalreforestation": {
 		num: -17,

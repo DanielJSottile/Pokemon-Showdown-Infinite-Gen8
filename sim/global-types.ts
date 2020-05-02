@@ -26,15 +26,15 @@ type Nonstandard = 'Glitch' | 'Past' | 'Future' | 'CAP' | 'LGPE' | 'Pokestar' | 
  * adjacentAlly - Only relevant to Doubles or Triples, the move only targets an ally of the user.
  * adjacentAllyOrSelf - The move can target the user or its ally.
  * adjacentFoe - The move can target a foe, but not (in Triples) a distant foe.
- * all - The move targets the field or all Pokémon at once.
+ * all - The move targets the field or all Pokï¿½mon at once.
  * allAdjacent - The move is a spread move that also hits the user's ally.
  * allAdjacentFoes - The move is a spread move.
- * allies - The move affects all active Pokémon on the user's team.
+ * allies - The move affects all active Pokï¿½mon on the user's team.
  * allySide - The move adds a side condition on the user's side.
- * allyTeam - The move affects all unfainted Pokémon on the user's team.
- * any - The move can hit any other active Pokémon, not just those adjacent.
+ * allyTeam - The move affects all unfainted Pokï¿½mon on the user's team.
+ * any - The move can hit any other active Pokï¿½mon, not just those adjacent.
  * foeSide - The move adds a side condition on the foe's side.
- * normal - The move can hit one adjacent Pokémon of your choice.
+ * normal - The move can hit one adjacent Pokï¿½mon of your choice.
  * randomNormal - The move targets an adjacent foe at random.
  * scripted - The move targets the foe that damaged the user.
  * self - The move affects the user of the move.
@@ -753,7 +753,7 @@ interface FlingData {
 interface ItemData extends EffectData, ItemEventMethods, EventMethods {
 	gen: number
 	fling?: FlingData
-	forcedForme?: string
+	forcedForme?: string[]
 	ignoreKlutz?: boolean
 	isBerry?: boolean
 	isChoice?: boolean
@@ -872,6 +872,7 @@ type MoveHitData = {[targetSlotid: string]: {
 }}
 
 interface ActiveMove extends BasicEffect, MoveData {
+	deflagrateBoosted: any;
 	readonly effectType: 'Move'
 	id: ID
 	weather?: ID

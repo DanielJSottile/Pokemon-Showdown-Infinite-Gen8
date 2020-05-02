@@ -585,8 +585,8 @@ let BattleAbilities = {
 		num: 212,
 	},
 	"cottondown": {
-		desc: "When the Pokémon is hit by an attack, it scatters cotton fluff around and lowers the Speed stat of all Pokémon except itself.",
-		shortDesc: "Lowers Speed of all Pokémon except itself when hit by an attack.",
+		desc: "When the Pokï¿½mon is hit by an attack, it scatters cotton fluff around and lowers the Speed stat of all Pokï¿½mon except itself.",
+		shortDesc: "Lowers Speed of all Pokï¿½mon except itself when hit by an attack.",
 		onAfterDamage(damage, target, source, effect) {
 			if (effect && effect.effectType === 'Move' && effect.id !== 'confused') {
 				this.add('-ability', target, 'Cotton Down');
@@ -1599,7 +1599,7 @@ let BattleAbilities = {
 		num: 37,
 	},
 	"hungerswitch": {
-		desc: "The Pokémon changes its form, alternating between its Full Belly Mode and Hangry Mode after the end of each turn.",
+		desc: "The Pokï¿½mon changes its form, alternating between its Full Belly Mode and Hangry Mode after the end of each turn.",
 		shortDesc: "Changes between Full Belly and Hangry Mode at the end of each turn.",
 		onResidual(pokemon) {
 			if (pokemon.template.baseSpecies !== 'Morpeko' || pokemon.transformed) return;
@@ -2010,7 +2010,7 @@ let BattleAbilities = {
 		num: 26,
 	},
 	"libero": {
-		shortDesc: "Changes the Pokémon's type to the type of the move it's about to use.",
+		shortDesc: "Changes the Pokï¿½mon's type to the type of the move it's about to use.",
 		onPrepareHit(source, target, move) {
 			if (move.hasBounced) return;
 			let type = move.type;
@@ -2280,7 +2280,7 @@ let BattleAbilities = {
 		num: 196,
 	},
 	"mimicry": {
-		shortDesc: "Changes the Pokémon's type depending on the terrain.",
+		shortDesc: "Changes the Pokï¿½mon's type depending on the terrain.",
 		onStart(pokemon) {
 			if (this.field.terrain) {
 				pokemon.addVolatile('mimicry');
@@ -2606,7 +2606,7 @@ let BattleAbilities = {
 		num: 233,
 	},
 	"neutralizinggas": {
-		desc: "If the Pokémon with Neutralizing Gas is in the battle, the effects of opposing Pokémon's Abilities will be nullified or will not be triggered.",
+		desc: "If the Pokï¿½mon with Neutralizing Gas is in the battle, the effects of opposing Pokï¿½mon's Abilities will be nullified or will not be triggered.",
 		shortDesc: "Nullifies abilities while on the field.",
 		// Ability suppression implemented in sim/pokemon.ts:Pokemon#ignoringAbility
 		// TODO Will abilities that already started start again? (Intimidate seems like a good test case)
@@ -2833,8 +2833,8 @@ let BattleAbilities = {
 		num: 257,
 	},
 	"perishbody": {
-		desc: "When hit by a move that makes direct contact, the Pokémon and the attacker will faint after three turns unless they switch out of battle.",
-		shortDesc: "When hit by a contact move, the Pokémon and the attacker faint in 3 turns.",
+		desc: "When hit by a move that makes direct contact, the Pokï¿½mon and the attacker will faint after three turns unless they switch out of battle.",
+		shortDesc: "When hit by a contact move, the Pokï¿½mon and the attacker faint in 3 turns.",
 		onAfterDamage(damage, target, source, move) {
 			if (!move.flags['contact']) return;
 
@@ -3161,8 +3161,8 @@ let BattleAbilities = {
 		num: 227,
 	},
 	"punkrock": {
-		desc: "Boosts the power of sound-based moves. The Pokémon also takes half the damage from these kinds of moves.",
-		shortDesc: "Boosts sound move power, 0.5× damage from sound moves.",
+		desc: "Boosts the power of sound-based moves. The Pokï¿½mon also takes half the damage from these kinds of moves.",
+		shortDesc: "Boosts sound move power, 0.5ï¿½ damage from sound moves.",
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move) {
 			if (move.flags['sound']) {
@@ -3594,7 +3594,7 @@ let BattleAbilities = {
 		num: 113,
 	},
 	"screencleaner": {
-		desc: "On switch-in, this Pokémon ends the effects of Reflect, Light Screen, and Aurora Veil for both the user's and the opposing side.",
+		desc: "On switch-in, this Pokï¿½mon ends the effects of Reflect, Light Screen, and Aurora Veil for both the user's and the opposing side.",
 		shortDesc: "Removes Reflect, Light Screen, and Aurora Veil on switch-in.",
 		onStart(pokemon) {
 			let activated = false;
@@ -4800,7 +4800,7 @@ let BattleAbilities = {
 		num: 10,
 	},
 	"wanderingspirit": {
-		desc: "The Pokémon exchanges Abilities with a Pokémon that hits it with a move that makes direct contact.",
+		desc: "The Pokï¿½mon exchanges Abilities with a Pokï¿½mon that hits it with a move that makes direct contact.",
 		shortDesc: "Exchanges abilities when hit with a contact move.",
 		onAfterDamage(damage, target, source, effect) {
 			if (!source || source.ability === 'wanderingspirit' || target.volatiles['dynamax']) return;

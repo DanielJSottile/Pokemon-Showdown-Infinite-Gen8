@@ -1222,9 +1222,15 @@ let BattleFormatsData = {
 		tier: "LC",
 	},
 	sirfetchd: {
-		randomBattleMoves: ["bravebird", "closecombat", "firstimpression", "knockoff", "swordsdance"],
+		randomBattleMoves: ["bravebird", "closecombat", "leafblade", "firstimpression", "knockoff", "swordsdance"],
 		tier: "RU",
 		doublesTier: "(DUU)",
+	},
+	sirfetchdmega: {
+		randomBattleMoves: ["bravebird", "closecombat", "leafblade", "firstimpression", "knockoff", "swordsdance"],
+		requiredItem: "Sirfetch'dite",
+		tier: "UUBL",
+		doublesTier: "DUU",
 	},
 	doduo: {
 		encounters: [
@@ -3096,6 +3102,12 @@ let BattleFormatsData = {
 	celebi: {
 		randomBattleMoves: ["nastyplot", "psychic", "gigadrain", "recover", "earthpower", "hiddenpowerfire", "leafstorm", "uturn", "thunderwave"],
 		randomDoubleBattleMoves: ["protect", "psychic", "gigadrain", "leechseed", "recover", "earthpower", "hiddenpowerfire", "nastyplot", "leafstorm", "uturn", "thunderwave"],
+		tier: "UU",
+		doublesTier: "(DUU)",
+	},
+	celebialternate: {
+		randomBattleMoves: ["nastyplot", "shadowball", "gigadrain", "recover", "earthpower", "hiddenpowerfire", "curse", "earthquake", "willowisp"],
+		randomDoubleBattleMoves: ["nastyplot", "shadowball", "gigadrain", "recover", "earthpower", "hiddenpowerfire", "curse", "earthquake", "willowisp", "protect"],
 		tier: "UU",
 		doublesTier: "(DUU)",
 	},
@@ -7042,6 +7054,13 @@ let BattleFormatsData = {
 		tier: "RU",
 		doublesTier: "(DUU)",
 	},
+	golisopodmega: {
+		randomBattleMoves: ["spikes", "firstimpression", "liquidation", "aquajet", "knockoff"],
+		randomDoubleBattleMoves: ["firstimpression", "aquajet", "liquidation", "leechlife", "protect", "suckerpunch", "wideguard"],
+		requiredItem: "Golisopodite",
+		tier: "UU",
+		doublesTier: "DUU",
+	},
 	sandygast: {
 		tier: "LC",
 	},
@@ -7102,7 +7121,7 @@ let BattleFormatsData = {
 	silvallyfairy: {
 		randomBattleMoves: ["multiattack", "flamethrower", "rockslide", "thunderwave", "partingshot"],
 		randomDoubleBattleMoves: ["protect", "multiattack", "uturn", "icebeam", "partingshot", "flamethrower", "thunderwave"],
-		requiredItem: ["Fairy Memory", "Fairium Z"],
+		requiredItems: ["Fairy Memory", "Fairium Z"],
 		tier: "UU",
 		doublesTier: "(DUU)",
 	},
