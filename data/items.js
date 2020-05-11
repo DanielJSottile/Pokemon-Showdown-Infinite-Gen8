@@ -42,10 +42,8 @@ let BattleItems = {
 		onAfterDamage(damage, target, source, move) {
 			if (move.type === 'Water') {
 				target.useItem();
+				this.boost({spa: 1});
 			}
-		},
-		boosts: {
-			spa: 1,
 		},
 		num: 545,
 		gen: 5,
@@ -79,11 +77,10 @@ let BattleItems = {
 		onAfterBoost(boost, target, source, effect) {
 			if (effect.id === 'intimidate') {
 				target.useItem();
+				this.boost({spe: 1});
 			}
 		},
-		boosts: {
-			spe: 1,
-		},
+		
 		num: 846,
 		gen: 7,
 		desc: "Raises holder's Speed by 1 stage if it gets affected by Intimidate. Single use.",
@@ -843,10 +840,8 @@ let BattleItems = {
 		onAfterDamage(damage, target, source, move) {
 			if (move.type === 'Electric') {
 				target.useItem();
+				this.boost({atk: 1});
 			}
-		},
-		boosts: {
-			atk: 1,
 		},
 		num: 546,
 		gen: 5,
@@ -1898,10 +1893,8 @@ let BattleItems = {
 		onAnyTerrainStart(pokemon) {
 			if (this.field.isTerrain('electricterrain')) {
 				pokemon.useItem();
+				this.boost({def: 1});
 			}
-		},
-		boosts: {
-			def: 1,
 		},
 		num: 881,
 		gen: 7,
@@ -2725,13 +2718,11 @@ let BattleItems = {
 				pokemon.useItem();
 			}
 		},
-		onAnyTerrainStart() {
+		onAnyTerrainStart(pokemon) {
 			if (this.field.isTerrain('grassyterrain')) {
 				pokemon.useItem();
+				this.boost({def: 1});
 			}
-		},
-		boosts: {
-			def: 1,
 		},
 		num: 884,
 		gen: 7,
@@ -3799,10 +3790,8 @@ let BattleItems = {
 		onAfterDamage(damage, target, source, move) {
 			if (move.type === 'Water') {
 				target.useItem();
+				this.boost({spd: 1});
 			}
-		},
-		boosts: {
-			spd: 1,
 		},
 		num: 648,
 		gen: 6,
@@ -4403,13 +4392,11 @@ let BattleItems = {
 				pokemon.useItem();
 			}
 		},
-		onAnyTerrainStart() {
+		onAnyTerrainStart(pokemon) {
 			if (this.field.isTerrain('mistyterrain')) {
 				pokemon.useItem();
+				this.boost({spd: 1});
 			}
-		},
-		boosts: {
-			spd: 1,
 		},
 		num: 883,
 		gen: 7,
@@ -5293,13 +5280,11 @@ let BattleItems = {
 				pokemon.useItem();
 			}
 		},
-		onAnyTerrainStart() {
+		onAnyTerrainStart(pokemon) {
 			if (this.field.isTerrain('psychicterrain')) {
 				pokemon.useItem();
+				this.boost({spd: 1});
 			}
-		},
-		boosts: {
-			spd: 1,
 		},
 		num: 882,
 		gen: 7,
@@ -5718,10 +5703,8 @@ let BattleItems = {
 		onUpdate(pokemon) {
 			if (this.field.getPseudoWeather('trickroom')) {
 				pokemon.useItem();
+				this.boost({spe: -1});
 			}
-		},
-		boosts: {
-			spe: -1,
 		},
 		num: 1122,
 		gen: 7,
@@ -6292,10 +6275,8 @@ let BattleItems = {
 		onAfterDamage(damage, target, source, move) {
 			if (move.type === 'Ice') {
 				target.useItem();
+				this.boost({atk: 1});
 			}
-		},
-		boosts: {
-			atk: 1,
 		},
 		num: 649,
 		gen: 6,
@@ -6789,10 +6770,8 @@ let BattleItems = {
 		onAfterMoveSecondarySelf(target, source, move) {
 			if (move.flags['sound']) {
 				target.useItem();
+				this.boost({spa: 1});
 			}
-		},
-		boosts: {
-			spa: 1,
 		},
 		num: 1118,
 		gen: 7,
@@ -7173,11 +7152,8 @@ let BattleItems = {
 		onHit(target, source, move) {
 			if (target.hp && move.category !== 'Status' && !move.damage && !move.damageCallback && target.getMoveHitData(move).typeMod > 0) {
 				target.useItem();
+				this.boost({atk: 2, spa: 2});
 			}
-		},
-		boosts: {
-			atk: 2,
-			spa: 2,
 		},
 		num: 639,
 		gen: 6,

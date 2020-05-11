@@ -658,7 +658,7 @@ let BattleMovedex = {
 	"apocalypticmaelstrom": {
 		num: 0,
 		accuracy: 100,
-		basePower: 100,
+		basePower: 110,
 		category: "Physical",
 		desc: "Does damage.  If this move is successful, the weather becomes Maelstrom for 5 turns, 8 if holding Calamity Stone.",
 		shortDesc: "Does damage.  Summons Maelstrom for 5 turns, 8 with Calamity Stone.",
@@ -5057,7 +5057,7 @@ let BattleMovedex = {
 			onBasePower(basePower, attacker, defender, move) {
 				if (move.type === 'Electric' && attacker.isGrounded() && !attacker.isSemiInvulnerable()) {
 					this.debug('electric terrain boost');
-					return this.chainModify(1.2);
+					return this.chainModify(1.25);
 				}
 			},
 			onStart(battle, source, effect) {
@@ -7236,7 +7236,7 @@ let BattleMovedex = {
 	"futuresreckoning": {
 		num: -11,
 		accuracy: 100,
-		basePower: 120,
+		basePower: 110,
 		category: "Special",
 		desc: "This move becomes a physical attack if the user's Attack is greater than its Special Attack, including stat stage changes.  Lowers the user's Defense and Special Defense by 1 stage.",
 		shortDesc: "Phsyical or Special based on higher stat, Lowers the user's Defense and Sp. Def by 1.",
@@ -8577,7 +8577,7 @@ let BattleMovedex = {
 				}
 				if (move.type === 'Grass' && attacker.isGrounded()) {
 					this.debug('grassy terrain boost');
-					return this.chainModify(1.2);
+					return this.chainModify(1.25);
 				}
 			},
 			onStart(battle, source, effect) {
@@ -16523,7 +16523,7 @@ let BattleMovedex = {
 			onBasePower(basePower, attacker, defender, move) {
 				if (move.type === 'Psychic' && attacker.isGrounded() && !attacker.isSemiInvulnerable()) {
 					this.debug('psychic terrain boost');
-					return this.chainModify(1.2);
+					return this.chainModify(1.25);
 				}
 			},
 			onStart(battle, source, effect) {
@@ -18643,31 +18643,6 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Ghost",
 		zMovePower: 90,
-		contestType: "Clever",
-	},
-	"shadowstrike": {
-		num: 0,
-		accuracy: 95,
-		basePower: 80,
-		category: "Physical",
-		desc: "Has a 50% chance to lower the target's Defense by 1 stage.",
-		shortDesc: "50% chance to lower the target's Defense by 1.",
-		id: "shadowstrike",
-		isNonstandard: "CAP",
-		isViable: true,
-		name: "Shadow Strike",
-		pp: 10,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
-		secondary: {
-			chance: 50,
-			boosts: {
-				def: -1,
-			},
-		},
-		target: "normal",
-		type: "Ghost",
-		zMovePower: 150,
 		contestType: "Clever",
 	},
 	"sharpen": {

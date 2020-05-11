@@ -1,4 +1,4 @@
-/*
+﻿/*
 
 Ratings and how they work:
 
@@ -92,7 +92,9 @@ let BattleAbilities = {
 		shortDesc: "Upon switch-in, weather is cleared.  The effects of future weather is disabled while active.",
 		onStart(pokemon, source) {
 			this.add('-ability', pokemon, 'Air Lock');
+			if (!this.field.isWeather(['desolateland', 'primordialsea', 'deltastream'])) {
 			this.field.clearWeather();
+			};
 		},
 		suppressWeather: true,
 		id: "airlock",
@@ -174,7 +176,7 @@ let BattleAbilities = {
 			onFoeTrapPokemon(pokemon) {
 				this.add('-start', pokemon, 'ability: Arena Trap');
 				if (!this.isAdjacent(pokemon, this.effectData.target)) return;
-				if (pokemon.isGrounded()) {
+				if (pokemon.isGrounded() || pokemon.ability !== 'runaway') {
 					pokemon.tryTrap(true);
 				}
 			},
@@ -2215,7 +2217,7 @@ let BattleAbilities = {
 			duration: 2,
 			onFoeTrapPokemon(pokemon) {
 				this.add('-start', pokemon, 'ability: Magnet Pull');
-				if (pokemon.hasType('Steel') && this.isAdjacent(pokemon, this.effectData.target)) {
+				if (pokemon.hasType('Steel') && this.isAdjacent(pokemon, this.effectData.target) && pokemon.ability !== 'runaway') {
 					pokemon.tryTrap(true);
 				}
 			},
@@ -3660,7 +3662,7 @@ let BattleAbilities = {
 		effect: {
 			duration: 2,
 			onFoeTrapPokemon(pokemon) {
-				if (pokemon.ability !== 'shadowtag') {
+				if (pokemon.ability !== 'shadowtag' || pokemon.ability !== 'runaway') {
 					pokemon.tryTrap(true);
 				}
 			},

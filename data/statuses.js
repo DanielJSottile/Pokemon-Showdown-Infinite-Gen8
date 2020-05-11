@@ -563,7 +563,7 @@ let BattleStatuses = {
 			if (move.type === 'Water') {
 				if (defender.hasItem('utilityumbrella')) return;
 				this.debug('rain water boost');
-				return this.chainModify(1.5);
+				return this.chainModify(1.25);
 			}
 			if (move.type === 'Fire') {
 				this.debug('rain fire suppress');
@@ -606,7 +606,7 @@ let BattleStatuses = {
 			if (move.type === 'Water') {
 				if (defender.hasItem('utilityumbrella')) return;
 				this.debug('Rain water boost');
-				return this.chainModify(1.5);
+				return this.chainModify(1.25);
 			}
 		},
 		onStart(battle, source, effect) {
@@ -637,7 +637,7 @@ let BattleStatuses = {
 			if (move.type === 'Fire') {
 				if (defender.hasItem('utilityumbrella')) return;
 				this.debug('Sunny Day fire boost');
-				return this.chainModify(1.5);
+				return this.chainModify(1.25);
 			}
 			if (move.type === 'Water') {
 				if (defender.hasItem('utilityumbrella')) return;
@@ -685,7 +685,7 @@ let BattleStatuses = {
 			if (move.type === 'Fire') {
 				if (defender.hasItem('utilityumbrella')) return;
 				this.debug('Sunny Day fire boost');
-				return this.chainModify(1.5);
+				return this.chainModify(1.25);
 			}
 		},
 		onStart(battle, source, effect) {
@@ -722,7 +722,7 @@ let BattleStatuses = {
 		onModifySpD(spd, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
 			if (pokemon.hasType('Rock') && this.field.isWeather('sandstorm')) {
-				return this.modify(spd, 1.5);
+				return this.modify(spd, 1.25);
 			}
 		},
 		onStart(battle, source, effect) {
@@ -772,7 +772,7 @@ let BattleStatuses = {
 		onModifyDef(def, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
 			if (pokemon.hasType('Ice') && this.field.isWeather('hail')) {
-				return this.modify(def, 1.5);
+				return this.modify(def, 1.25);
 			}
 		},
 		onResidualOrder: 1,
