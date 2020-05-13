@@ -40,8 +40,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Water') {
-				target.useItem();
+			if (move.type === 'Water' && target.useItem()) {
 				this.boost({spa: 1});
 			}
 		},
@@ -75,8 +74,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterBoost(boost, target, source, effect) {
-			if (effect.id === 'intimidate') {
-				target.useItem();
+			if (effect.id === 'intimidate' && target.useItem()) {
 				this.boost({spe: 1});
 			}
 		},
@@ -838,8 +836,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Electric') {
-				target.useItem();
+			if (move.type === 'Electric' && target.useItem()) {
 				this.boost({atk: 1});
 			}
 		},
@@ -1886,13 +1883,12 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('electricterrain')) {
-				pokemon.useItem();
+			if (!pokemon.ignoringItem() && this.field.isTerrain('electricterrain') && pokemon.useItem()) {
+				this.boost({def: 1});
 			}
 		},
 		onAnyTerrainStart(pokemon) {
-			if (this.field.isTerrain('electricterrain')) {
-				pokemon.useItem();
+			if (this.field.isTerrain('electricterrain') && pokemon.useItem()) {
 				this.boost({def: 1});
 			}
 		},
@@ -2714,13 +2710,12 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('grassyterrain')) {
-				pokemon.useItem();
+			if (!pokemon.ignoringItem() && this.field.isTerrain('grassyterrain') && pokemon.useItem()) {
+				this.boost({def: 1});
 			}
 		},
 		onAnyTerrainStart(pokemon) {
-			if (this.field.isTerrain('grassyterrain')) {
-				pokemon.useItem();
+			if (this.field.isTerrain('grassyterrain') && pokemon.useItem()) {
 				this.boost({def: 1});
 			}
 		},
@@ -3788,8 +3783,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Water') {
-				target.useItem();
+			if (move.type === 'Water' && target.useItem()) {
 				this.boost({spd: 1});
 			}
 		},
@@ -4388,13 +4382,12 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('mistyterrain')) {
-				pokemon.useItem();
+			if (!pokemon.ignoringItem() && this.field.isTerrain('mistyterrain') && pokemon.useItem()) {
+				this.boost({spd: 1});
 			}
 		},
 		onAnyTerrainStart(pokemon) {
-			if (this.field.isTerrain('mistyterrain')) {
-				pokemon.useItem();
+			if (this.field.isTerrain('mistyterrain') && pokemon.useItem()) {
 				this.boost({spd: 1});
 			}
 		},
@@ -5276,13 +5269,12 @@ let BattleItems = {
 			basePower: 10,
 		},
 		onStart(pokemon) {
-			if (!pokemon.ignoringItem() && this.field.isTerrain('psychicterrain')) {
-				pokemon.useItem();
+			if (!pokemon.ignoringItem() && this.field.isTerrain('psychicterrain') && pokemon.useItem()) {
+				this.boost({spd: 1});
 			}
 		},
 		onAnyTerrainStart(pokemon) {
-			if (this.field.isTerrain('psychicterrain')) {
-				pokemon.useItem();
+			if (this.field.isTerrain('psychicterrain') && pokemon.useItem()) {
 				this.boost({spd: 1});
 			}
 		},
@@ -5701,8 +5693,7 @@ let BattleItems = {
 			basePower: 100,
 		},
 		onUpdate(pokemon) {
-			if (this.field.getPseudoWeather('trickroom')) {
-				pokemon.useItem();
+			if (this.field.getPseudoWeather('trickroom') && pokemon.useItem()) {
 				this.boost({spe: -1});
 			}
 		},
@@ -6273,8 +6264,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterDamage(damage, target, source, move) {
-			if (move.type === 'Ice') {
-				target.useItem();
+			if (move.type === 'Ice' && target.useItem()) {
 				this.boost({atk: 1});
 			}
 		},
@@ -6768,8 +6758,7 @@ let BattleItems = {
 			basePower: 30,
 		},
 		onAfterMoveSecondarySelf(target, source, move) {
-			if (move.flags['sound']) {
-				target.useItem();
+			if (move.flags['sound'] && target.useItem()) {
 				this.boost({spa: 1});
 			}
 		},
@@ -7150,8 +7139,7 @@ let BattleItems = {
 		},
 		onHitPriority: 1,
 		onHit(target, source, move) {
-			if (target.hp && move.category !== 'Status' && !move.damage && !move.damageCallback && target.getMoveHitData(move).typeMod > 0) {
-				target.useItem();
+			if (target.hp && move.category !== 'Status' && !move.damage && !move.damageCallback && target.getMoveHitData(move).typeMod > 0 && target.useItem()) {
 				this.boost({atk: 2, spa: 2});
 			}
 		},
