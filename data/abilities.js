@@ -3209,6 +3209,19 @@ let BattleAbilities = {
 		rating: 2,
 		num: 214,
 	},
+	quickdraw: {
+		shortDesc: "This Pokemon has a 30% chance to move first in its priority bracket with attacking moves.",
+		onFractionalPriorityPriority: -1,
+		onFractionalPriority(priority, pokemon, target, move) {
+			if (move.category !== "Status" && this.randomChance(3, 10)) {
+				this.add('-activate', pokemon, 'ability: Quick Draw');
+				return 0.1;
+			}
+		},
+		name: "Quick Draw",
+		rating: 3,
+		num: 259,
+	},
 	"quickfeet": {
 		desc: "If this Pokemon has a major status condition, its Speed is multiplied by 1.5; the Speed drop from paralysis is ignored.",
 		shortDesc: "If this Pokemon is statused, its Speed is 1.5x; ignores Speed drop from paralysis.",
@@ -4105,15 +4118,18 @@ let BattleAbilities = {
 		num: 80,
 	},
 	"steamengine": {
-		shortDesc: "",
-		onAfterDamage(damage, target, source, effect) {
-			if (effect && ['Water', 'Fire'].includes(effect.type)) {
-				this.boost({spe: 3});
+		shortDesc: "This Pokemon's Speed is raised 3 stages after it is hit by a Water-type or Fire-type move, is immune.",
+		onTryHit(target, source, move) {
+			if (target !== source && (move.type === 'Water' || move.type ==='Fire')) {
+				if (!this.boost({spe: 3})) {
+					this.add('-immune', target, '[from] ability: Steam Engine');
+				}
+				return null;
 			}
 		},
 		id: "steamengine",
 		name: "Steam Engine",
-		rating: 1,
+		rating: 3.5,
 		num: 243,
 	},
 	"steelworker": {
@@ -4753,6 +4769,16 @@ let BattleAbilities = {
 		name: "Unown's Spell",
 		rating: 5,
 		num: -5,
+	},
+	unseenfist: {
+		desc: "All of this Pokemon's moves that make contact bypass protection.",
+		shortDesc: "All contact moves hit through protection.",
+		onModifyMove(move) {
+			if (move.flags['contact']) delete move.flags['protect'];
+		},
+		name: "Unseen Fist",
+		rating: 2.5,
+		num: 260,
 	},
 	"victorystar": {
 		shortDesc: "This Pokemon and its allies' moves have their accuracy multiplied by 1.1.",

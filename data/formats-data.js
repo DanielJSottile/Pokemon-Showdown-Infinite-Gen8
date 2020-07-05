@@ -50,6 +50,11 @@ let BattleFormatsData = {
 		tier: "UUBL",
 		doublesTier: "DOU",
 	},
+	venusaurgmax: {
+		isGigantamax: "G-Max Vine Lash",
+		tier: "NUBL",
+		doublesTier: "(DUU)",
+	},
 	charmander: {
 		eventPokemon: [
 			{"generation": 3, "level": 10, "gender": "M", "moves": ["scratch", "growl", "ember"], "pokeball": "pokeball"},
@@ -137,6 +142,11 @@ let BattleFormatsData = {
 		randomDoubleBattleMoves: ["muddywater", "icebeam", "hydropump", "fakeout", "scald", "darkpulse", "aurasphere", "followme", "icywind", "protect"],
 		requiredItem: "Blastoisinite",
 		tier: "OU",
+		doublesTier: "DUU",
+	},
+	blastoisegmax: {
+		isGigantamax: "G-Max Cannonade",
+		tier: "UUL",
 		doublesTier: "DUU",
 	},
 	caterpie: {
@@ -1138,12 +1148,14 @@ let BattleFormatsData = {
 		tier: "LC",
 	},
 	slowpokegalar: {
-		unreleasedHidden: true,
 		tier: "LC",
 	},
 	slowbrogalar: {
-		unreleasedHidden: true,
-		tier: "Illegal",
+		randomBattleMoves: ["flamethrower", "psyshock", "shellsidearm", "trick", "trickroom"],
+		randomBattleLevel: 82,
+		randomDoubleBattleMoves: ["fireblast", "healpulse", "protect", "psychic", "shellsidearm", "trickroom"],
+		tier: "UU",
+		doublesTier: "DUU",
 	},
 	slowkinggalar: {
 		unreleasedHidden: true,
@@ -6753,7 +6765,7 @@ let BattleFormatsData = {
 	volcanion: {
 		randomBattleMoves: ["substitute", "steameruption", "fireblast", "sludgebomb", "earthpower", "superpower"],
 		randomDoubleBattleMoves: ["substitute", "steameruption", "heatwave", "sludgebomb", "rockslide", "earthquake", "protect"],
-		tier: "UU",
+		tier: "UUBL",
 		doublesTier: "DUU",
 	},
 	rowlet: {
@@ -7624,12 +7636,12 @@ let BattleFormatsData = {
 	},
 	coalossal: {
 		randomBattleMoves: ["earthquake", "fireblast", "rapidspin", "spikes", "stealthrock", "stoneedge"],
-		tier: "NU",
+		tier: "RU",
 		doublesTier: "(DUU)",
 	},
 	coalossalgmax: {
 		isGigantamax: "G-Max Volcalith",
-		tier: "NU",
+		tier: "RU",
 		doublesTier: "(DUU)",
 	},
 	applin: {
@@ -7699,7 +7711,7 @@ let BattleFormatsData = {
 	},
 	toxtricitylowkey: {
 		randomBattleMoves: ["boomburst", "drainpunch", "firepunch", "gunkshot", "overdrive", "poisonjab", "shiftgear", "sludgebomb", "voltswitch"],
-		tier: "UU",
+		tier: "RUBL",
 		doublesTier: "DUU",
 	},
 	toxtricitygmax: {
@@ -7922,6 +7934,63 @@ let BattleFormatsData = {
 		isGigantamax: "E-Max Eternal Energy",
 		tier: "AG",
 		doublesTier: "DUber",
+	},
+	kubfu: {
+		tier: "NFE",
+	},
+	urshifu: {
+		randomBattleMoves: ["closecombat", "ironhead", "uturn", "wickedblow"],
+		randomDoubleBattleMoves: ["closecombat", "ironhead", "protect", "suckerpunch", "wickedblow"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifurapidstrike: {
+		randomBattleMoves: ["closecombat", "surgingstrikes", "thunderpunch", "uturn"],
+		randomDoubleBattleMoves: ["aquajet", "closecombat", "poisonjab", "protect", "surgingstrikes", "uturn"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifudragonfist: {
+		randomBattleMoves: ["closecombat", "wyvernblow", "ironhead", "uturn"],
+		randomDoubleBattleMoves: ["scaleshot", "closecombat", "ironhead", "protect", "wyvernblow", "uturn"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifutigerclaw: {
+		randomBattleMoves: ["closecombat", "blazingstrike", "thunderpunch", "uturn"],
+		randomDoubleBattleMoves: ["firepunch", "closecombat", "thunderpunch", "protect", "blazingstrike", "uturn"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifugmax: {
+		randomBattleMoves: ["bulkup", "drainpunch", "substitute", "wickedblow"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifurapidstrikegmax: {
+		randomBattleMoves: ["bulkup", "drainpunch", "substitute", "surgingstrikes"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifudragonfistgmax: {
+		randomBattleMoves: ["bulkup", "drainpunch", "substitute", "wyvernblow"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	urshifutigerclawgmax: {
+		randomBattleMoves: ["bulkup", "drainpunch", "substitute", "blazingstrike"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	zarude: {
+		randomBattleMoves: ["bulkup", "closecombat", "darkestlariat", "powerwhip", "uturn"],
+		randomDoubleBattleMoves: ["closecombat", "darkestlariat", "junglehealing", "powerwhip", "protect", "rockslide"],
+		tier: "RU",
+	},
+	zarudedada: {
+		randomBattleMoves: ["bulkup", "closecombat", "darkestlariat", "powerwhip", "uturn"],
+		randomDoubleBattleMoves: ["closecombat", "darkestlariat", "junglehealing", "powerwhip", "protect", "rockslide"],
+		tier: "RU",
 	},
 	apocalylidae: {
 		randomBattleMoves: ["apocalypticmaelstrom", "powerwhip", "eruption", "thunder", "bravebird", "oblivionwing", "precipiceblades", "pastsassurance"],

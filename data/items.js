@@ -706,10 +706,12 @@ let BattleItems = {
 		spritenum: 53,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Bug' && source.useItem()) {
-				source.addVolatile('gem');
-			}	
+			if (move.type === 'Bug') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Bug Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
+			}
 		},
 		num: 558,
 		gen: 5,
@@ -1308,9 +1310,11 @@ let BattleItems = {
 		spritenum: 89,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Dark' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Dark') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Dark Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 562,
@@ -1555,9 +1559,11 @@ let BattleItems = {
 		spritenum: 107,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Dragon' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Dragon') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Dragon Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 561,
@@ -1849,9 +1855,11 @@ let BattleItems = {
 		spritenum: 120,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Electric' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Electric') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Electric Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 550,
@@ -2004,9 +2012,11 @@ let BattleItems = {
 		spritenum: 611,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Fairy' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Fairy') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Fairy Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 715,
@@ -2045,9 +2055,11 @@ let BattleItems = {
 		spritenum: 139,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Fighting' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Fighting') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Fighting Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 553,
@@ -2118,9 +2130,11 @@ let BattleItems = {
 		spritenum: 141,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Fire' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Fire') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Fire Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 548,
@@ -2279,9 +2293,11 @@ let BattleItems = {
 		spritenum: 149,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Flying' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Flying') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Flying Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 556,
@@ -2552,9 +2568,11 @@ let BattleItems = {
 		spritenum: 161,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Ghost' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Ghost') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Ghost Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 560,
@@ -2662,9 +2680,11 @@ let BattleItems = {
 		spritenum: 172,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Grass' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Grass') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Grass Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 551,
@@ -2789,9 +2809,11 @@ let BattleItems = {
 		spritenum: 182,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Ground' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Ground') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Ground Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 555,
@@ -3025,9 +3047,11 @@ let BattleItems = {
 		spritenum: 218,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Ice' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Ice') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Ice Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 552,
@@ -3129,9 +3153,11 @@ let BattleItems = {
 		spritenum: 89,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Infinite' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Infinite') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Infinite Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: -16,
@@ -4562,9 +4588,11 @@ let BattleItems = {
 		spritenum: 307,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Normal' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Normal') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Normal Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 564,
@@ -4967,9 +4995,11 @@ let BattleItems = {
 		spritenum: 344,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Poison' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Poison') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Poison Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 554,
@@ -5235,9 +5265,11 @@ let BattleItems = {
 		spritenum: 369,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Psychic' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Psychic') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Psychic Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 557,
@@ -5611,9 +5643,11 @@ let BattleItems = {
 		spritenum: 415,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Rock' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Rock') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Rock Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 559,
@@ -6472,9 +6506,11 @@ let BattleItems = {
 		spritenum: 473,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status') return;
-			if (move.type === 'Steel' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Steel') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Steel Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 563,
@@ -7046,9 +7082,11 @@ let BattleItems = {
 		spritenum: 528,
 		isGem: true,
 		onSourceTryPrimaryHit(target, source, move) {
-			if (target === source || move.category === 'Status' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
-			if (move.type === 'Water' && source.useItem()) {
-				source.addVolatile('gem');
+			if (move.type === 'Water') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Water Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
 			}
 		},
 		num: 549,
