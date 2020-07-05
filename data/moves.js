@@ -2557,14 +2557,14 @@ let BattleMovedex = {
 		gmaxPower: 120,
 		contestType: "Tough",
 	},
-	burningstrike: {
+	blazingstrike: {
 		num: -38,
 		accuracy: 100,
 		basePower: 70,
 		category: "Physical",
 		desc: "This move is always a critical hit and goes first.",
 		shortDesc: "Always results in a critical hit and goes first.",
-		name: "Burning Strike",
+		name: "Blazing Strike",
 		pp: 5,
 		priority: 1,
 		flags: {contact: 1, protect: 1},
