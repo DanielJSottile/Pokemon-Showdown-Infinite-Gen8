@@ -18485,7 +18485,7 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "Has a 10% chance to whiplash the target.",
 		shortDesc: "10% chance to whiplash the target.",
-		id: "roundhousehick",
+		id: "roundhousekick",
 		isViable: true,
 		name: "Roundhouse Kick",
 		pp: 15,
