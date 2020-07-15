@@ -1582,6 +1582,16 @@ let BattleAbilities = {
 		rating: 0,
 		num: 134,
 	},
+	"herooftheforest": {
+		shortDesc: "If this Pokemon is above half HP, its Grass-type moves have their priority increased by 1.",
+		onModifyPriority(priority, pokemon, target, move) {
+			if (move && move.type === 'Grass' && pokemon.hp > (pokemon.baseMaxhp / 2)) return priority + 1;
+		},
+		id: "herooftheforest",
+		name: "Hero Of The Forest",
+		rating: 3,
+		num: -10,
+	},
 	"honeygather": {
 		shortDesc: "No competitive use.",
 		id: "honeygather",
@@ -4540,7 +4550,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -9,
+		num: -10,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",

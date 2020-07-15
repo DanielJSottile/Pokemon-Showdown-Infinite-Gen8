@@ -2965,23 +2965,24 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage in exchange for the user losing 1/3 of its maximum HP, rounded down. Fails if the user would faint or if its Attack, Defense, Special Attack, Special Defense, and Speed stat stages are 6.",
-		shortDesc: "User loses 33% max HP. Raises all stats by 1.",
+		desc: "Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage in exchange for the user losing 1/2 of its maximum HP, rounded down. Fails if the user would faint or if its Attack, Defense, Special Attack, Special Defense, and Speed stat stages are 6.",
+		shortDesc: "User loses 50% max HP. Raises all stats by 1.",
 		id: "clangoroussoul",
 		name: "Clangorous Soul",
 		pp: 5,
 		priority: 0,
 		flags: {snatch: 1, sound: 1, dance: 1},
 		onTryHit(pokemon, target, move) {
-			if (pokemon.hp <= pokemon.maxhp / 3 || pokemon.maxhp === 1) {
+			if (pokemon.hp <= pokemon.maxhp / 2 || pokemon.maxhp === 1) {
 				return false;
 			}
+			if (pokemon.getItem().id === 'kommoniumz') return false;
 			// @ts-ignore
 			if (!this.boost(move.boosts)) return null;
 			delete move.boosts;
 		},
 		onHit(pokemon) {
-			this.directDamage(pokemon.maxhp / 3);
+			this.directDamage(pokemon.maxhp / 2);
 		},
 		boosts: {
 			atk: 1,
@@ -4905,13 +4906,13 @@ let BattleMovedex = {
 	"drumbeating": {
 		num: 778,
 		accuracy: 100,
-		basePower: 100,
+		basePower: 80,
 		category: "Physical",
 		desc: "Has a 100% chance to lower the target's Speed by 1 stage.",
 		shortDesc: "100% chance to lower the target's Speed by 1.",
 		id: "drumbeating",
 		name: "Drum Beating",
-		pp: 5,
+		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		secondary: {
@@ -17289,8 +17290,8 @@ let BattleMovedex = {
 	},
 	"pyroball": {
 		num: 780,
-		accuracy: 100,
-		basePower: 100,
+		accuracy: 90,
+		basePower: 120,
 		category: "Physical",
 		desc: "Has a 10% chance to burn the target.",
 		shortDesc: "10% chance to burn the target.",
@@ -20277,13 +20278,13 @@ let BattleMovedex = {
 	"snipeshot": {
 		num: 745,
 		accuracy: 100,
-		basePower: 100,
+		basePower: 80,
 		category: "Special",
 		desc: "Has a higher chance for a critical hit.",
 		shortDesc: "High critical hit ratio.",
 		id: "snipeshot",
 		name: "Snipe Shot",
-		pp: 5,
+		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		critRatio: 2,
