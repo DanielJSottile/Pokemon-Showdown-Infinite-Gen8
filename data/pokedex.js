@@ -12400,7 +12400,7 @@ let BattlePokedex = {
 		forme: "Mega",
 		types: ["Flying", "Dragon"],
 		baseStats: {hp: 85, atk: 90, def: 95, spa: 147, spd: 95, spe: 123},
-		abilities: {0: "Cacophony"},
+		abilities: {0: "Punk Rock"},
 		heightm: 1.5,
 		weightkg: 85,
 		color: "Purple",

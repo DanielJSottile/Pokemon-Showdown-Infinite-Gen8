@@ -406,29 +406,6 @@ let BattleAbilities = {
 		rating: 3,
 		num: 171,
 	},
-	"cacophony": {
-		shortDesc: "Moves that are sound based get a 1.2x boost; All other moves become sound based and are 1x.",
-		onBasePowerPriority: 8,
-		onBasePower(basePower, attacker, defender, move) {
-			if (move.flags['sound']) {
-				this.debug('Cacophony Boost');
-				return this.chainModify(1.2);
-			} else {
-				return this.chainModify(1);
-			}
-		},
-		onModifyMovePriority: -1,
-		onModifyMove(move) {
-			if (!move.flags['sound']) {
-				move.flags['sound'] = 1;
-				console.log(move.flags);
-			}
-		},
-		id: "cacophony",
-		name: "Cacophony",
-		rating: 1.5,
-		num: -4,
-	},
 	"cheekpouch": {
 		desc: "If this Pokemon eats a Berry, it restores 1/3 of its maximum HP, rounded down, in addition to the Berry's effect.",
 		shortDesc: "If this Pokemon eats a Berry, it restores 1/3 of its max HP after the Berry's effect.",
