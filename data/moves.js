@@ -11859,6 +11859,11 @@ let BattleMovedex = {
 		onModifyMove(move, pokemon) {
 			if (pokemon.ignoringItem()) return;
 			const item = pokemon.getItem();
+			if (item.id === 'mysteriousplate') {
+				console.log(pokemon.getTypes().join());
+				console.log(pokemon.types[0]);
+				move.type = pokemon.types[0];
+			}
 			if (item.id && item.onPlate && !item.zMove) {
 				move.type = item.onPlate;
 			}

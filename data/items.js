@@ -1022,8 +1022,7 @@ let BattleItems = {
 		gen: 7,
 		desc: "Evolves Sinistea into Polteageist when used.",
 	},
-	"choiceband": {
-		id: "choiceband",
+	choiceband: {
 		name: "Choice Band",
 		spritenum: 68,
 		fling: {
@@ -1048,8 +1047,7 @@ let BattleItems = {
 		gen: 3,
 		desc: "Holder's Attack is 1.5x, but it can only select the first move it executes.",
 	},
-	"choicescarf": {
-		id: "choicescarf",
+	choicescarf: {
 		name: "Choice Scarf",
 		spritenum: 69,
 		fling: {
@@ -1073,8 +1071,7 @@ let BattleItems = {
 		gen: 4,
 		desc: "Holder's Speed is 1.5x, but it can only select the first move it executes.",
 	},
-	"choicespecs": {
-		id: "choicespecs",
+	choicespecs: {
 		name: "Choice Specs",
 		spritenum: 70,
 		fling: {
@@ -4459,6 +4456,27 @@ let BattleItems = {
 		gen: 4,
 		desc: "Holder's physical attacks have 1.1x power.",
 	},
+	"mysteriousplate": {
+		id: "mysteriousplate",
+		name: "Mysterious Plate",
+		spritenum: 223,
+		onBasePowerPriority: 6,
+		onBasePower(basePower, user, target, move) {
+			if (user.getTypes().includes(move.type)) {
+				return this.chainModify([0x1333, 0x1000]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseTemplate.num === 493) || pokemon.baseTemplate.num === 493) {
+				return false;
+			}
+			return true;
+		},
+		itemUser: ["Arceus-Aumagari"],
+		num: -51,
+		gen: 8,
+		desc: "Holder's Same-type attacks have 1.2x power. Judgment is users type.",
+	},
 	"mysticwater": {
 		id: "mysticwater",
 		name: "Mystic Water",
@@ -6845,6 +6863,21 @@ let BattleItems = {
 		gen: 3,
 		isPokeball: true,
 		desc: "A Poke Ball that becomes better the more turns there are in a battle.",
+	},
+	"togekissite": {
+		id: "togekissite",
+		name: "Togekissite",
+		spritenum: 575,
+		megaStone: "Togekiss-Mega",
+		megaEvolves: "Togekiss",
+		itemUser: ["Togekiss"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseTemplate.baseSpecies) return false;
+			return true;
+		},
+		num: -50,
+		gen: 8,
+		desc: "If held by a Togekiss, this item allows it to Mega Evolve in battle.",
 	},
 	"togepiumz": {
 		id: "togepiumz",

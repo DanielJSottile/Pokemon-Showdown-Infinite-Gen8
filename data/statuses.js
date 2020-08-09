@@ -401,8 +401,6 @@ let BattleStatuses = {
 	},
 	choicelock: {
 		name: 'choicelock',
-		id: 'choicelock',
-		num: 0,
 		noCopy: true,
 		onStart(pokemon) {
 			if (!this.activeMove) throw new Error("Battle.activeMove is null");
@@ -414,10 +412,14 @@ let BattleStatuses = {
 				pokemon.removeVolatile('choicelock');
 				return;
 			}
-			if (!pokemon.ignoringItem() && !pokemon.volatiles['dynamax'] && move.id !== this.effectData.move && move.id !== 'struggle') {
+			if (
+				!pokemon.ignoringItem() && !pokemon.volatiles['dynamax'] &&
+				move.id !== this.effectData.move && move.id !== 'struggle'
+			) {
 				// Fails unless the Choice item is being ignored, and no PP is lost
 				this.addMove('move', pokemon, move.name);
 				this.attrLastMove('[still]');
+				this.debug("Disabled by Choice item lock");
 				this.add('-fail', pokemon);
 				return false;
 			}

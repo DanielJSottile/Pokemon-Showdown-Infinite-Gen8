@@ -1662,8 +1662,8 @@ var _state = require('./state');
 	 * reality doesn't support setting a type to more than one type.
 	 */
 	setType(newType, enforce = false) {
-		// First type of Arceus, Silvally cannot be normally changed
-		if (!enforce && (this.template.num === 493 || this.template.num === 773)) return false;
+		// First type of Regular Arceus, Silvally cannot be normally changed
+		if (!enforce && ((this.template.num === 493 && this.template.forme !== 'Aumagari' ) || this.template.num === 773)) return false;
 
 		if (!newType) throw new Error("Must pass type to setType");
 		this.types = (typeof newType === 'string' ? [newType] : newType);

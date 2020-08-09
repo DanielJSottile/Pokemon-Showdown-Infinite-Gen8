@@ -1366,16 +1366,18 @@ let BattleAbilities = {
 		rating: 2,
 		num: 183,
 	},
-	"gorillatactics": {
-		shortDesc: "Gives a 1.3x boost to users attack stat, locks into a single move.",
+	gorillatactics: {
+		shortDesc: "This Pokemon's Attack is 1.3x, but it can only select the first move it executes.",
 		onStart(pokemon) {
 			pokemon.abilityData.choiceLock = "";
 		},
 		onBeforeMove(pokemon, target, move) {
-			if (pokemon.abilityData.choiceLock && pokemon.abilityData.choiceLock !== move.id && move.id !== 'struggle') {
+			if (move.isZPowered || move.maxPowered || move.id === 'struggle') return;
+			if (pokemon.abilityData.choiceLock && pokemon.abilityData.choiceLock !== move.id) {
 				// Fails unless ability is being ignored (these events will not run), no PP lost.
 				this.addMove('move', pokemon, move.name);
 				this.attrLastMove('[still]');
+				this.debug("Disabled by Gorilla Tactics");
 				this.add('-fail', pokemon);
 				return false;
 			}
@@ -1385,13 +1387,15 @@ let BattleAbilities = {
 			pokemon.abilityData.choiceLock = move.id;
 		},
 		onModifyAtkPriority: 1,
-		onModifyAtk(atk) {
+		onModifyAtk(atk, pokemon) {
+			if (pokemon.volatiles['dynamax']) return;
 			// PLACEHOLDER
 			this.debug('Gorilla Tactics Atk Boost');
 			return this.chainModify(1.3);
 		},
 		onDisableMove(pokemon) {
 			if (!pokemon.abilityData.choiceLock) return;
+			if (pokemon.volatiles['dynamax']) return;
 			for (const moveSlot of pokemon.moveSlots) {
 				if (moveSlot.id !== pokemon.abilityData.choiceLock) {
 					pokemon.disableMove(moveSlot.id, false, this.effectData.sourceEffect);
@@ -1401,9 +1405,8 @@ let BattleAbilities = {
 		onEnd(pokemon) {
 			pokemon.abilityData.choiceLock = "";
 		},
-		id: "gorillatactics",
 		name: "Gorilla Tactics",
-		rating: 4,
+		rating: 4.5,
 		num: 255,
 	},
 	"grasspelt": {
@@ -3103,22 +3106,13 @@ let BattleAbilities = {
 		rating: 3,
 		num: 232,
 	},
-	"propellertail": {
-		shortDesc: "This Pokemon's moves cannot be redirected or stopped by any move effect or ability.",
-		onStart(pokemon) {
-			this.add('-ability', pokemon, 'Propeller Tail');
-		},
+	propellertail: {
+		shortDesc: "This Pokemon's moves cannot be redirected to a different target by any effect.",
 		onModifyMove(move) {
 			// this doesn't actually do anything because ModifyMove happens after the tracksTarget check
 			// the actual implementation is in Battle#getTarget
-			move.breaksProtect = true;
-			console.log(move);
-			console.log(move.breaksProtect);
-			move.ignoreAbility = true;
-			move.infiltrates = true;
-			// move.tracksTarget = true;
+			move.tracksTarget = true;
 		},
-		id: "propellertail",
 		name: "Propeller Tail",
 		rating: 0,
 		num: 239,
@@ -4674,6 +4668,27 @@ let BattleAbilities = {
 		rating: 3.5,
 		num: 163,
 	},
+	"typeflux": {
+		desc: "This Pokemon's Type is randomly changed upon entry and at the end of each full turn it has been on the field.",
+		shortDesc: "This Pokemon's Type is randomly changed upon entry and at the end of each full turn on the field.",
+		onResidualPriority: -1,
+		onStart(pokemon) {
+			const possibleTypes = ['Bug', 'Dark', 'Dragon', 'Electric', 'Fairy', 'Fighting', 'Fire', 'Flying', 'Ghost', 'Grass', 'Ground', 'Ice', 'Infinite', 'Normal', 'Poison', 'Psychic', 'Rock', 'Steel', 'Water'];
+			const type = this.sample(possibleTypes);
+			this.add('-start', pokemon, 'typechange', type, '[from] ability: Type Flux');
+			pokemon.setType(type); // this actually changes the type! Normally arceus can't change type, but we fixed that for aumagari
+		},
+		onResidual(pokemon) {
+			const possibleTypes = ['Bug', 'Dark', 'Dragon', 'Electric', 'Fairy', 'Fighting', 'Fire', 'Flying', 'Ghost', 'Grass', 'Ground', 'Ice', 'Infinite', 'Normal', 'Poison', 'Psychic', 'Rock', 'Steel', 'Water'];
+			const type = this.sample(possibleTypes.filter(t => pokemon.types[0] !== t));
+			this.add('-start', pokemon, 'typechange', type, '[from] ability: Type Flux');
+			pokemon.setType(type); // this actually changes the type! Normally arceus can't change type, but we fixed that for aumagari
+		},
+		id: 'typeflux',
+		name: "Type Flux",
+		rating: 3.5,
+		num: -4,
+	},
 	"unaware": {
 		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.  However, the foe's critical hit ratio is raised by 2.",
 		shortDesc: "This Pokemon ignores other Pokemon's stat stages; foes crit ratio +2.",
@@ -4746,11 +4761,12 @@ let BattleAbilities = {
 			if (pokemon.template.speciesid === 'unownalphabet' || pokemon.hp > pokemon.baseMaxhp / 2) return;
 			this.add('-activate', pokemon, "ability: Unown's Spell");
 			pokemon.formeChange('Unown-Alphabet', this.effect, true);
-			pokemon.baseMaxhp = Math.floor(Math.floor(2 * pokemon.template.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100) * pokemon.level / 100 + 10);
-			let newMaxHP = pokemon.volatiles['dynamax'] ? (2 * pokemon.baseMaxhp) : pokemon.baseMaxhp;
-			pokemon.hp = newMaxHP - (pokemon.maxhp - pokemon.hp);
-			pokemon.maxhp = newMaxHP;
-			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
+			// pokemon.baseMaxhp = Math.floor(Math.floor(2 * pokemon.template.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100) * pokemon.level / 100 + 10);
+			// let newMaxHP = pokemon.volatiles['dynamax'] ? (2 * pokemon.baseMaxhp) : pokemon.baseMaxhp;
+			// pokemon.hp = newMaxHP - (pokemon.maxhp - pokemon.hp);
+			// pokemon.maxhp = newMaxHP;
+			// this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
+			this.heal(pokemon.baseMaxhp);
 		},
 		id: "unownspell",
 		name: "Unown's Spell",

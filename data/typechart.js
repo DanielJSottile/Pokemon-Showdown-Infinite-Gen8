@@ -2,8 +2,34 @@
 
 /**@type {{[k: string]: TypeData}} */
 let BattleTypeChart = {
+	"???": {
+		damageTaken: {
+			"???": 0,
+			"Bug": 0,
+			"Dark": 0,
+			"Dragon": 0,
+			"Electric": 0,
+			"Fairy": 0,
+			"Fighting": 0,
+			"Fire": 0,
+			"Flying": 0,
+			"Ghost": 0,
+			"Grass": 0,
+			"Ground": 0,
+			"Ice": 0,
+			"Infinite": 0,
+			"Normal": 0,
+			"Poison": 0,
+			"Psychic": 0,
+			"Rock": 0,
+			"Steel": 0,
+			"Water": 0,
+		},
+		HPivs: {"hp": 30, "spe": 30},
+	},
 	"Bug": {
 		damageTaken: {
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
@@ -31,6 +57,7 @@ let BattleTypeChart = {
 		damageTaken: {
 			blindness: 3,
 			prankster: 3,
+			"???": 0,
 			"Bug": 1,
 			"Dark": 2,
 			"Dragon": 0,
@@ -55,6 +82,7 @@ let BattleTypeChart = {
 	},
 	"Dragon": {
 		damageTaken: {
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 1,
@@ -81,6 +109,7 @@ let BattleTypeChart = {
 	"Electric": {
 		damageTaken: {
 			par: 3,
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
@@ -107,6 +136,7 @@ let BattleTypeChart = {
 	"Fairy": {
 		damageTaken: {
 			bewitchment: 3,
+			"???": 0,
 			"Bug": 2,
 			"Dark": 2,
 			"Dragon": 3,
@@ -132,6 +162,7 @@ let BattleTypeChart = {
 	"Fighting": {
 		damageTaken: {
 			whiplash: 3,
+			"???": 0,
 			"Bug": 2,
 			"Dark": 2,
 			"Dragon": 0,
@@ -158,6 +189,7 @@ let BattleTypeChart = {
 	"Fire": {
 		damageTaken: {
 			brn: 3,
+			"???": 0,
 			"Bug": 2,
 			"Dark": 0,
 			"Dragon": 0,
@@ -183,6 +215,7 @@ let BattleTypeChart = {
 	},
 	"Flying": {
 		damageTaken: {
+			"???": 0,
 			"Bug": 2,
 			"Dark": 0,
 			"Dragon": 0,
@@ -209,6 +242,7 @@ let BattleTypeChart = {
 	"Ghost": {
 		damageTaken: {
 			trapped: 3,
+			"???": 0,
 			"Bug": 2,
 			"Dark": 1,
 			"Dragon": 0,
@@ -235,6 +269,7 @@ let BattleTypeChart = {
 	"Grass": {
 		damageTaken: {
 			powder: 3,
+			"???": 0,
 			"Bug": 1,
 			"Dark": 0,
 			"Dragon": 0,
@@ -261,6 +296,7 @@ let BattleTypeChart = {
 	"Ground": {
 		damageTaken: {
 			sandstorm: 3,
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
@@ -288,6 +324,7 @@ let BattleTypeChart = {
 		damageTaken: {
 			hail: 3,
 			frz: 3,
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
@@ -314,6 +351,7 @@ let BattleTypeChart = {
 	"Infinite": {
 		damageTaken: {
 			maelstrom: 3,
+			"???": 0,
 			"Bug": 1,
 			"Dark": 0,
 			"Dragon": 0,
@@ -338,6 +376,7 @@ let BattleTypeChart = {
 	},
 	"Normal": {
 		damageTaken: {
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
@@ -363,6 +402,7 @@ let BattleTypeChart = {
 		damageTaken: {
 			psn: 3,
 			tox: 3,
+			"???": 0,
 			"Bug": 2,
 			"Dark": 0,
 			"Dragon": 0,
@@ -388,6 +428,7 @@ let BattleTypeChart = {
 	},
 	"Psychic": {
 		damageTaken: {
+			"???": 0,
 			"Bug": 1,
 			"Dark": 1,
 			"Dragon": 0,
@@ -414,6 +455,7 @@ let BattleTypeChart = {
 	"Rock": {
 		damageTaken: {
 			sandstorm: 3,
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
@@ -442,6 +484,7 @@ let BattleTypeChart = {
 			psn: 3,
 			tox: 3,
 			sandstorm: 3,
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 2,
@@ -467,6 +510,7 @@ let BattleTypeChart = {
 	},
 	"Water": {
 		damageTaken: {
+			"???": 0,
 			"Bug": 0,
 			"Dark": 0,
 			"Dragon": 0,
