@@ -16,8 +16,8 @@ const LOGIN_SERVER_BATCH_TIME = 1000;
 const http = Config.loginserver.startsWith('http:') ? require('http') : require('https');
 var _url = require('url'); var url = _url;
 
-var _fs = require('../.lib-dist/fs');
-var _streams = require('../.lib-dist/streams'); var Streams = _streams;
+var _fs = require('../lib/fs');
+var _streams = require('../lib/streams'); var Streams = _streams;
 
 /**
  * A custom error type used when requests to the login server take too long.

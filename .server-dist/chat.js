@@ -82,7 +82,7 @@ const BROADCAST_TOKEN = '!';
 
 const TRANSLATION_DIRECTORY = 'translations/';
 
-var _fs = require('../.lib-dist/fs');
+var _fs = require('../lib/fs');
 var _chatformatter = require('./chat-formatter');
 
 // @ts-ignore no typedef available

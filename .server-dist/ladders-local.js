@@ -15,7 +15,7 @@
 
 'use strict';
 
-var _fs = require('../.lib-dist/fs');
+var _fs = require('../lib/fs');
 
 // ladderCaches = {formatid: ladder OR Promise(ladder)}
 // Use Ladders(formatid).ladder to guarantee a Promise(ladder).

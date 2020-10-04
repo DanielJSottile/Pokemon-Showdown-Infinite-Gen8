@@ -11,7 +11,7 @@
  */
 
 var _child_process = require('child_process'); var child_process = _child_process;
-var _fs = require('../../.lib-dist/fs');
+var _fs = require('../../lib/fs');
 
  const commands = {
 
@@ -249,7 +249,7 @@ var _fs = require('../../.lib-dist/fs');
 
 				Chat.destroy();
 
-				const processManagers = require('../../.lib-dist/process-manager').processManagers;
+				const processManagers = require('../../lib/process-manager').processManagers;
 				for (const manager of processManagers.slice()) {
 					if (manager.filename.startsWith(_fs.FS.call(void 0, 'server/chat-plugins').path)) {
 						manager.destroy();
@@ -294,7 +294,7 @@ var _fs = require('../../.lib-dist/fs');
 				Chat.uncacheDir('./data');
 				Chat.uncache('./config/formats');
 				// reload .sim-dist/dex.js
-				global.Dex = require('../../.sim-dist/dex').Dex;
+				global.Dex = require('../../sim/dex').Dex;
 				// rebuild the formats list
 				delete Rooms.global.formatList;
 				// respawn validator processes

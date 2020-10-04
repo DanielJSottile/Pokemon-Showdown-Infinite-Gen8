@@ -1,6 +1,6 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true});const LOTTERY_FILE = 'config/chat-plugins/lottery.json';
 
-var _fs = require('../../.lib-dist/fs');
+var _fs = require('../../lib/fs');
 
 const lotteriesContents = _fs.FS.call(void 0, LOTTERY_FILE).readIfExistsSync();
 const lotteries
