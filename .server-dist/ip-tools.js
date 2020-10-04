@@ -19,7 +19,7 @@
 const BLOCKLISTS = ['sbl.spamhaus.org', 'rbl.efnetrbl.org'];
 
 var _dns = require('dns'); var dns = _dns;
-var _fs = require('../lib/fs');
+var _fs = require('../.lib-dist/fs');
 
  const IPTools = new (_class = class {constructor() { _class.prototype.__init.call(this);_class.prototype.__init2.call(this);_class.prototype.__init3.call(this);_class.prototype.__init4.call(this);_class.prototype.__init5.call(this);_class.prototype.__init6.call(this); }
 	 __init() {this.dnsblCache = new Map([

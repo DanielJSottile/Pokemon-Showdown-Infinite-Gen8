@@ -11,7 +11,7 @@
  * @license MIT license
  */
 
-var _fs = require('../lib/fs');
+var _fs = require('../.lib-dist/fs');
 
 
 

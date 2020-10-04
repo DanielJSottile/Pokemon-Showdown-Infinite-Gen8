@@ -9,8 +9,8 @@
 'use strict';
 
 var _child_process = require('child_process');
-var _crashlogger = require('../lib/crashlogger');
-var _fs = require('../lib/fs');
+var _crashlogger = require('../.lib-dist/crashlogger');
+var _fs = require('../.lib-dist/fs');
 
 const MONITOR_CLEAN_TIMEOUT = 2 * 60 * 60 * 1000;
 
