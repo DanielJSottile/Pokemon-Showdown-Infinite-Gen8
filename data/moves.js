@@ -1429,14 +1429,17 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "The user is replaced with another Pokemon in its party. The selected Pokemon has the user's stat stage changes, confusion, and certain move effects transferred to it.",
-		shortDesc: "User switches, passing stat changes and more.",
+		desc: "The user is replaced with another Pokemon in its party. The selected Pokemon has the user's volatiles such as confusion, and certain move effects transferred to it.",
+		shortDesc: "User switches, passing move volatiles.",
 		id: "batonpass",
 		isViable: true,
 		name: "Baton Pass",
 		pp: 40,
 		priority: 0,
 		flags: {},
+		onSwap() {
+			this.add('-hint', "The shown stats are not actually applied after passing!");
+		},
 		selfSwitch: 'copyvolatile',
 		secondary: null,
 		target: "self",
@@ -1512,6 +1515,33 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Normal",
 		contestType: "Cool",
+	},
+	"beatdrop": {
+		num: -39,
+		accuracy: 100,
+		basePower: 70,
+		category: "Special",
+		desc: "Fails if the target did not select a physical attack, special attack, or Me First for use this turn, or if the target moves before the user.",
+		shortDesc: "Usually goes first. Fails if target is not attacking.",
+		id: "beatdrop",
+		isViable: true,
+		name: "Beat Drop",
+		pp: 5,
+		priority: 1,
+		flags: {protect: 1, mirror: 1, sound: 1, authentic: 1},
+		onTry(source, target) {
+			let action = this.willMove(target);
+			if (!action || action.choice !== 'move' || (action.move.category === 'Status' && action.move.id !== 'mefirst') || target.volatiles.mustrecharge) {
+				this.add('-fail', source);
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Electric",
+		zMovePower: 130,
+		contestType: "Clever",
 	},
 	"beatup": {
 		num: 251,
@@ -8517,14 +8547,14 @@ let BattleMovedex = {
 		type: "Grass",
 		contestType: "Cool",
 	},
-	gmaxtigerstromstrike: {
+	gmaxtigerstormstrike: {
 		num: 1000,
 		accuracy: true,
 		basePower: 10,
 		category: "Physical",
 		desc: "Power is equal to the base move's Max Move power. If this move is successful and any Pokemon on the opposing side is using Baneful Bunker, Detect, King's Shield, Mat Block, Max Guard, Obstruct, Protect, or Spiky Shield, this move will fully break the protection.",
 		shortDesc: "Base move affects power. Breaks all protection.",
-		name: "G-Max Tigerstrom Strike",
+		name: "G-Max Tigerstorm Strike",
 		pp: 5,
 		priority: 0,
 		flags: {},
@@ -8869,8 +8899,12 @@ let BattleMovedex = {
 		priority: 0,
 		flags: {contact: 1, protect: 1, mystery: 1},
 		onModifyPriority(priority, source, target, move) {
-			if (this.field.isTerrain('grassyterrain') && source.isGrounded()) {
-				return priority + 1;
+			if (this.field.isTerrain('grassyterrain')) {
+				console.log(this.field.isTerrain('grassyterrain'))
+				console.log(source.isGrounded())
+				priority += 1;
+				console.log(priority)
+				return priority
 			}
 		},
 		secondary: null,
@@ -8973,7 +9007,7 @@ let BattleMovedex = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		desc: "For 5 turns, the evasiveness of all active Pokemon is multiplied by 0.6. At the time of use, Bounce, Fly, Magnet Rise, Sky Drop, and Telekinesis end immediately for all active Pokemon. During the effect, Bounce, Fly, Flying Press, High Jump Kick, Jump Kick, Magnet Rise, Sky Drop, Splash, and Telekinesis are prevented from being used by all active Pokemon. Ground-type attacks, Spikes, Toxic Spikes, Sticky Web, and the Arena Trap Ability can affect Flying types or Pokemon with the Levitate Ability. Fails if this move is already in effect.",
+		desc: "For 5 turns, the accuracy of all non-status moves is increased by 1.66. At the time of use, Bounce, Fly, Magnet Rise, Sky Drop, and Telekinesis end immediately for all active Pokemon. During the effect, Bounce, Fly, Flying Press, High Jump Kick, Jump Kick, Magnet Rise, Sky Drop, Splash, and Telekinesis are prevented from being used by all active Pokemon. Ground-type attacks, Spikes, Toxic Spikes, Sticky Web, and the Arena Trap Ability can affect Flying types or Pokemon with the Levitate Ability. Fails if this move is already in effect.",
 		shortDesc: "For 5 turns, negates all Ground immunities.",
 		id: "gravity",
 		name: "Gravity",
@@ -9020,9 +9054,14 @@ let BattleMovedex = {
 					if (applies) this.add('-activate', pokemon, 'move: Gravity');
 				}
 			},
-			onModifyAccuracy(accuracy) {
+			onModifyAccuracy(accuracy, move) {
 				if (typeof accuracy !== 'number') return;
-				return accuracy * 5 / 3;
+				if (move.category !== 'Status') {
+					// Gravity accuracy boost will now only affect non-status moves
+					return accuracy * 5 / 3;
+				} else {
+				return;
+				}
 			},
 			onDisableMove(pokemon) {
 				for (const moveSlot of pokemon.moveSlots) {
@@ -24500,26 +24539,21 @@ let BattleMovedex = {
 	wyvernblow: {
 		num: -37,
 		accuracy: 100,
-		basePower: 70,
+		basePower: 75,
 		category: "Physical",
-		desc: "This move is always a critical hit and boosts the users Attack 1 stage.",
-		shortDesc: "Always results in a critical hit, Atk +1.",
+		desc: "This move is always a critical hit and lowers the opponents Def 1 stage.",
+		shortDesc: "Always results in a critical hit, lowers opp Def -1.",
 		name: "Wyvern Blow",
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1},
 		willCrit: true,
-		secondary: {
-			chance: 100,
-			self: {
-				boosts: {
-					atk: 1,
-				},
-			},
+		boosts: {
+			def: -1,
 		},
 		target: "normal",
 		type: "Dragon",
-		zMovePower: 130,
+		zMovePower: 135,
 		gmaxPower: 120,
 		contestType: "Tough",
 	},

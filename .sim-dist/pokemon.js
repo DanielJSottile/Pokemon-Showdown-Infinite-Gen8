@@ -922,7 +922,9 @@ var _state = require('./state');
 
 	copyVolatileFrom(pokemon) {
 		this.clearVolatile();
-		this.boosts = pokemon.boosts;
+		this.clearBoosts();
+		// this.boosts = pokemon.boosts;
+		// In Infinite, boosts are no longer passed between for Baton Pass, only volatiles
 		for (const i in pokemon.volatiles) {
 			if (this.battle.dex.getEffectByID(i ).noCopy) continue;
 			// shallow clones

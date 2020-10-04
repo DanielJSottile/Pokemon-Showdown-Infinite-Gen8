@@ -2248,12 +2248,12 @@ let BattleAbilities = {
 		num: 63,
 	},
 	"megalauncher": {
-		desc: "This Pokemon's pulse moves have their power multiplied by 1.5. Heal Pulse restores 3/4 of a target's maximum HP, rounded half down.",
-		shortDesc: "This Pokemon's pulse moves have 1.5x power. Heal Pulse heals 3/4 target's max HP.",
+		desc: "This Pokemon's pulse moves have their power multiplied by 1.3. Heal Pulse restores 3/4 of a target's maximum HP, rounded half down.",
+		shortDesc: "This Pokemon's pulse moves have 1.3x power. Heal Pulse heals 3/4 target's max HP.",
 		onBasePowerPriority: 8,
 		onBasePower(basePower, attacker, defender, move) {
 			if (move.flags['pulse']) {
-				return this.chainModify(1.5);
+				return this.chainModify(1.3);
 			}
 		},
 		id: "megalauncher",
@@ -3935,7 +3935,7 @@ let BattleAbilities = {
 		shortDesc: "This Pokemon's Sp. Atk is raised by 1 stage when another Pokemon faints.",
 		onAnyFaintPriority: 1,
 		onAnyFaint(target, source) {
-			if (source.volatiles['dynamax']) return;
+			if (source && source.volatiles['dynamax']) return;
 			this.boost({spa: 1}, this.effectData.target);
 		},
 		id: "soulheart",

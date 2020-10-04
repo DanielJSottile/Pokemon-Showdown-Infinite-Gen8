@@ -451,8 +451,13 @@ let BattleStatuses = {
 			pokemon.removeVolatile('truant');
 			return null;
 		},
-		onStart(pokemon) {
-			this.add('-mustrecharge', pokemon);
+		onAfterMove(pokemon, target) {
+			if (!target || target.fainted || target.hp <= 0) {
+				pokemon.removeVolatile('mustrecharge');
+			} else {
+				this.add('-mustrecharge', pokemon);
+			}
+			
 		},
 		onLockMove: 'recharge',
 	},

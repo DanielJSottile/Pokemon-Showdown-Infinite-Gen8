@@ -19,7 +19,7 @@ let Formats = [
 
 		mod: 'gen8',
 		ruleset: ['Obtainable', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Sleep Clause Mod', 'Infinite Timer'],
-		banlist: ['Power Construct', 'Baton Pass',
+		banlist: ['Power Construct',
 			'Apocalylidae', 'Arceus', 'Darkrai', 'Darkrai-Mega', 'Deoxys-Attack', 'Deoxys-Base', 'Dialga', 'Eternatus', 'Gengar-Mega', 'Giratina', 'Groudon', 'Groudon-Primal',
 			'Ho-Oh', 'Kyogre', 'Kyogre-Primal', 'Kyurem-White', 'Kyurem-Black', 'Kyurem-Omnipotent', 'Lucario-Mega', 'Lugia', 'Lunala',
 			'Marshadow', 'Mebiusan-Past', 'Mebiusan-Future', 'Mewtwo', 'Naganadel', 'Necrozma-Dawn-Wings', 'Necrozma-Dusk-Mane', 'Palkia', 'Pheromosa',
@@ -65,7 +65,7 @@ let Formats = [
 		mod: 'gen8',
 		gameType: 'doubles',
 		ruleset: ['Obtainable', 'Standard Doubles', 'Team Preview', 'Infinite Timer'],
-		banlist: ['DUber', 'Gravity ++ Hypnosis', 'Gravity ++ Lovely Kiss', 'Gravity ++ Sing', 'Gravity ++ Sleep Powder'],
+		banlist: ['DUber'],
 	},
 	{
 		name: "[Gen 8] Anything Goes",

@@ -3039,6 +3039,10 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	stantmoose: {
+		tier: "NU",
+		doublesTier: "(DUU)",
+	},
 	smeargle: {
 		randomBattleMoves: ["spore", "stealthrock", "destinybond", "whirlwind", "stickyweb"],
 		randomDoubleBattleMoves: ["spore", "fakeout", "wideguard", "helpinghand", "followme", "tailwind", "kingsshield", "transform"],
@@ -3096,7 +3100,7 @@ let BattleFormatsData = {
 	enteiaumagari: {
 		randomBattleMoves: ["extremespeed", "flareblitz", "earthquake", "stoneedge", "ironhead"],
 		randomDoubleBattleMoves: ["extremespeed", "flareblitz", "ironhead", "earthquake", "stoneedge", "protect"],
-		tier: "UU",
+		tier: "RUBL",
 		doublesTier: "DUU",
 	},
 	suicuneaumagari: {
@@ -3503,7 +3507,11 @@ let BattleFormatsData = {
 		eventPokemon: [
 			{"generation": 4, "level": 50, "gender": "M", "nature": "Adamant", "moves": ["gigaimpact", "return", "shadowclaw", "aerialace"], "pokeball": "cherishball"},
 		],
-		tier: "(PU)",
+		tier: "NU",
+		doublesTier: "(DUU)",
+	},
+	hyperoth: {
+		tier: "NU",
 		doublesTier: "(DUU)",
 	},
 	nincada: {
@@ -3799,6 +3807,10 @@ let BattleFormatsData = {
 		randomDoubleBattleMoves: ["protect", "icefang", "crunch", "liquidation", "psychicfangs"],
 		requiredItem: "Sharpedonite",
 		tier: "RUBL",
+		doublesTier: "(DUU)",
+	},
+	anchorage: {
+		tier: "RU",
 		doublesTier: "(DUU)",
 	},
 	wailmer: {
@@ -4293,6 +4305,10 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	gouranimos: {
+		tier: "PU",
+		doublesTier: "(DUU)",
+	},
 	bagon: {
 		eventPokemon: [
 			{"generation": 3, "level": 5, "shiny": 1, "moves": ["rage", "bite", "wish"], "pokeball": "pokeball"},
@@ -4329,6 +4345,15 @@ let BattleFormatsData = {
 		requiredItem: "Salamencite",
 		tier: "AG",
 		doublesTier: "DOU",
+	},
+	bashigon: {
+		tier: "UUBL",
+		doublesTier: "(DUU)",
+	},
+	bashigongmax: {
+		isGigantamax: "G-Max Battering",
+		tier: "UUBL",
+		doublesTier: "(DUU)",
 	},
 	beldum: {
 		eventPokemon: [
@@ -4727,6 +4752,10 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	drifigible: {
+		tier: "PU",
+		doublesTier: "(DUU)",
+	},
 	buneary: {
 		tier: "LC",
 	},
@@ -4913,6 +4942,10 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	carnicreeper: {
+		tier: "NU",
+		doublesTier: "(DUU)",
+	},
 	finneon: {
 		tier: "LC",
 	},
@@ -5009,6 +5042,10 @@ let BattleFormatsData = {
 		tier: "NU",
 		doublesTier: "(DUU)",
 	},
+	voltergiest: {
+		tier: "UU",
+		doublesTier: "(DUU)",
+	},
 	uxie: {
 		randomBattleMoves: ["stealthrock", "thunderwave", "psychic", "uturn", "healbell", "knockoff", "yawn"],
 		randomDoubleBattleMoves: ["uturn", "psyshock", "yawn", "healbell", "stealthrock", "thunderbolt", "protect", "helpinghand", "thunderwave"],
@@ -5053,7 +5090,7 @@ let BattleFormatsData = {
 	},
 	regigigasgmax: {
 		isGigantamax: "G-Max Colossal Force",
-		tier: "OU",
+		tier: "UUBL",
 		doublesTier: "DOU",
 	},
 	giratina: {
@@ -6093,6 +6130,15 @@ let BattleFormatsData = {
 			{"generation": 7, "level": 33, "isHidden": false},
 		],
 		tier: "UU",
+		doublesTier: "DUU",
+	},
+	pawniardaumagari: {
+		tier: "LC",
+	},
+	dubsknight: {
+		randomBattleMoves: ["nastyplot", "thunderbolt", "flashcannon", "beatdrop", "boomburst"],
+		randomDoubleBattleMoves: ["nastyplot", "substitute", "beatdrop", "flashcannon", "boomburst", "thunderbolt", "protect"],
+		tier: "RU",
 		doublesTier: "DUU",
 	},
 	bouffalant: {
@@ -7311,6 +7357,10 @@ let BattleFormatsData = {
 		tier: "(PU)",
 		doublesTier: "(DUU)",
 	},
+	kommursa: {
+		tier: "RU",
+		doublesTier: "(DUU)",
+	},
 	turtonator: {
 		randomBattleMoves: ["fireblast", "shellsmash", "earthquake", "dragontail", "explosion", "dragonpulse", "dracometeor"],
 		randomDoubleBattleMoves: ["dragonpulse", "dracometeor", "fireblast", "shellsmash", "protect", "focusblast", "explosion"],
@@ -7536,6 +7586,14 @@ let BattleFormatsData = {
 		randomDoubleBattleMoves: ["willowisp", "fireblast", "shadowball", "hiddenpowerice", "heatwave", "protect"],
 		tier: "OU",
 		doublesTier: "DUU",
+	},
+	verglaceress: {
+		tier: "UU",
+		doublesTier: "DUU",
+	},
+	gilgadozer: {
+		tier: "OU",
+		doublesTier: "DOU",
 	},
 	zeraora: {
 		randomBattleMoves: ["plasmafists", "closecombat", "voltswitch", "hiddenpowerice", "knockoff", "grassknot", "workup"],
