@@ -490,7 +490,7 @@ let BattleStatuses = {
 			if (data.source.hasAbility('adaptability') && this.gen >= 6) {
 				data.moveData.stab = 2;
 			}
-			const hitMove = new this.Data.Move(data.moveData);
+			const hitMove = new this.dex.Data.Move(data.moveData);
 
 			this.trySpreadMoveHit([target], data.source, /** @type {ActiveMove} */(/** @type {unknown} */(hitMove)));
 		},

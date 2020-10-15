@@ -1322,6 +1322,41 @@ let BattleMovedex = {
 		type: "Dark",
 		contestType: "Clever",
 	},
+	"balloonburst": {
+		num: -42,
+		accuracy: 100,
+		basePower: 100,
+		basePowerCallback(pokemon, target, move) {
+			let damagedByTarget = pokemon.attackedBy.some(p =>
+				p.source === target && p.damage > 0 && p.thisTurn
+			);
+			if (damagedByTarget) {
+				this.debug('Boosted for getting hit by ' + target);
+				return move.basePower * 2;
+			}
+			return move.basePower;
+		},
+		category: "Special",
+		desc: "If the user is hit by a move this turn before it can execute this move, this move does double the damage, and takes half the users health.",
+		shortDesc: "Doubles power if hit by a move before, takes 1/2 users health.",
+		id: "balloonburst",
+		isViable: true,
+		name: "Balloon Burst",
+		pp: 5,
+		priority: -4,
+		flags: {protect: 1, mirror: 1},
+		mindBlownRecoil: true,
+		onAfterMove(pokemon, target, move) {
+			if (move.mindBlownRecoil && !move.multihit) {
+				this.damage(Math.round(pokemon.maxhp / 2), pokemon, pokemon, this.dex.getEffect('Balloon Burst'), true);
+			}
+		},
+		secondary: null,
+		target: "allAdjacent",
+		type: "Flying",
+		zMovePower: 170,
+		contestType: "Cool",
+	},
 	"banefulbunker": {
 		num: 661,
 		accuracy: true,
@@ -5665,8 +5700,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 80,
 		category: "Special",
-		desc: "If the current terrain is Psychic Terrain and the user is grounded, this move hits all opposing Pokemon and has its power multiplied by 1.5.",
-		shortDesc: "User on Psychic Terrain: 1.5x power, hits foes.",
+		desc: "If the current terrain is Psychic Terrain and the user is grounded, this move hits all opposing Pokemon and has its power multiplied by 1.2.",
+		shortDesc: "User on Psychic Terrain: 1.2x power, hits foes.",
 		name: "Expanding Force",
 		pp: 10,
 		priority: 0,
@@ -5674,7 +5709,7 @@ let BattleMovedex = {
 		onBasePower(basePower, source) {
 			if (this.field.isTerrain('psychicterrain') && source.isGrounded()) {
 				this.debug('terrain buff');
-				return this.chainModify(1.5);
+				return this.chainModify(1.2);
 			}
 		},
 		onModifyMove(move, source, target) {
@@ -7734,6 +7769,36 @@ let BattleMovedex = {
 		type: "Psychic",
 		contestType: "Clever",
 	},
+	"gmaxbattering": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		desc: "Flinches or raises user def 1 stage. Base Power scales with the base move's Base Power.",
+		shortDesc: "Flinches or raises user def 1 stage.",
+		id: "gmaxbattering",
+		isNonstandard: "Custom",
+		name: "G-Max Battering",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Bashigon",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					let result = this.random(2);
+					if (result === 0) {
+						pokemon.addVolatile('flinch');
+					} else {
+						this.boost({def: 1}, pokemon, source, move);
+					}
+				}
+			},
+		},
+		target: "adjacentFoe",
+		type: "Steel",
+		contestType: "Cool",
+	},
 	"gmaxbefuddle": {
 		num: 1000,
 		accuracy: true,
@@ -7988,6 +8053,36 @@ let BattleMovedex = {
 		type: "Grass",
 		contestType: "Cool",
 	},
+	"gmaxelectrocution": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		desc: "Foe: Paralysis or Flinch. Base Power scales with the base move's Base Power.",
+		shortDesc: "Foe: Paralysis or Flinch.",
+		id: "gmaxelectrocution",
+		isNonstandard: "Custom",
+		name: "G-Max Electrocution",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Gorochu",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					let result = this.random(2);
+					if (result === 0) {
+						pokemon.addVolatile('flinch');
+					} else {
+						pokemon.trySetStatus('par', source);
+					}
+				}
+			},
+		},
+		target: "adjacentFoe",
+		type: "Electric",
+		contestType: "Cool",
+	},
 	"gmaxfinale": {
 		num: 1000,
 		accuracy: true,
@@ -8173,6 +8268,36 @@ let BattleMovedex = {
 		secondary: null,
 		target: "adjacentFoe",
 		type: "Rock",
+		contestType: "Cool",
+	},
+	"gmaxlivewire": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		desc: "Foe: Burn or Flinch. Base Power scales with the base move's Base Power.",
+		shortDesc: "Foe: Burn or Flinch.",
+		id: "gmaxlivewire",
+		isNonstandard: "Custom",
+		name: "G-Max Live-Wire",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Voltergeist",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					let result = this.random(2);
+					if (result === 0) {
+						pokemon.addVolatile('flinch');
+					} else {
+						pokemon.trySetStatus('brn', source);
+					}
+				}
+			},
+		},
+		target: "adjacentFoe",
+		type: "Electric",
 		contestType: "Cool",
 	},
 	"gmaxmalodor": {
@@ -8584,6 +8709,36 @@ let BattleMovedex = {
 		secondary: null,
 		target: "adjacentFoe",
 		type: "Fire",
+		contestType: "Cool",
+	},
+	"gmaxvegetation": {
+		num: 1000,
+		accuracy: true,
+		basePower: 10,
+		category: "Physical",
+		desc: "Foe: Leech Seed or Flinch. Base Power scales with the base move's Base Power.",
+		shortDesc: "Foe: Leech Seed or Flinch.",
+		id: "gmaxvegetation",
+		isNonstandard: "Custom",
+		name: "G-Max Vegetation",
+		pp: 5,
+		priority: 0,
+		flags: {},
+		isMax: "Carnicreeper",
+		self: {
+			onHit(source) {
+				for (let pokemon of source.side.foe.active) {
+					let result = this.random(2);
+					if (result === 0) {
+						pokemon.addVolatile('flinch');
+					} else {
+						pokemon.addVolatile('leechseed');
+					}
+				}
+			},
+		},
+		target: "adjacentFoe",
+		type: "Grass",
 		contestType: "Cool",
 	},
 	gmaxvinelash: {
@@ -18127,8 +18282,8 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 70,
 		category: "Special",
-		desc: "If the current terrain is Electric Terrain and the target is grounded, this move's power is doubled.",
-		shortDesc: "2x power if target is grounded in Electric Terrain.",
+		desc: "If the current terrain is Electric Terrain and the target is grounded, this move's power is 1.5x.",
+		shortDesc: "1.5x power if target is grounded in Electric Terrain.",
 		name: "Rising Voltage",
 		pp: 20,
 		priority: 0,
@@ -18136,7 +18291,7 @@ let BattleMovedex = {
 		onBasePower(basePower, pokemon, target) {
 			if (this.field.isTerrain('electricterrain') && target.isGrounded()) {
 				this.debug('terrain buff');
-				return this.chainModify(2);
+				return this.chainModify(1.5);
 			}
 		},
 		secondary: null,

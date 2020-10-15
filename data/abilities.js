@@ -1572,6 +1572,18 @@ let BattleAbilities = {
 		rating: 3,
 		num: -10,
 	},
+	"highstrung": {
+		shortDesc: "This Pokemon's Speed is raised by 1 stage after it is damaged by a contact move.",
+		onAfterDamage(damage, target, source, effect) {
+			if (effect && effect.flags['contact']) {
+				this.boost({spe: 1});
+			}
+		},
+		id: "highstrung",
+		name: "High-Strung",
+		rating: 3.5,
+		num: -4,
+	},
 	"honeygather": {
 		shortDesc: "No competitive use.",
 		id: "honeygather",
@@ -2708,7 +2720,7 @@ let BattleAbilities = {
 		id: "omniforge",
 		name: "Omniforge",
 		rating: 3.5,
-		num: -7,
+		num: -8,
 	},
 	"overcoat": {
 		shortDesc: "This Pokemon is immune to powder moves and damage from Sandstorm or Hail.",
@@ -3336,7 +3348,7 @@ let BattleAbilities = {
 		id: "resolutegauntlet",
 		name: "Resolute Gauntlet",
 		rating: 4.5,
-		num: -6,
+		num: -7,
 	},
 	"ripen": {
 		// TODO Needs research. Following berries aren't supported currently:
@@ -4296,7 +4308,7 @@ let BattleAbilities = {
 		id: "supremebeing",
 		name: "Supreme Being",
 		rating: 3.5,
-		num: -8,
+		num: -9,
 	},
 	"surgesurfer": {
 		shortDesc: "If Electric Terrain is active, this Pokemon's Speed is doubled.",
@@ -4521,7 +4533,7 @@ let BattleAbilities = {
 		id: "timetravel",
 		name: "Time Travel",
 		rating: 4,
-		num: -10,
+		num: -11,
 	},
 	"tintedlens": {
 		shortDesc: "This Pokemon's attacks that are not very effective on a target deal double damage.",
@@ -4687,7 +4699,7 @@ let BattleAbilities = {
 		id: 'typeflux',
 		name: "Type Flux",
 		rating: 3.5,
-		num: -4,
+		num: -5,
 	},
 	"unaware": {
 		desc: "This Pokemon ignores other Pokemon's Attack, Special Attack, and accuracy stat stages when taking damage, and ignores other Pokemon's Defense, Special Defense, and evasiveness stat stages when dealing damage.  However, the foe's critical hit ratio is raised by 2.",
@@ -4771,7 +4783,7 @@ let BattleAbilities = {
 		id: "unownspell",
 		name: "Unown's Spell",
 		rating: 5,
-		num: -5,
+		num: -6,
 	},
 	unseenfist: {
 		desc: "All of this Pokemon's moves that make contact bypass protection.",
