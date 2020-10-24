@@ -1689,7 +1689,7 @@ export class Pokemon {
 		return [this.battle.gen >= 5 ? 'Normal' : '???'];
 	}
 
-	isGrounded(negateImmunity: boolean = false) {
+	isGrounded(negateImmunity = false) {
 		if ('gravity' in this.battle.field.pseudoWeather) return true;
 		if ('ingrain' in this.volatiles && this.battle.gen >= 4) return true;
 		if ('smackdown' in this.volatiles) return true;

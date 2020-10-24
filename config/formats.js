@@ -20,7 +20,7 @@ let Formats = [
 		mod: 'gen8',
 		ruleset: ['Obtainable', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Sleep Clause Mod', 'Infinite Timer'],
 		banlist: ['Power Construct',
-			'Apocalylidae', 'Arceus', 'Darkrai', 'Darkrai-Mega', 'Deoxys-Attack', 'Deoxys-Base', 'Dialga', 'Eternatus', 'Gengar-Mega', 'Giratina', 'Groudon', 'Groudon-Primal',
+			'Alakazam-Mega', 'Apocalylidae', 'Arceus', 'Blastoise-Mega', 'Darkrai', 'Darkrai-Mega', 'Deoxys-Attack', 'Deoxys-Base', 'Deoxys-Speed', 'Dialga', 'Eternatus', 'Gengar-Mega', 'Giratina', 'Groudon', 'Groudon-Primal',
 			'Ho-Oh', 'Kyogre', 'Kyogre-Primal', 'Kyurem-White', 'Kyurem-Black', 'Kyurem-Omnipotent', 'Lucario-Mega', 'Lugia', 'Lunala',
 			'Marshadow', 'Mebiusan-Past', 'Mebiusan-Future', 'Mewtwo', 'Naganadel', 'Necrozma-Dawn-Wings', 'Necrozma-Dusk-Mane', 'Palkia', 'Pheromosa',
 			'Rayquaza', 'Rayquaza-Mega', 'Reshiram', 'Solgaleo', 'Salamence-Mega', 'Zacian', 'Zamazenta', 'Xerneas', 'Yveltal', 'Zekrom',

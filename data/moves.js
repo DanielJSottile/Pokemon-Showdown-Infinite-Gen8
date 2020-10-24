@@ -947,6 +947,24 @@ let BattleMovedex = {
 		zMovePower: 90,
 		contestType: "Cute",
 	},
+	"astralbarrage": {
+		num: 825,
+		accuracy: 100,
+		basePower: 120,
+		category: "Special",
+		desc: "No additional effect.",
+		shortDesc: "No additional effect. Hits adjacent foes.",
+		id: "astralbarrage",
+		name: "Astral Barrage",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Ghost",
+		zMovePower: 175,
+		contestType: "Popular"
+	},
 	"attackorder": {
 		num: 454,
 		accuracy: 100,
@@ -2216,15 +2234,10 @@ let BattleMovedex = {
 		},
 		effect: {
 			duration: 2,
-			onTryImmunity(target, source, move) {
-				if (['gust', 'twister', 'skyuppercut', 'thunder', 'hurricane', 'smackdown', 'thousandarrows', 'helpinghand'].includes(move.id)) {
+			onInvulnerability(target, source, move) {
+				if (['gust', 'twister', 'skyuppercut', 'thunder', 'hurricane', 'smackdown', 'thousandarrows'].includes(move.id)) {
 					return;
 				}
-				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
-					return;
-				}
-				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
-				if (move.id === 'toxic' && source.hasType('Poison')) return;
 				return false;
 			},
 			onSourceBasePower(basePower, target, source, move) {
@@ -2646,15 +2659,19 @@ let BattleMovedex = {
 	blazingstrike: {
 		num: -38,
 		accuracy: 100,
-		basePower: 70,
+		basePower: 75,
 		category: "Physical",
-		desc: "This move is always a critical hit and goes first.",
-		shortDesc: "Always results in a critical hit and goes first.",
+		desc: "This move is always a critical hit and lowers the opponents Spe 1 stage.",
+		shortDesc: "Always results in a critical hit, lowers opp Spe -1.",
+		id: "blazingstrike",
 		name: "Blazing Strike",
 		pp: 5,
-		priority: 1,
+		priority: 0,
 		flags: {contact: 1, protect: 1},
 		willCrit: true,
+		boosts: {
+			spe: -1,
+		},
 		secondary: null,
 		target: "normal",
 		type: "Fire",
@@ -4273,14 +4290,10 @@ let BattleMovedex = {
 			onImmunity(type, pokemon) {
 				if (type === 'sandstorm' || type === 'hail') return false;
 			},
-			onTryImmunity(target, source, move) {
-				if (['earthquake', 'magnitude', 'helpinghand'].includes(move.id)) {
+			onInvulnerability(target, source, move) {
+				if (['earthquake', 'magnitude'].includes(move.id)) {
 					return;
 				}
-				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
-					return;
-				}
-				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
 				return false;
 			},
 			onSourceModifyDamage(damage, source, target, move) {
@@ -4442,14 +4455,10 @@ let BattleMovedex = {
 			onImmunity(type, pokemon) {
 				if (type === 'sandstorm' || type === 'hail') return false;
 			},
-			onTryImmunity(target, source, move) {
-				if (['surf', 'whirlpool', 'helpinghand'].includes(move.id)) {
+			onInvulnerability(target, source, move) {
+				if (['surf', 'whirlpool'].includes(move.id)) {
 					return;
 				}
-				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
-					return;
-				}
-				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
 				return false;
 			},
 			onSourceModifyDamage(damage, source, target, move) {
@@ -4792,6 +4801,27 @@ let BattleMovedex = {
 		zMovePower: 160,
 		gmaxPower: 120,
 		contestType: "Clever",
+	},
+	"dragonenergy": {
+		num: 820,
+		accuracy: 100,
+		basePower: 150,
+		basePowerCallback(pokemon, target, move) {
+			return move.basePower * pokemon.hp / pokemon.maxhp;
+		},
+		category: "Special",
+		desc: "Power is equal to (user's current HP * 150 / user's maximum HP), rounded down, but not less than 1.",
+		shortDesc: "Less power as user's HP decreases. Hits foe(s).",
+		id: "dragonenergy",
+		name: "Dragon Energy",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dragon",
+		zMovePower: 190,
+		contestType: "Beautiful",
 	},
 	"dragonhammer": {
 		num: 692,
@@ -5195,6 +5225,34 @@ let BattleMovedex = {
 		type: "Electric",
 		zMoveBoost: {spd: 1},
 		contestType: "Clever",
+	},
+	"eeriespell": {
+		num: 826,
+		accuracy: 100,
+		basePower: 80,
+		category: "Special",
+		desc: "Removes 3 PP from the target's last move.",
+		shortDesc: "Removes 3 PP from the target's last move.",
+		id: "eeriespell",
+		name: "Eerie Spell",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, sound: 1, authentic: 1},
+		onHit(target) {
+			if (!target.hp) return;
+			const move = target.lastMove;
+			if (!move || move.isZ || move.isMax) return;
+
+			const ppDeducted = target.deductPP(move.id, 3);
+			if (!ppDeducted) return;
+
+			this.add('-activate', target, 'move: Eerie Spell', move.name, ppDeducted);
+		},
+		secondary: null,
+		target: "normal",
+		type: "Psychic",
+		zMovePower: 150,
+		contestType: "Clever"
 	},
 	"eggbomb": {
 		num: 121,
@@ -6131,6 +6189,27 @@ let BattleMovedex = {
 		zMovePower: 150,
 		contestType: "Beautiful",
 	},
+	"fierywrath": {
+		num: 822,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		desc: "Hits foe(s). 20% chance to flinch each foe.",
+		shortDesc: "Hits foe(s). 20% chance to flinch each foe.",
+		id: "fierywrath",
+		name: "Fiery Wrath",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 20,
+			volatileStatus: 'flinch',
+		},
+		target: "allAdjacentFoes",
+		type: "Dark",
+		zMovePower: 165,
+		contestType: "Beautiful",
+	},
 	"finalgambit": {
 		num: 515,
 		accuracy: 100,
@@ -6846,14 +6925,10 @@ let BattleMovedex = {
 		},
 		effect: {
 			duration: 2,
-			onTryImmunity(target, source, move) {
-				if (['gust', 'twister', 'skyuppercut', 'thunder', 'hurricane', 'smackdown', 'thousandarrows', 'helpinghand'].includes(move.id)) {
+			onInvulnerability(target, source, move) {
+				if (['gust', 'twister', 'skyuppercut', 'thunder', 'hurricane', 'smackdown', 'thousandarrows'].includes(move.id)) {
 					return;
 				}
-				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
-					return;
-				}
-				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
 				return false;
 			},
 			onSourceModifyDamage(damage, source, target, move) {
@@ -7219,6 +7294,27 @@ let BattleMovedex = {
 		zMovePower: 190,
 		contestType: "Beautiful",
 	},
+	"freezingglare": {
+		num: 821,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		desc: "Has a 10% chance to freeze the target.",
+		shortDesc: "10% chance to freeze the target.",
+		id: "freezingglare",
+		name: "Freezing Glare",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 10,
+			status: 'frz',
+		},
+		target: "normal",
+		type: "Psychic",
+		zMovePower: 165,
+		contestType: "Clever",
+	},
 	"freezyfrost": {
 		num: 739,
 		accuracy: 100,
@@ -7241,6 +7337,7 @@ let BattleMovedex = {
 		secondary: null,
 		target: "normal",
 		type: "Ice",
+		zMovePower: 165,
 		contestType: "Clever",
 	},
 	"frenzyplant": {
@@ -7705,6 +7802,24 @@ let BattleMovedex = {
 		type: "Electric",
 		contestType: "Cool",
 	},
+	"glaciallance": {
+		num: 824,
+		accuracy: 100,
+		basePower: 130,
+		category: "Physical",
+		desc: "No additional effect.",
+		shortDesc: "No additional effect. Hits adjacent foes.",
+		id: "glaciallance",
+		name: "Glacial Lance",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Ice",
+		zMovePower: 185,
+		contestType: "Popular"
+	},
 	"glaciate": {
 		num: 549,
 		accuracy: 95,
@@ -8022,6 +8137,8 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "Power is equal to the base move's Max Move power. If this move is successful and any Pokemon on the opposing side is using Baneful Bunker, Detect, King's Shield, Mat Block, Max Guard, Obstruct, Protect, or Spiky Shield, this move will fully break the protection.",
 		shortDesc: "Base move affects power. Breaks all protection.",
+		id: "gmaxdraconianblow",
+		isNonstandard: "Custom",
 		name: "G-Max Draconian Blow",
 		pp: 5,
 		priority: 0,
@@ -8381,6 +8498,8 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "Power is equal to the base move's Max Move power. If this move is successful and any Pokemon on the opposing side is using Baneful Bunker, Detect, King's Shield, Mat Block, Max Guard, Obstruct, Protect, or Spiky Shield, this move will fully break the protection.",
 		shortDesc: "Base move affects power. Breaks all protection.",
+		id: "gmaxoneblow",
+		isNonstandard: "Custom",
 		name: "G-Max One Blow",
 		pp: 5,
 		priority: 0,
@@ -8399,6 +8518,8 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "Power is equal to the base move's Max Move power. If this move is successful and any Pokemon on the opposing side is using Baneful Bunker, Detect, King's Shield, Mat Block, Max Guard, Obstruct, Protect, or Spiky Shield, this move will fully break the protection.",
 		shortDesc: "Base move affects power. Breaks all protection.",
+		id: "gmaxrapidflow",
+		isNonstandard: "Custom",
 		name: "G-Max Rapid Flow",
 		pp: 5,
 		priority: 0,
@@ -8700,6 +8821,8 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "Power is equal to the base move's Max Move power. If this move is successful and any Pokemon on the opposing side is using Baneful Bunker, Detect, King's Shield, Mat Block, Max Guard, Obstruct, Protect, or Spiky Shield, this move will fully break the protection.",
 		shortDesc: "Base move affects power. Breaks all protection.",
+		id: "gmaxtigerstormstrike",
+		isNonstandard: "Custom",
 		name: "G-Max Tigerstorm Strike",
 		pp: 5,
 		priority: 0,
@@ -9068,25 +9191,18 @@ let BattleMovedex = {
 		accuracy: 100,
 		basePower: 70,
 		category: "Physical",
-		desc: "If the current terrain is Grassy Terrain and the user is grounded, this move has its priority increased by 1.",
-		shortDesc: "User on Grassy Terrain: +1 priority.",
 		name: "Grassy Glide",
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mystery: 1},
 		onModifyPriority(priority, source, target, move) {
-			if (this.field.isTerrain('grassyterrain')) {
-				console.log(this.field.isTerrain('grassyterrain'))
-				console.log(source.isGrounded())
-				priority += 1;
-				console.log(priority)
-				return priority
+			if (this.field.isTerrain('grassyterrain') && source.isGrounded()) {
+				return priority + 1;
 			}
 		},
 		secondary: null,
 		target: "normal",
 		type: "Grass",
-		zMovePower: 130,
 		contestType: "Cool",
 	},
 	"grassyterrain": {
@@ -16303,16 +16419,7 @@ let BattleMovedex = {
 		},
 		effect: {
 			duration: 2,
-			onTryImmunity(target, source, move) {
-				if (move.id === 'helpinghand') {
-					return;
-				}
-				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
-					return;
-				}
-				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
-				return false;
-			},
+			onInvulnerability: false,
 		},
 		secondary: null,
 		target: "normal",
@@ -17883,6 +17990,34 @@ let BattleMovedex = {
 		zMovePower: 150,
 		contestType: "Cool",
 	},
+	"reconstruction": {
+		num: -43,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		desc: "The user restores 1/3 of its maximum HP, rounded half up. If there is an adjacent ally, the user restores 1/3 of both its and its ally's maximum HP, rounded up.  This clears all stats on the field.",
+		shortDesc: "Heals the user (and allies) by 1/3 amount; clears all stats.",
+		id: "reconstruction",
+		isViable: true,
+		name: "Reconstruction",
+		pp: 10,
+		priority: 0,
+		flags: {snatch: 1, heal: 1, authentic: 1},
+		onHit(target, source) {
+			for (const pokemon of source.side.active) {
+				this.heal(Math.ceil(pokemon.maxhp / 3), pokemon, source);
+			}
+			this.add('-clearallboost');
+			for (const pokemon of this.getAllActive()) {
+				pokemon.clearBoosts();
+			}
+		},
+		secondary: null,
+		target: "allyTeam",
+		type: "Infinite",
+		zMoveEffect: 'clearnegativeboost',
+		contestType: "Popular",
+	},
 	"recover": {
 		num: 105,
 		accuracy: true,
@@ -19355,16 +19490,7 @@ let BattleMovedex = {
 		},
 		effect: {
 			duration: 2,
-			onTryImmunity(target, source, move) {
-				if (move.id === 'helpinghand') {
-					return;
-				}
-				if (source.hasAbility('noguard') || target.hasAbility('noguard')) {
-					return;
-				}
-				if (source.volatiles['lockon'] && target === source.volatiles['lockon'].source) return;
-				return false;
-			},
+			onInvulnerability: false,
 		},
 		secondary: null,
 		target: "normal",
@@ -19475,6 +19601,7 @@ let BattleMovedex = {
 		category: "Special",
 		desc: "Has a 20% chance to poison the target. This move becomes a physical attack that makes contact if the value of ((((2 * the user's level / 5 + 2) * 90 * X) / Y) / 50), where X is the user's Attack stat and Y is the target's Defense stat, is greater than the same value where X is the user's Special Attack stat and Y is the target's Special Defense stat. No stat modifiers other than stat stage changes are considered for this purpose. If the two values are equal, this move chooses a damage category at random.",
 		shortDesc: "20% poison. Physical, contact if more damaging.",
+		id: "shellsidearm",
 		name: "Shell Side Arm",
 		pp: 10,
 		priority: 0,
@@ -20707,6 +20834,25 @@ let BattleMovedex = {
 		type: "Normal",
 		zMovePower: 90,
 		contestType: "Cool",
+	},
+	"soulplunge": {
+		num: -44,
+		accuracy: 100,
+		basePower: 80,
+		category: "Special",
+		desc: "Damage is calculated using the user's Special Defense stat, including stat stage changes. The user's Ability is used as normal.",
+		shortDesc: "Uses user's Sp. Def stat in damage calculation.",
+		id: "soulplunge",
+		name: "Soul Plunge",
+		pp: 10,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		useSourceSpecialDefensiveAsOffensive: true,
+		secondary: null,
+		target: "normal",
+		type: "Infinite",
+		zMovePower: 150,
+		contestType: "Clever",
 	},
 	"soulstealing7starstrike": {
 		num: 699,
@@ -22121,6 +22267,7 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "Hits three times. This move is always a critical hit unless the target is under the effect of Lucky Chant or has the Battle Armor or Shell Armor Abilities.",
 		shortDesc: "Always results in a critical hit. Hits 3 times.",
+		id: "surgingstrikes",
 		name: "Surging Strikes",
 		pp: 5,
 		priority: 0,
@@ -23094,6 +23241,25 @@ let BattleMovedex = {
 		zMovePower: 165,
 		contestType: "Cool",
 	},
+	"thundercage": {
+		num: 819,
+		accuracy: 90,
+		basePower: 80,
+		category: "Special",
+		desc: "Prevents the target from switching for four or five turns (seven turns if the user is holding Grip Claw). Causes damage to the target equal to 1/8 of its maximum HP (1/6 if the user is holding Binding Band), rounded down, at the end of each turn during effect. The target can still switch out if it is holding Shed Shell or uses Baton Pass, Parting Shot, Teleport, U-turn, or Volt Switch. The effect ends if either the user or the target leaves the field, or if the target uses Rapid Spin or Substitute successfully. This effect is not stackable or reset by using this or another binding move.",
+		shortDesc: "Traps and damages the target for 4-5 turns.",
+		id: "thundercage",
+		name: "Thunder Cage",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		volatileStatus: 'partiallytrapped',
+		secondary: null,
+		target: "normal",
+		type: "Electric",
+		zMovePower: 165,
+		contestType: "Cool",
+	},
 	"thunderfang": {
 		num: 422,
 		accuracy: 95,
@@ -23118,6 +23284,29 @@ let BattleMovedex = {
 		target: "normal",
 		type: "Electric",
 		zMovePower: 110,
+		contestType: "Cool",
+	},
+	"thunderouskick": {
+		num: 823,
+		accuracy: 100,
+		basePower: 90,
+		category: "Physical",
+		desc: "Has a 100% chance to lower the target's Defense by 1 stage.",
+		shortDesc: "Lowers the target's Defense by 1.",
+		id: "thunderouskick",
+		name: "Thunderous Kick",
+		pp: 10,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			boosts: {
+				def: -1,
+			},
+		},
+		target: "normal",
+		type: "Fighting",
+		zMovePower: 165,
 		contestType: "Cool",
 	},
 	"thunderpunch": {
@@ -24402,6 +24591,7 @@ let BattleMovedex = {
 		category: "Physical",
 		desc: "This move is always a critical hit unless the target is under the effect of Lucky Chant or has the Battle Armor or Shell Armor Abilities.",
 		shortDesc: "Always results in a critical hit.",
+		id: "wickedblow",
 		name: "Wicked Blow",
 		pp: 5,
 		priority: 0,
@@ -24736,10 +24926,11 @@ let BattleMovedex = {
 	wyvernblow: {
 		num: -37,
 		accuracy: 100,
-		basePower: 75,
+		basePower: 70,
 		category: "Physical",
 		desc: "This move is always a critical hit and lowers the opponents Def 1 stage.",
 		shortDesc: "Always results in a critical hit, lowers opp Def -1.",
+		id: "wyvernblow",
 		name: "Wyvern Blow",
 		pp: 5,
 		priority: 0,

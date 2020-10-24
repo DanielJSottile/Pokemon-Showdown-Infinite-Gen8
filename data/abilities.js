@@ -218,6 +218,42 @@ let BattleAbilities = {
 		rating: 2,
 		num: 165,
 	},
+	"asoneglastrier": {
+		desc: "The combination of Unnerve and Chilling Neigh.",
+		shortDesc: "The combination of Unnerve and Chilling Neigh.",
+		onPreStart(pokemon) {
+			this.add('-ability', pokemon, 'Unnerve', pokemon.side.foe);
+		},
+		onFoeTryEatItem: false,
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.add('-ability', source, 'Chilling Neigh');
+				this.boost({atk: length}, source, source, null, true);
+			}
+		},
+		id: "asoneglastrier",
+		name: "As One (Glastrier)",
+		rating: 3.5,
+		num: 266,
+	},
+	"asonespectrier": {
+		desc: "The combination of Unnerve and Grim Neigh.",
+		shortDesc: "The combination of Unnerve and Grim Neigh.",
+		onPreStart(pokemon) {
+			this.add('-ability', pokemon, 'Unnerve', pokemon.side.foe);
+		},
+		onFoeTryEatItem: false,
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.add('-ability', source, 'Grim Neigh');
+				this.boost({spa: length}, source, source, null, true);
+			}
+		},
+		id: "asonespectrier",
+		name: "As One (Spectrier)",
+		rating: 3.5,
+		num: 267,
+	},
 	"aurabreak": {
 		desc: "While this Pokemon is active, the effects of the Dark Aura and Fairy Aura Abilities are reversed, multiplying the power of Dark- and Fairy-type moves, respectively, by 3/4 instead of 1.33.",
 		shortDesc: "While this Pokemon is active, the Dark Aura and Fairy Aura power modifier is 0.75x.",
@@ -417,6 +453,19 @@ let BattleAbilities = {
 		rating: 1.5,
 		num: 167,
 	},
+	"chillingneigh": {
+		desc: "This Pokemon's Attack is raised by 1 stage if it attacks and knocks out another Pokemon.",
+		shortDesc: "This Pokemon's Attack is raised by 1 stage if it attacks and KOes another Pokemon.",
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.boost({atk: length}, source);
+			}
+		},
+		id: "chillingneigh",
+		name: "Chilling Neigh",
+		rating: 3,
+		num: 264,
+	},
 	"chlorophyll": {
 		desc: "If Sunny Day is active and this Pokemon is not holding Utility Umbrella, this Pokemon's Speed is doubled.",
 		shortDesc: "If Sunny Day is active, this Pokemon's Speed is multiplied by 1.8x.",
@@ -579,6 +628,22 @@ let BattleAbilities = {
 		name: "Cotton Down",
 		rating: 2,
 		num: 238,
+	},
+	curiousmedicine: {
+		desc: "On switch-in, allies stat changes are reset to 0.",
+		shortDesc: "On switch-in, allies stat changes are reset to 0.",
+		onStart(pokemon) {
+			for (const ally of pokemon.side.active) {
+				if (ally !== pokemon) {
+					ally.clearBoosts();
+					this.add('-clearboost', ally, '[from] ability: Curious Medicine', '[of] ' + pokemon);
+				}
+			}
+		},
+		id: 'curiousmedicine',
+		name: "Curious Medicine",
+		rating: 0,
+		num: 261,
 	},
 	"cursedbody": {
 		desc: "If this Pokemon is hit by an attack, there is a 20% chance that move gets disabled unless one of the attacker's moves is already disabled.",
@@ -859,6 +924,28 @@ let BattleAbilities = {
 		name: "Dragon Scales",
 		rating: 3,
 		num: -3,
+	},
+	"dragonsmaw": {
+		desc: "This Pokemon's attacking stat is multiplied by 1.3 while using an Dragon-type attack.",
+		shortDesc: "This Pokemon's attacking stat is multiplied by 1.3 while using an Dragon-type attack.",
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Dragon') {
+				this.debug('Dragon\'s Maw boost');
+				return this.chainModify(1.3);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Dragon') {
+				this.debug('Dragon\'s Maw boost');
+				return this.chainModify(1.3);
+			}
+		},
+		id: "dragonsmaw",
+		name: "Dragon's Maw",
+		rating: 3.5,
+		num: 263,
 	},
 	"drizzle": {
 		shortDesc: "On switch-in, this Pokemon summons Rain Dance.",
@@ -1446,6 +1533,19 @@ let BattleAbilities = {
 		name: "Gravity Well",
 		rating: 1,
 		num: 0,
+	},
+	"grimneigh": {
+		desc: "This Pokemon's Special Attack is raised by 1 stage if it attacks and knocks out another Pokemon.",
+		shortDesc: "This Pokemon's Sp. Atk is raised by 1 stage if it attacks and KOes another Pokemon.",
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.boost({spa: length}, source);
+			}
+		},
+		id: "grimneigh",
+		name: "Grim Neigh",
+		rating: 3,
+		num: 265,
 	},
 	"gulpmissile": {
 		desc: "If this Pokemon is a Cramorant, it changes forme when it hits a target with Surf or uses the first turn of Dive successfully. It becomes Gulping Form with an Arrokuda in its mouth if it has more than 1/2 of its maximum HP remaining, or Gorging Form with a Pikachu in its mouth if it has 1/2 or less of its maximum HP remaining. If Cramorant gets hit in Gulping or Gorging Form, it spits the Arrokuda or Pikachu at its attacker, even if it has no HP remaining. The projectile deals damage equal to 1/4 of the target's maximum HP, rounded down; this damage is blocked by the Magic Guard Ability but not by a substitute. An Arrokuda also lowers the target's Defense by 1 stage, and a Pikachu paralyzes the target. Cramorant will return to normal if it spits out a projectile, switches out, or Dynamaxes.",
@@ -4628,6 +4728,28 @@ let BattleAbilities = {
 		rating: 2.5,
 		num: 36,
 	},
+	"transistor": {
+		desc: "This Pokemon's attacking stat is multiplied by 1.3 while using an Electric-type attack.",
+		shortDesc: "This Pokemon's attacking stat is multiplied by 1.3 while using an Electric-type attack.",
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Electric') {
+				this.debug('Transistor boost');
+				return this.chainModify(1.3);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Electric') {
+				this.debug('Transistor boost');
+				return this.chainModify(1.3);
+			}
+		},
+		id: "transistor",
+		name: "Transistor",
+		rating: 3.5,
+		num: 262,
+	},	
 	"triage": {
 		shortDesc: "This Pokemon's healing moves have their priority increased by 1.",
 		onModifyPriority(priority, pokemon, target, move) {

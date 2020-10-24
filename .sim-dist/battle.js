@@ -1987,6 +1987,7 @@ var _state = require('./state');
 		const defender = target;
 		let attackStat = category === 'Physical' ? 'atk' : 'spa';
 		const defenseStat = defensiveCategory === 'Physical' ? 'def' : 'spd';
+		const specialDefenseStat = defensiveCategory === 'Special' ? 'spd' : 'def';
 		if (move.useSourceDefensiveAsOffensive) {
 			attackStat = defenseStat;
 			// Body press really wants to use the def stat,
@@ -2000,6 +2001,23 @@ var _state = require('./state');
 				}
 				if (attacker.boosts['def'] || attacker.boosts['spd']) {
 					this.hint("Body Press uses Sp. Def boosts when Wonder Room is active.");
+				}
+			}
+		}
+
+		if (move.useSourceSpecialDefensiveAsOffensive) {
+			attackStat = specialDefenseStat;
+			// Soul Plunge really wants to use the spDef stat,
+			// so it switches stats to compensate for Wonder Room.
+			// Of course, the game thus miscalculates the boosts...
+			if ('wonderroom' in this.field.pseudoWeather) {
+				if (attackStat === 'def') {
+					attackStat = 'spd';
+				} else if (attackStat === 'spd') {
+					attackStat = 'def';
+				}
+				if (attacker.boosts['def'] || attacker.boosts['spd']) {
+					this.hint("Soul Plunge uses Def boosts when Wonder Room is active.");
 				}
 			}
 		}
@@ -2428,7 +2446,12 @@ var _state = require('./state');
 						}
 					}
 				}
-				const priority = this.runEvent('ModifyPriority', action.pokemon, target, move, move.priority);
+				// take priority from the base move, so abilities like Prankster only apply once
+				// (instead of compounding every time `getActionSpeed` is called)
+				let priority = this.dex.getMove(move.id).priority;
+				// Grassy Glide priority
+				priority = this.singleEvent('ModifyPriority', move, null, action.pokemon, null, null, priority);
+				priority = this.runEvent('ModifyPriority', action.pokemon, null, move, priority);
 				action.priority = priority + action.fractionalPriority;
 				// In Gen 6, Quick Guard blocks moves with artificially enhanced priority.
 				if (this.gen > 5) action.move.priority = priority;

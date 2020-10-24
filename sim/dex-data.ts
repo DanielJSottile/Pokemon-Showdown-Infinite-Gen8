@@ -780,6 +780,8 @@ export class Move extends BasicEffect implements Readonly<BasicEffect & MoveData
 	/** Use the user's Def/SpD as the attacking stat, instead of Atk/SpA. */
 	readonly useSourceDefensiveAsOffensive: boolean;
 	/** Whether or not this move ignores negative attack boosts. */
+	readonly useSourceSpecialDefensiveAsOffensive: boolean;
+	/** Whether or not this move ignores negative attack boosts. */
 	readonly ignoreNegativeOffensive: boolean;
 	/** Whether or not this move ignores positive defense boosts. */
 	readonly ignorePositiveDefensive: boolean;
@@ -850,6 +852,7 @@ export class Move extends BasicEffect implements Readonly<BasicEffect & MoveData
 		this.defensiveCategory = data.defensiveCategory || undefined;
 		this.useTargetOffensive = !!data.useTargetOffensive;
 		this.useSourceDefensiveAsOffensive = !!data.useSourceDefensiveAsOffensive;
+		this.useSourceSpecialDefensiveAsOffensive = !!data.useSourceSpecialDefensiveAsOffensive;
 		this.ignoreNegativeOffensive = !!data.ignoreNegativeOffensive;
 		this.ignorePositiveDefensive = !!data.ignorePositiveDefensive;
 		this.ignoreOffensive = !!data.ignoreOffensive;

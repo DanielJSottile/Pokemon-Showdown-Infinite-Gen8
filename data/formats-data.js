@@ -141,8 +141,8 @@ let BattleFormatsData = {
 		randomBattleMoves: ["icebeam", "hydropump", "rapidspin", "scald", "dragontail", "darkpulse", "aurasphere"],
 		randomDoubleBattleMoves: ["muddywater", "icebeam", "hydropump", "fakeout", "scald", "darkpulse", "aurasphere", "followme", "icywind", "protect"],
 		requiredItem: "Blastoisinite",
-		tier: "OU",
-		doublesTier: "DUU",
+		tier: "AG",
+		doublesTier: "DUbers",
 	},
 	blastoisegmax: {
 		isGigantamax: "G-Max Cannonade",
@@ -988,8 +988,8 @@ let BattleFormatsData = {
 		randomBattleMoves: ["calmmind", "psyshock", "focusblast", "shadowball", "encore", "substitute"],
 		randomDoubleBattleMoves: ["protect", "psychic", "psyshock", "focusblast", "shadowball", "encore", "substitute", "dazzlinggleam"],
 		requiredItem: "Alakazite",
-		tier: "OU",
-		doublesTier: "(DUU)",
+		tier: "AG",
+		doublesTier: "DOU",
 	},
 	machop: {
 		encounters: [
@@ -1155,17 +1155,6 @@ let BattleFormatsData = {
 	slowpokegalar: {
 		tier: "LC",
 	},
-	slowbrogalar: {
-		randomBattleMoves: ["flamethrower", "psyshock", "shellsidearm", "trick", "trickroom"],
-		randomBattleLevel: 82,
-		randomDoubleBattleMoves: ["fireblast", "healpulse", "protect", "psychic", "shellsidearm", "trickroom"],
-		tier: "NU",
-		doublesTier: "DUU",
-	},
-	slowkinggalar: {
-		unreleasedHidden: true,
-		tier: "Illegal",
-	},
 	slowbro: {
 		randomBattleMoves: ["scald", "toxic", "thunderwave", "psyshock", "fireblast", "icebeam", "slackoff"],
 		randomDoubleBattleMoves: ["scald", "fireblast", "icebeam", "psychic", "grassknot", "thunderwave", "slackoff", "trickroom", "protect", "psyshock"],
@@ -1191,9 +1180,20 @@ let BattleFormatsData = {
 		tier: "UU",
 		doublesTier: "(DUU)",
 	},
+	slowbrogalar: {
+		randomBattleMoves: ["flamethrower", "psyshock", "shellsidearm", "trick", "trickroom"],
+		randomDoubleBattleMoves: ["fireblast", "healpulse", "protect", "psychic", "shellsidearm", "trickroom"],
+		tier: "NU",
+		doublesTier: "DUU",
+	},
 	slowking: {
 		randomBattleMoves: ["scald", "fireblast", "icebeam", "psychic", "grassknot", "thunderwave", "toxic", "slackoff", "trickroom", "nastyplot", "dragontail", "psyshock"],
 		randomDoubleBattleMoves: ["scald", "fireblast", "icebeam", "psychic", "grassknot", "thunderwave", "slackoff", "trickroom", "protect", "psyshock"],
+		tier: "NU",
+		doublesTier: "(DUU)",
+	},
+	slowkinggalar: {
+		randomBattleMoves: ["fireblast", "psyshock", "slackoff", "sludgebomb", "trick", "trickroom"],
 		tier: "NU",
 		doublesTier: "(DUU)",
 	},
@@ -2251,17 +2251,32 @@ let BattleFormatsData = {
 		tier: "PU",
 		doublesTier: "(DUU)",
 	},
+	articunogalar: {
+		randomBattleMoves: ["airslash", "calmmind", "freezingglare", "recover"],
+		tier: "RU",
+		doublesTier: "DUU",
+	},
 	zapdos: {
 		randomBattleMoves: ["thunderbolt", "heatwave", "hiddenpowerice", "roost", "toxic", "uturn", "defog"],
 		randomDoubleBattleMoves: ["thunderbolt", "heatwave", "hiddenpowergrass", "hiddenpowerice", "tailwind", "protect", "discharge"],
 		tier: "OU",
 		doublesTier: "DOU",
 	},
+	zapdosgalar: {
+		randomBattleMoves: ["bulkup", "bravebird", "closecombat", "throatchop", "uturn"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
 	moltres: {
 		randomBattleMoves: ["fireblast", "roost", "substitute", "toxic", "willowisp", "hurricane"],
 		randomDoubleBattleMoves: ["fireblast", "airslash", "roost", "substitute", "protect", "uturn", "willowisp", "hurricane", "heatwave", "tailwind"],
-		tier: "RU",
-		doublesTier: "(DUU)",
+		tier: "UU",
+		doublesTier: "DUU",
+	},
+	moltresgalar: {
+		randomBattleMoves: ["fierywrath", "hurricane", "nastyplot", "substitute"],
+		tier: "RUBL",
+		doublesTier: "DUU",
 	},
 	dratini: {
 		encounters: [
@@ -4501,7 +4516,7 @@ let BattleFormatsData = {
 	deoxysspeed: {
 		randomBattleMoves: ["spikes", "stealthrock", "superpower", "psychoboost", "taunt", "magiccoat", "knockoff"],
 		randomDoubleBattleMoves: ["superpower", "icebeam", "psychoboost", "taunt", "lightscreen", "reflect", "protect", "knockoff"],
-		tier: "OU",
+		tier: "AG",
 		doublesTier: "(DUU)",
 	},
 	turtwig: {
@@ -7457,8 +7472,8 @@ let BattleFormatsData = {
 	tapubulu: {
 		randomBattleMoves: ["woodhammer", "hornleech", "stoneedge", "superpower", "megahorn", "bulkup"],
 		randomDoubleBattleMoves: ["woodhammer", "hornleech", "stoneedge", "superpower", "leechseed", "protect", "naturesmadness"],
-		tier: "OU",
-		doublesTier: "DOU",
+		tier: "UUBL",
+		doublesTier: "DUU",
 	},
 	tapufini: {
 		randomBattleMoves: ["calmmind", "moonblast", "scald", "taunt", "icebeam", "hydropump"],
@@ -8131,6 +8146,41 @@ let BattleFormatsData = {
 		randomBattleMoves: ["bulkup", "closecombat", "darkestlariat", "powerwhip", "uturn"],
 		randomDoubleBattleMoves: ["closecombat", "darkestlariat", "junglehealing", "powerwhip", "protect", "rockslide"],
 		tier: "RUBL",
+	},
+	regieleki: {
+		randomBattleMoves: ["explosion", "substitute", "thunderbolt", "voltswitch"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	regidrago: {
+		randomBattleMoves: ["dracometeor", "dragondance", "firefang", "outrage", "thunderfang"],
+		tier: "RU",
+		doublesTier: "DUU",
+	},
+	glastrier: {
+		randomBattleMoves: ["closecombat", "highhorsepower", "iciclecrash", "swordsdance"],
+		tier: "UU",
+		doublesTier: "DOU",
+	},
+	spectrier: {
+		randomBattleMoves: ["darkpulse", "nastyplot", "shadowball", "substitute"],
+		tier: "OU",
+		doublesTier: "DOU",
+	},
+	calyrex: {
+		randomBattleMoves: ["calmmind", "gigadrain", "psyshock", "substitute"],
+		tier: "PU",
+		doublesTier: "(DUU)",
+	},
+	calyrexice: {
+		randomBattleMoves: ["closecombat", "highhorsepower", "iciclecrash", "swordsdance"],
+		tier: "AG",
+		doublesTier: "DUber",
+	},
+	calyrexshadow: {
+		randomBattleMoves: ["darkpulse", "nastyplot", "shadowball", "substitute"],
+		tier: "AG",
+		doublesTier: "DUber",
 	},
 	apocalylidae: {
 		randomBattleMoves: ["apocalypticmaelstrom", "powerwhip", "eruption", "thunder", "bravebird", "oblivionwing", "precipiceblades", "pastsassurance"],

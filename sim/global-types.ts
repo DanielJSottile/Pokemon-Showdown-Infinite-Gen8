@@ -1,4 +1,4 @@
-type Battle = import('./battle').Battle
+﻿type Battle = import('./battle').Battle
 type Field = import('./field').Field
 type ModdedDex = import('./dex').ModdedDex
 type Pokemon = import('./pokemon').Pokemon
@@ -843,6 +843,7 @@ interface MoveData extends EffectData, MoveEventMethods {
 	thawsTarget?: boolean
 	useTargetOffensive?: boolean
 	useSourceDefensiveAsOffensive?: boolean
+	useSourceSpecialDefensiveAsOffensive?: boolean
 	volatileStatus?: string
 	weather?: string
 	willCrit?: boolean

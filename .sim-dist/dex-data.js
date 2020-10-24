@@ -781,6 +781,8 @@ const toID = Tools.getId;
 	
 	/** Whether or not this move ignores negative attack boosts. */
 	
+	/** Whether or not this move ignores negative attack boosts. */
+	
 	/** Whether or not this move ignores positive defense boosts. */
 	
 	/** Whether or not this move ignores attack boosts. */
@@ -850,6 +852,7 @@ const toID = Tools.getId;
 		this.defensiveCategory = data.defensiveCategory || undefined;
 		this.useTargetOffensive = !!data.useTargetOffensive;
 		this.useSourceDefensiveAsOffensive = !!data.useSourceDefensiveAsOffensive;
+		this.useSourceSpecialDefensiveAsOffensive = !!data.useSourceSpecialDefensiveAsOffensive;
 		this.ignoreNegativeOffensive = !!data.ignoreNegativeOffensive;
 		this.ignorePositiveDefensive = !!data.ignorePositiveDefensive;
 		this.ignoreOffensive = !!data.ignoreOffensive;
