@@ -18,12 +18,26 @@ let Formats = [
 		],
 
 		mod: 'gen8',
-		ruleset: ['Obtainable', 'Species Clause', 'Nickname Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Sleep Clause Mod', 'Infinite Timer'],
-		banlist: ['Power Construct',
-			'Alakazam-Mega', 'Apocalylidae', 'Arceus', 'Blastoise-Mega', 'Darkrai', 'Darkrai-Mega', 'Deoxys-Attack', 'Deoxys-Base', 'Deoxys-Speed', 'Dialga', 'Eternatus', 'Gengar-Mega', 'Giratina', 'Groudon', 'Groudon-Primal',
+		ruleset: ['Obtainable', 'Species Clause', 'Evasion Moves Clause', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Sleep Clause Mod', 'Infinite Timer'],
+		banlist: ['Power Construct', 'Ultranecrozium Z',
+			'Alakazam-Mega', 'Apocalylidae', 'Arceus', 'Blastoise-Mega', 'Calyrex-Ice', 'Calyrex-Shadow', 'Darkrai', 'Darkrai-Mega', 'Darmanitan-Galar-Zen', 'Deoxys-Attack', 'Deoxys-Base', 'Deoxys-Speed', 'Dialga', 'Eternatus', 'Gengar-Mega', 'Giratina', 'Groudon', 'Groudon-Primal',
 			'Ho-Oh', 'Kyogre', 'Kyogre-Primal', 'Kyurem-White', 'Kyurem-Black', 'Kyurem-Omnipotent', 'Lucario-Mega', 'Lugia', 'Lunala',
 			'Marshadow', 'Mebiusan-Past', 'Mebiusan-Future', 'Mewtwo', 'Naganadel', 'Necrozma-Dawn-Wings', 'Necrozma-Dusk-Mane', 'Palkia', 'Pheromosa',
 			'Rayquaza', 'Rayquaza-Mega', 'Reshiram', 'Solgaleo', 'Salamence-Mega', 'Zacian', 'Zamazenta', 'Xerneas', 'Yveltal', 'Zekrom',
+		],
+	},
+	{
+		name: "[Gen 8] OU [Tier II]",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3656245/">OU Metagame Discussion</a>`,
+		],
+
+		mod: 'gen8',
+		ruleset: ['Obtainable', 'Species Clause', 'Evasion Moves Clause', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Sleep Clause Mod', 'Infinite Timer'],
+		banlist: ['Ultranecrozium Z',
+			'Apocalylidae', 'Arceus-Base', 'Arceus-Ghost', 'Arceus-Infinite', 'Arceus-Fairy', 'Arceus-Water', 'Arceus-Ground', 
+			'Calyrex-Shadow', 'Calyrex-Ice', 'Darkrai-Mega', 'Darmanitan-Galar-Zen', 'Eternatus', 'Groudon-Primal', 'Ho-Oh', 'Kyogre', 'Kyogre-Primal', 'Kyurem-Omnipotent', 'Lugia',
+			'Mewtwo-Mega-X', 'Mewtwo-Mega-Y', 'Necrozma-Dusk-Mane', 'Rayquaza-Mega', 'Zacian', 'Zamazenta-Crowned',
 		],
 	},
 	{
@@ -34,7 +48,7 @@ let Formats = [
 
 		mod: 'gen8',
 		ruleset: ['[Gen 8] OU'],
-		banlist: ['OU', 'UUBL', 'Drizzle', 'Drought', 'Mewnium Z', 'Kommonium Z'],
+		banlist: ['OU', 'UUBL'],
 	},
 	{
 		name: "[Gen 8] RU",

@@ -18,7 +18,7 @@ interface ChosenAction {
 	target?: Pokemon; // the target of the action
 	index?: number; // the chosen index in Team Preview
 	side?: Side; // the action's side
-	mega?: boolean | null; // true if megaing or ultra bursting
+	mega?: boolean | null; // true if megaing, ultra bursting, or time traveling
 	zmove?: string; // if zmoving, the name of the zmove
 	maxMove?: string; // if dynamaxed, the name of the max move
 	priority?: number; // priority of the action
@@ -35,6 +35,7 @@ export interface Choice {
 	zMove: boolean; // true if a Z-move has already been selected
 	mega: boolean; // true if a mega evolution has already been selected
 	ultra: boolean; // true if an ultra burst has already been selected
+	timetravel: boolean; // true if a time travel has already been selected
 	dynamax: boolean; // true if a dynamax has already been selected
 }
 
@@ -118,6 +119,7 @@ export class Side {
 			switchIns: new Set(),
 			zMove: false,
 			mega: false,
+			timetravel: false,
 			ultra: false,
 			dynamax: false,
 		};
@@ -146,7 +148,8 @@ export class Side {
 			case 'move':
 				let details = ``;
 				if (action.targetLoc && this.active.length > 1) details += ` ${action.targetLoc}`;
-				if (action.mega) details += (action.pokemon!.item === 'ultranecroziumz' ? ` ultra` : ` mega`);
+				if (action.mega) details += (action.pokemon!.item === 'ultranecroziumz' ? ` ultra` : action.pokemon!.ability === 'timetravel' ? ` timetravel` : ` mega`);
+				// this line may be broken above
 				if (action.zmove) details += ` zmove`;
 				return `move ${action.moveid}${details}`;
 			case 'switch':
@@ -526,6 +529,10 @@ export class Side {
 		if (ultra && this.choice.ultra) {
 			return this.emitChoiceError(`Can't move: You can only ultra burst once per battle`);
 		}
+		const timetravel = (megaDynaOrZ === 'timetravel');
+		if (timetravel && !pokemon.canTimeTravel) {
+			return this.emitChoiceError(`Can't move: ${pokemon.name} can't time travel`);
+		}
 		let dynamax = (megaDynaOrZ === 'dynamax');
 		if (dynamax && (this.choice.dynamax || !this.battle.canDynamax(pokemon))) {
 			if (pokemon.volatiles['dynamax']) {
@@ -540,7 +547,7 @@ export class Side {
 			pokemon,
 			targetLoc,
 			moveid,
-			mega: mega || ultra,
+			mega: mega || ultra || timetravel,
 			zmove: zMove,
 			maxMove: maxMove ? maxMove.id : undefined,
 		});
@@ -551,6 +558,7 @@ export class Side {
 
 		if (mega) this.choice.mega = true;
 		if (ultra) this.choice.ultra = true;
+		if (timetravel) this.choice.timetravel = true;
 		if (zMove) this.choice.zMove = true;
 		if (dynamax) this.choice.dynamax = true;
 
@@ -743,6 +751,7 @@ export class Side {
 			zMove: false,
 			mega: false,
 			ultra: false,
+			timetravel: true,
 			dynamax: false,
 		};
 	}
@@ -807,6 +816,10 @@ export class Side {
 						if (megaDynaOrZ) return error();
 						megaDynaOrZ = 'ultra';
 						data = data.slice(0, -6);
+					} else if (data.endsWith(' timetravel')) {
+						if (megaDynaOrZ) return error();
+						megaDynaOrZ = 'timetravel';
+						data = data.slice(0, -10);
 					} else if (data.endsWith(' dynamax')) {
 						if (megaDynaOrZ) return error();
 						megaDynaOrZ = 'dynamax';

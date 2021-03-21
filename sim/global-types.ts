@@ -1083,6 +1083,7 @@ interface BattleScriptsData {
 	afterMoveSecondaryEvent?: (this: Battle, targets: Pokemon[], pokemon: Pokemon, move: ActiveMove) => undefined
 	calcRecoilDamage?: (this: Battle, damageDealt: number, move: Move) => number
 	canMegaEvo?: (this: Battle, pokemon: Pokemon) => string | undefined | null
+	canTimeTravel?: (this: Battle, pokemon: Pokemon) => string | undefined | null
 	canUltraBurst?: (this: Battle, pokemon: Pokemon) => string | null
 	canZMove?: (this: Battle, pokemon: Pokemon) => ZMoveOptions | void
 	canDynamax?: (this: Battle, pokemon: Pokemon, skipChecks?: boolean) => DynamaxOptions | void
@@ -1128,7 +1129,7 @@ interface ModdedBattlePokemon {
 	boostBy?: (this: Pokemon, boost: SparseBoostsTable) => boolean | number
 	calculateStat?: (this: Pokemon, statName: StatNameExceptHP, boost: number, modifier?: number) => number
 	getActionSpeed?: (this: Pokemon) => number
-	getRequestData?: (this: Pokemon) => {moves: {move: string, id: ID, target?: string, disabled?: boolean}[], maybeDisabled?: boolean, trapped?: boolean, maybeTrapped?: boolean, canMegaEvo?: boolean, canUltraBurst?: boolean, canZMove?: ZMoveOptions}
+	getRequestData?: (this: Pokemon) => {moves: {move: string, id: ID, target?: string, disabled?: boolean}[], maybeDisabled?: boolean, trapped?: boolean, maybeTrapped?: boolean, canMegaEvo?: boolean, canUltraBurst?: boolean, canTimeTravel?: boolean, canZMove?: ZMoveOptions}
 	getStat?: (this: Pokemon, statName: StatNameExceptHP, unboosted?: boolean, unmodified?: boolean, fastReturn?: boolean) => number
 	getWeight?: (this: Pokemon) => number
 	hasAbility?: (this: Pokemon, ability: string | string[]) => boolean
@@ -1215,7 +1216,7 @@ namespace Actions {
 		moveid: ID
 		/** a move to use (move action only) */
 		move: Move;
-		/** true if megaing or ultra bursting */
+		/** true if megaing, ultra bursting, or time traveling */
 		mega: boolean | 'done';
 		/** if zmoving, the name of the zmove */
 		zmove?: string;

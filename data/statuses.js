@@ -81,34 +81,25 @@ let BattleStatuses = {
 			return false;
 		},
 	},
-	frz: {
-		name: 'frz',
-		id: 'frz',
+	fsb: {
+		name: 'fsb',
+		id: 'fsb',
 		num: 0,
 		effectType: 'Status',
 		onStart(target, source, sourceEffect) {
-			if (sourceEffect && sourceEffect.effectType === 'Ability') {
-				this.add('-status', target, 'frz', '[from] ability: ' + sourceEffect.name, '[of] ' + source);
+			if (sourceEffect && sourceEffect.id === 'frostorb') {
+				this.add('-status', target, 'fsb', '[from] item: Frost Orb');
+			} else if (sourceEffect && sourceEffect.effectType === 'Ability') {
+				this.add('-status', target, 'fsb', '[from] ability: ' + sourceEffect.name, '[of] ' + source);
 			} else {
-				this.add('-status', target, 'frz');
+				this.add('-status', target, 'fsb');
 			}
-			if (target.template.species === 'Shaymin-Sky' && target.baseTemplate.baseSpecies === 'Shaymin') {
-				target.formeChange('Shaymin', this.effect, true);
-			}
+			this.add('-message', 'The target became Frostbitten!');
 		},
 		onBeforeMovePriority: 10,
-		onBeforeMove(pokemon, target, move) {
-			if (move.flags['defrost']) return;
-			if (this.randomChance(1, 5)) {
-				pokemon.cureStatus();
-				return;
-			}
-			this.add('cant', pokemon, 'frz');
-			return false;
-		},
 		onModifyMove(move, pokemon) {
 			if (move.flags['defrost']) {
-				this.add('-curestatus', pokemon, 'frz', '[from] move: ' + move);
+				this.add('-curestatus', pokemon, 'fsb', '[from] move: ' + move);
 				pokemon.setStatus('');
 			}
 		},
@@ -116,6 +107,12 @@ let BattleStatuses = {
 			if (move.thawsTarget || move.type === 'Fire' && move.category !== 'Status') {
 				target.cureStatus();
 			}
+		},
+		// Damage reduction is handled directly in the sim/battle.js damage function
+		onResidualOrder: 9,
+		onResidual(pokemon) {
+			this.damage(pokemon.baseMaxhp / 8);
+			this.add('-message', 'The target is chilled by frostbite!');
 		},
 	},
 	psn: {
@@ -662,7 +659,6 @@ let BattleStatuses = {
 		},
 		onImmunity(type, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
-			if (type === 'frz') return false;
 		},
 		onResidualOrder: 1,
 		onResidual() {
@@ -700,7 +696,6 @@ let BattleStatuses = {
 		},
 		onImmunity(type, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
-			if (type === 'frz') return false;
 		},
 		onResidualOrder: 1,
 		onResidual() {

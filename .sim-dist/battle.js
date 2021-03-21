@@ -2133,7 +2133,7 @@ var _state = require('./state');
 			}
 		}
 
-		if (pokemon.status === 'psn' && move.category === 'Special' && !pokemon.hasAbility('guts') && !pokemon.hasAbility('poisonheal') && !pokemon.hasAbility('toxicboost')) {
+		if (pokemon.status === 'fsb' && move.category === 'Special' && !pokemon.hasAbility('guts')) {
 			if (this.gen < 6 || move.id !== 'facade') {
 				baseDamage = this.modify(baseDamage, 0.66);
 			}
@@ -3166,6 +3166,10 @@ var _state = require('./state');
 
 	canUltraBurst(pokemon) {
 		throw new UnimplementedError('canUltraBurst');
+	}
+
+	canTimeTravel(pokemon) {
+		throw new UnimplementedError('canTimeTravel');
 	}
 
 	canZMove(pokemon) {

@@ -38,6 +38,7 @@ var _state = require('./state');
 
 
 
+
  class Side {
 	
 	
@@ -118,6 +119,7 @@ var _state = require('./state');
 			switchIns: new Set(),
 			zMove: false,
 			mega: false,
+			timetravel: false,
 			ultra: false,
 			dynamax: false,
 		};
@@ -146,7 +148,8 @@ var _state = require('./state');
 			case 'move':
 				let details = ``;
 				if (action.targetLoc && this.active.length > 1) details += ` ${action.targetLoc}`;
-				if (action.mega) details += (action.pokemon.item === 'ultranecroziumz' ? ` ultra` : ` mega`);
+				if (action.mega) details += (action.pokemon.item === 'ultranecroziumz' ? ` ultra` : action.pokemon.ability === 'timetravel' ? ` timetravel` : ` mega`);
+				// this line may be broken above
 				if (action.zmove) details += ` zmove`;
 				return `move ${action.moveid}${details}`;
 			case 'switch':
@@ -526,6 +529,10 @@ var _state = require('./state');
 		if (ultra && this.choice.ultra) {
 			return this.emitChoiceError(`Can't move: You can only ultra burst once per battle`);
 		}
+		const timetravel = (megaDynaOrZ === 'timetravel');
+		if (timetravel && !pokemon.canTimeTravel) {
+			return this.emitChoiceError(`Can't move: ${pokemon.name} can't time travel`);
+		}
 		let dynamax = (megaDynaOrZ === 'dynamax');
 		if (dynamax && (this.choice.dynamax || !this.battle.canDynamax(pokemon))) {
 			if (pokemon.volatiles['dynamax']) {
@@ -540,7 +547,7 @@ var _state = require('./state');
 			pokemon,
 			targetLoc,
 			moveid,
-			mega: mega || ultra,
+			mega: mega || ultra || timetravel,
 			zmove: zMove,
 			maxMove: maxMove ? maxMove.id : undefined,
 		});
@@ -551,6 +558,7 @@ var _state = require('./state');
 
 		if (mega) this.choice.mega = true;
 		if (ultra) this.choice.ultra = true;
+		if (timetravel) this.choice.timetravel = true;
 		if (zMove) this.choice.zMove = true;
 		if (dynamax) this.choice.dynamax = true;
 
@@ -743,6 +751,7 @@ var _state = require('./state');
 			zMove: false,
 			mega: false,
 			ultra: false,
+			timetravel: true,
 			dynamax: false,
 		};
 	}
@@ -807,6 +816,10 @@ var _state = require('./state');
 						if (megaDynaOrZ) return error();
 						megaDynaOrZ = 'ultra';
 						data = data.slice(0, -6);
+					} else if (data.endsWith(' timetravel')) {
+						if (megaDynaOrZ) return error();
+						megaDynaOrZ = 'timetravel';
+						data = data.slice(0, -10);
 					} else if (data.endsWith(' dynamax')) {
 						if (megaDynaOrZ) return error();
 						megaDynaOrZ = 'dynamax';

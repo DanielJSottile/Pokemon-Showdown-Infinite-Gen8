@@ -456,9 +456,10 @@ let BattleAbilities = {
 	"chillingneigh": {
 		desc: "This Pokemon's Attack is raised by 1 stage if it attacks and knocks out another Pokemon.",
 		shortDesc: "This Pokemon's Attack is raised by 1 stage if it attacks and KOes another Pokemon.",
-		onSourceAfterFaint(length, target, source, effect) {
+		onSourceFaint(target, source, effect) {
+			if (source.volatiles['dynamax']) return;
 			if (effect && effect.effectType === 'Move') {
-				this.boost({atk: length}, source);
+				this.boost({atk: 1}, source);
 			}
 		},
 		id: "chillingneigh",
@@ -890,8 +891,8 @@ let BattleAbilities = {
 		num: 209,
 	},
 	"download": {
-		desc: "On switch-in, this Pokemon's Attack or Special Attack is raised by 1 stage based on the weaker combined defensive stat of all opposing Pokemon. Attack is raised if their Defense is lower, and Special Attack is raised if their Special Defense is the same or lower.",
-		shortDesc: "On switch-in, Attack or Sp. Atk is raised 1 stage based on the foes' weaker Defense.",
+		desc: "On switch-in, this Pokemon's Attack or Special Attack is raised by 1 stage based on the stronger combined defensive stat of all opposing Pokemon. Attack is raised if their Defense is higher, and Special Attack is raised if their Special Defense is the same or higher.",
+		shortDesc: "On switch-in, Attack or Sp. Atk is raised 1 stage based on the foes' stronger Defense.",
 		onStart(pokemon) {
 			let totaldef = 0;
 			let totalspd = 0;
@@ -900,7 +901,7 @@ let BattleAbilities = {
 				totaldef += target.getStat('def', false, true);
 				totalspd += target.getStat('spd', false, true);
 			}
-			if (totaldef && totaldef >= totalspd) {
+			if (totaldef && totaldef <= totalspd) {
 				this.boost({spa: 1});
 			} else if (totalspd) {
 				this.boost({atk: 1});
@@ -1497,10 +1498,10 @@ let BattleAbilities = {
 		num: 255,
 	},
 	"grasspelt": {
-		shortDesc: "If Grassy Terrain is active, this Pokemon's Defense is multiplied by 1.5.",
+		shortDesc: "If Grassy Terrain is active, this Pokemon's Defense is multiplied by 1.8.",
 		onModifyDefPriority: 6,
 		onModifyDef(pokemon) {
-			if (this.field.isTerrain('grassyterrain')) return this.chainModify(1.5);
+			if (this.field.isTerrain('grassyterrain')) return this.chainModify(1.8);
 		},
 		id: "grasspelt",
 		name: "Grass Pelt",
@@ -1537,9 +1538,10 @@ let BattleAbilities = {
 	"grimneigh": {
 		desc: "This Pokemon's Special Attack is raised by 1 stage if it attacks and knocks out another Pokemon.",
 		shortDesc: "This Pokemon's Sp. Atk is raised by 1 stage if it attacks and KOes another Pokemon.",
-		onSourceAfterFaint(length, target, source, effect) {
+		onSourceFaint(target, source, effect) {
+			if (source.volatiles['dynamax']) return;
 			if (effect && effect.effectType === 'Move') {
-				this.boost({spa: length}, source);
+				this.boost({spa: 1}, source);
 			}
 		},
 		id: "grimneigh",
@@ -1988,7 +1990,7 @@ let BattleAbilities = {
 					this.add('-ability', pokemon, 'Intimidate', 'boost');
 					activated = true;
 				}
-				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, true) < target.getStat('spe', false, true))) {
+				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, false) < target.getStat('spe', false, false))) {
 					this.add('-immune', target);
 				} else if (target.hasAbility(['Own Tempo', 'Inner Focus', 'Keen Eye', 'Oblivious', 'Scrappy'])) {
 					this.add('-immune', target, `[from] ability: ${this.dex.getAbility(target.ability).name}`);
@@ -2290,15 +2292,15 @@ let BattleAbilities = {
 		num: 170,
 	},
 	"magmaarmor": {
-		shortDesc: "This Pokemon cannot be frozen. Gaining this Ability while frozen cures it.",
+		shortDesc: "This Pokemon cannot be frostbitten. Gaining this Ability while frozen cures it.",
 		onUpdate(pokemon) {
-			if (pokemon.status === 'frz') {
+			if (pokemon.status === 'fsb') {
 				this.add('-activate', pokemon, 'ability: Magma Armor');
 				pokemon.cureStatus();
 			}
 		},
 		onImmunity(type, pokemon) {
-			if (type === 'frz') return false;
+			if (type === 'fsb') return false;
 		},
 		id: "magmaarmor",
 		name: "Magma Armor",
@@ -2886,7 +2888,7 @@ let BattleAbilities = {
 		desc: "This Pokemon's damaging moves become multi-hit moves that hit twice. The second hit has its damage quartered. Does not affect multi-hit moves, moves with static damage, or moves that have multiple targets.",
 		shortDesc: "This Pokemon's damaging moves hit twice. The second hit has its damage quartered.",
 		onPrepareHit(source, target, move) {
-			if (['iceball', 'rollout', 'seismictoss', 'nightshade', 'dragonrage', 'sonicboom', 'psywave'].includes(move.id)) return;
+			if (['iceball', 'rollout', 'seismictoss', 'nightshade', 'dragonrage', 'sonicboom', 'psywave', 'sheercold', 'fissure', 'guillotine', 'horndrill', 'superfang', 'naturesmadness', 'guardianofalola'].includes(move.id)) return;
 			if (move.category !== 'Status' && !move.selfdestruct && !move.multihit && !move.flags['charge'] && !move.spreadHit && !move.isZ) {
 				move.multihit = 2;
 				move.multihitType = 'parentalbond';
@@ -3946,13 +3948,9 @@ let BattleAbilities = {
 				this.add('-end', target, 'Slow Start');
 			},
 		},
-		onAfterMove(pokemon) {
-			pokemon.removeVolatile('slowstart');
-			this.add('-end', pokemon, 'Slow STart', '[silent]');
-		},
 		id: "slowstart",
 		name: "Slow Start",
-		rating: -1,
+		rating: 0,
 		num: 112,
 	},
 	"slushrush": {
@@ -4074,6 +4072,20 @@ let BattleAbilities = {
 		num: 43,
 	},
 	"speedboost": {
+		desc: "This Pokemon's Speed is raised by 1 stage at the end of each full turn it has been on the field.",
+		shortDesc: "This Pokemon's Speed is raised 1 stage at the end of each full turn on the field.",
+		onResidualPriority: -1,
+		onResidual(pokemon) {
+			if (pokemon.activeTurns) {
+				this.boost({spe: 1});
+			}
+		},
+		id: "speedboost",
+		name: "Speed Boost",
+		rating: 4.5,
+		num: 3,
+	},
+	"speedboostalt": {
 		desc: "This Pokemon's Speed is raised by 1 stage at the end of each full turn it has been on the field. This ability does not activate on turns Protect, Detect, Endure, etc are used.",
 		shortDesc: "This Pokemon's Speed is raised 1 stage at the end of each full turn on the field.",
 		onResidualPriority: -1,
@@ -4082,10 +4094,10 @@ let BattleAbilities = {
 				this.boost({spe: 1});
 			}
 		},
-		id: "speedboost",
-		name: "Speed Boost",
+		id: "speedboostalt",
+		name: "Speed Boost (alt)",
 		rating: 4.5,
-		num: 3,
+		num: -999,
 	},
 	"spooked": {
 		desc: "On switch-in, this Pokemon lowers the Special Attack of adjacent opposing Pokemon by 1 stage. Own Tempo, Inner Focus, Keen Eye, and Pokemon behind a substitute are immune.",
@@ -4098,7 +4110,7 @@ let BattleAbilities = {
 					this.add('-ability', pokemon, 'Spooked', 'boost');
 					activated = true;
 				}
-				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, true) < target.getStat('spe', false, true))) {
+				if (target.volatiles['substitute'] || (pokemon.getStat('spe', false, false) < target.getStat('spe', false, false))) {
 					this.add('-immune', target);
 				} else if (target.hasAbility(['Own Tempo', 'Inner Focus', 'Keen Eye', 'Oblivious', 'Scrappy'])) {
 					this.add('-immune', target, `[from] ability: ${this.dex.getAbility(target.ability).name}`);
@@ -4504,7 +4516,7 @@ let BattleAbilities = {
 		onAfterSetStatus(status, target, source, effect) {
 			if (!source || source === target) return;
 			if (effect && effect.id === 'toxicspikes') return;
-			if (status.id === 'slp' || status.id === 'frz') return;
+			if (status.id === 'slp') return;
 			this.add('-activate', target, 'ability: Synchronize');
 			// Hack to make status-prevention abilities think Synchronize is a status move
 			// and show messages when activating against it.

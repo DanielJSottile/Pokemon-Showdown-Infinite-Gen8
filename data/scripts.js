@@ -1147,6 +1147,10 @@ let BattleScripts = {
 			pokemon.getItem().id === 'ultranecroziumz') {
 			return "Necrozma-Ultra";
 		}
+		return null;
+	},
+
+	canTimeTravel(pokemon) {
 		if ('Mebiusan-Past'.includes(pokemon.template.species) &&
 			pokemon.getAbility().id === 'timetravel') {
 			return "Mebiusan-Future";
@@ -1186,7 +1190,7 @@ let BattleScripts = {
 		let item = pokemon.getItem();
 		if (!skipChecks) {
 			if (!pokemon.canDynamax) return;
-			if (pokemon.template.isMega || pokemon.template.isPrimal || pokemon.template.forme === "Ultra" || pokemon.getItem().zMove || this.canMegaEvo(pokemon)) return;
+			if (pokemon.template.isMega || pokemon.template.isPrimal || pokemon.template.forme === "Ultra" || pokemon.getItem().zMove || this.canTimeTravel(pokemon) || this.canMegaEvo(pokemon)) return;
 			if (this.canZMove(pokemon)) return;
 			if (item.megaStone) return;
 			if (pokemon.getItem().id === 'ultranecroziumz') return;
@@ -1238,31 +1242,30 @@ let BattleScripts = {
 	},
 
 	runMegaEvo(pokemon) {
-		const templateid = pokemon.canMegaEvo || pokemon.canUltraBurst;
+		const templateid = pokemon.canMegaEvo || pokemon.canUltraBurst || pokemon.canTimeTravel;
+		const getThing = templateid === pokemon.canTimeTravel ? pokemon.getAbility() : pokemon.getItem();
 		if (!templateid) return false;
 		const side = pokemon.side;
 
 		// Pokémon affected by Sky Drop cannot mega evolve. Enforce it here for now.
 		for (const foeActive of side.foe.active) {
-			if (foeActive.volatiles['skydrop', 'psychokinesis'] && foeActive.volatiles['skydrop', 'psychokinesis'].source === pokemon) {
+			if (foeActive.volatiles['skydrop'] && foeActive.volatiles['skydrop'].source === pokemon) {
 				return false;
 			}
 		}
 
-		pokemon.formeChange(templateid, pokemon.getItem(), true);
-		pokemon.formeChange(templateid, pokemon.getAbility(), true);
+		pokemon.formeChange(templateid, getThing, true);
 
 		// Limit one mega evolution
 		let wasMega = pokemon.canMegaEvo;
 		for (const ally of side.pokemon) {
 			if (wasMega) {
 				ally.canMegaEvo = null;
-			} 
-			// else {
-				// ally.canUltraBurst = null;
+			} else {
+				ally.canTimeTravel = true;
+				ally.canUltraBurst = null;
+			}
 		}
-
-		// TODO: Make it so only Mebiusan can continue to UB.  Just a weird visual glitch for Necrozma, not needed functionally
 
 		this.runEvent('AfterMega', pokemon);
 		return true;

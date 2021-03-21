@@ -2133,7 +2133,7 @@ export class Battle {
 			}
 		}
 
-		if (pokemon.status === 'psn' && move.category === 'Special' && !pokemon.hasAbility('guts') && !pokemon.hasAbility('poisonheal') && !pokemon.hasAbility('toxicboost')) {
+		if (pokemon.status === 'fsb' && move.category === 'Special' && !pokemon.hasAbility('guts')) {
 			if (this.gen < 6 || move.id !== 'facade') {
 				baseDamage = this.modify(baseDamage, 0.66);
 			}
@@ -3166,6 +3166,10 @@ export class Battle {
 
 	canUltraBurst(pokemon: Pokemon): string | null {
 		throw new UnimplementedError('canUltraBurst');
+	}
+
+	canTimeTravel(pokemon: Pokemon): string | null {
+		throw new UnimplementedError('canTimeTravel');
 	}
 
 	canZMove(pokemon: Pokemon): (AnyObject | null)[] | void {

@@ -301,18 +301,18 @@ let BattleItems = {
 			type: "Ice",
 		},
 		onUpdate(pokemon) {
-			if (pokemon.status === 'frz') {
+			if (pokemon.status === 'fsb') {
 				pokemon.eatItem();
 			}
 		},
 		onEat(pokemon) {
-			if (pokemon.status === 'frz') {
+			if (pokemon.status === 'fsb') {
 				pokemon.cureStatus();
 			}
 		},
 		num: 153,
 		gen: 3,
-		desc: "Holder is cured if it is frozen. Single use.",
+		desc: "Holder is cured if it is frostbiten. Single use.",
 	},
 	"assaultvest": {
 		id: "assaultvest",
@@ -2438,6 +2438,23 @@ let BattleItems = {
 		gen: 2,
 		isPokeball: true,
 		desc: "A Poke Ball that makes caught Pokemon more friendly.",
+	},
+	"frostorb": {
+		id: "frostorb",
+		name: "Frost Orb",
+		spritenum: 145,
+		fling: {
+			basePower: 30,
+			status: 'fsb',
+		},
+		onResidualOrder: 26,
+		onResidualSubOrder: 2,
+		onResidual(pokemon) {
+			pokemon.trySetStatus('fsb', pokemon);
+		},
+		num: -53,
+		gen: 8,
+		desc: "At the end of every turn, this item attempts to frostbite the holder.",
 	},
 	"fullincense": {
 		id: "fullincense",
@@ -6034,6 +6051,43 @@ let BattleItems = {
 		num: 254,
 		gen: 3,
 		desc: "Holder's Water-type attacks have 1.2x power.",
+	},
+	"securityvest": {
+		id: "securityvest",
+		name: "Security Vest",
+		spritenum: 581,
+		fling: {
+			basePower: 80,
+		},
+		onSetStatus(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.effectType === 'Move' && effect.infiltrates && target.side !== source.side) return;
+				if (target !== source) {
+					this.debug('interrupting setStatus');
+					if (effect.id === 'synchronize' || (effect.effectType === 'Move' && !effect.secondaries)) {
+						this.add('-activate', target, 'item: Security Vest');
+					}
+					return null;
+				}
+			},
+		onTryAddVolatile(status, target, source, effect) {
+			if (!effect || !source) return;
+			if (effect.effectType === 'Move' && effect.infiltrates && target.side !== source.side) return;
+			if ((status.id === 'confusion' || status.id === 'yawn') && target !== source) {
+				this.add("-activate", target, "item: Security Vest")
+				return null;
+			}
+		},
+		onDisableMove(pokemon) {
+			for (const moveSlot of pokemon.moveSlots) {
+				if (this.dex.getMove(moveSlot.move).category !== 'Status') {
+					pokemon.disableMove(moveSlot.id);
+				}
+			}
+		},
+		num: -52,
+		gen: 8,
+		desc: "Holder is immune to status, but it can only select non-damaging moves.",
 	},
 	"sharpbeak": {
 		id: "sharpbeak",

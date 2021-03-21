@@ -203,6 +203,7 @@ var _state = require('./state');
 	
 	
 	
+	
 
 	
 	
@@ -381,6 +382,7 @@ var _state = require('./state');
 
 		this.canMegaEvo = this.battle.canMegaEvo(this);
 		this.canUltraBurst = this.battle.canUltraBurst(this);
+		this.canTimeTravel = this.battle.canTimeTravel(this);
 		// Set to true if appropriate initially to allow battle.canDynamax to work.
 		this.canDynamax = (this.battle.gen >= 8);
 		const canDynamax = this.battle.canDynamax(this);
@@ -837,6 +839,7 @@ var _state = require('./state');
 
 
 
+
  = {
 			moves,
 		};
@@ -860,6 +863,7 @@ var _state = require('./state');
 		if (!lockedMove) {
 			if (this.canMegaEvo) data.canMegaEvo = true;
 			if (this.canUltraBurst) data.canUltraBurst = true;
+			if (this.canTimeTravel) data.TimeTravel = true;
 			const canZMove = this.battle.canZMove(this);
 			if (canZMove) data.canZMove = canZMove;
 			// TODO interaction between dynamax and choice locked moves?
@@ -886,6 +890,16 @@ var _state = require('./state');
 			if (this.boosts[boost] > 0) boosts += this.boosts[boost];
 		}
 		return boosts;
+	}
+
+	negativeBoosts() {
+		let boosts = 0;
+		let boost;
+		for (boost in this.boosts) {
+			if (this.boosts[boost] < 0) boosts += this.boosts[boost];
+		}
+		// this needs to return a positive number for Reconstruction (and other potential moves)
+		return Math.abs(boosts);
 	}
 
 	boostBy(boosts) {
@@ -1107,7 +1121,12 @@ var _state = require('./state');
 			}
 		} else {
 			if (source.effectType === 'Ability') {
+				if (source.canTimeTravel) {
+					this.battle.add('-timetravel', this, apparentSpecies, template.requiredAbility);
+					this.moveThisTurnResult = true; // Time Travel counts as an action for Truant
+				} else {
 				this.battle.add('-formechange', this, template.species, message, `[from] ability: ${source.name}`);
+				}
 			} else {
 				this.battle.add('-formechange', this, this.illusion ? this.illusion.template.species : template.species, message);
 			}
