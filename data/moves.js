@@ -3764,7 +3764,7 @@ let BattleMovedex = {
 	},
 	"crosschop": {
 		num: 238,
-		accuracy: 80,
+		accuracy: 90,
 		basePower: 100,
 		category: "Physical",
 		desc: "Has a higher chance for a critical hit.",
