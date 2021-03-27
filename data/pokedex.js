@@ -9483,7 +9483,7 @@ let BattlePokedex = {
 		forme: "Mega",
 		types: ["Water", "Fighting"],
 		genderRatio: {M: 0.875, F: 0.125},
-		baseStats: {hp: 95, atk: 138, def: 100, spa: 110, spd: 95, spe: 90},
+		baseStats: {hp: 95, atk: 143, def: 95, spa: 120, spd: 85, spe: 90},
 		abilities: {0: "Adaptability"},
 		heightm: 1.7,
 		weightkg: 101.5,
